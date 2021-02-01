@@ -3,16 +3,14 @@ package DAO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.sun.net.httpserver.Authenticator.Result;
-
-import controller.Amministatore;
+import classes.Amministatore;
 import controller.Controller;
 
 public class Amministratore_DAO implements DAO_Interface {
 
 	@Override
 	public Boolean checkExists(String usrname, String pw, Object admin) {
-		System.out.println("classe DAO");
+		
 		admin = Controller.admin;
 		
 		String select = "username,password";
@@ -21,18 +19,12 @@ public class Amministratore_DAO implements DAO_Interface {
 		try {
 			ResultSet rs = Controller.conn.Query(select,"amministratore",where);
 			while(rs.next()) {
-				if(usrname.equals(rs.getString(1))&& pw.equals(rs.getString(2))) {
-					
-					((Amministatore) admin).setUsername(usrname);
-					((Amministatore) admin).setPassword(pw);
-					
-					
-					return true;
-				}
-					
-				else
-					return false;
-			}	
+				((Amministatore) admin).setUsername(usrname);
+				((Amministatore) admin).setPassword(pw);
+				return true;
+			}
+				
+
 		}catch(SQLException e) {
 			System.err.println("Errore SQL");
 			e.printStackTrace();
@@ -41,7 +33,11 @@ public class Amministratore_DAO implements DAO_Interface {
 	}
 	
 	
-	
+	public void updatePassword(String newPw) {
+		String values = "password='"+newPw+"'";
+		String where = "username='"+Controller.admin.getUsername()+"'";
+		Controller.conn.Update("amministratore", values, where);
+	}
 	
 
 	@Override

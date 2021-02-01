@@ -17,6 +17,7 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.SystemColor;
 
 public class Popup extends JDialog {
 
@@ -32,11 +33,9 @@ public class Popup extends JDialog {
 		setLocationRelativeTo(null);
 	}
 	
-	
-
 	private void inizializzaPopup(Controller ctr) {
 		setResizable(false);
-		setBounds(100, 100, 460, 280);
+		setBounds(100, 100, 460, 250);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(Color.WHITE);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -51,22 +50,22 @@ public class Popup extends JDialog {
 		
 		messaggio.setForeground(Color.GRAY);
 		messaggio.setHorizontalAlignment(SwingConstants.CENTER);
-		messaggio.setFont(new Font("Arial", Font.PLAIN, 25));
+		messaggio.setFont(new Font("Arial", Font.PLAIN, 20));
 		messaggio.setBounds(10, 86, 424, 58);
 		contentPanel.add(messaggio);
 		
 		JButton btnSi = new JButton("Si");
 		btnSi.setForeground(Color.WHITE);
-		btnSi.setFont(new Font("Arial", Font.PLAIN, 25));
+		btnSi.setFont(new Font("Arial", Font.PLAIN, 20));
 		btnSi.setBackground(new Color(0, 165, 255));
-		btnSi.setBounds(228, 189, 99, 30);
+		btnSi.setBounds(228, 166, 99, 30);
 		contentPanel.add(btnSi);
 		
 		JButton btnNo = new JButton("No");
 		btnNo.setForeground(Color.WHITE);
-		btnNo.setFont(new Font("Arial", Font.PLAIN, 25));
-		btnNo.setBackground(Color.LIGHT_GRAY);
-		btnNo.setBounds(119, 189, 99, 30);
+		btnNo.setFont(new Font("Arial", Font.PLAIN, 20));
+		btnNo.setBackground(SystemColor.controlHighlight);
+		btnNo.setBounds(118, 166, 99, 30);
 		contentPanel.add(btnNo);
 		
 		btnNo.addActionListener(new ActionListener() {

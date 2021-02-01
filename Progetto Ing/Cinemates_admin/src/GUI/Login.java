@@ -1,18 +1,11 @@
 package GUI;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.AbstractBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
-import java.awt.geom.RoundRectangle2D;
-
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -39,6 +32,7 @@ public class Login extends JFrame {
 	private JLabel lblNewLabel_4;
 	private Amministratore_DAO adminDAO;
 
+	/** Create the frame. */
 	public Login(Controller ctr) {
 		inizializzaFrame(ctr);
 		adminDAO= new Amministratore_DAO();
@@ -49,32 +43,25 @@ public class Login extends JFrame {
 		setTitle("Cinemates");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
-		setBounds(100, 100, 860, 590);
+		setBounds(100, 100, 720, 590);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.decode("#201849"));;
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-						
+		
 		JPanel panel = new JPanel();
 		panel.setBorder(new LineBorder(Color.WHITE, 100, true));
 		panel.setBackground(Color.WHITE);
-		panel.setBounds(204, 125, 450, 300);
+		panel.setBounds(132, 81, 450, 407);
 		contentPane.add(panel);
 		panel.setLayout(null);
-		
-		JLabel error = new JLabel("");
-		error.setForeground(Color.RED);
-		error.setFont(new Font("Arial", Font.PLAIN, 15));
-		error.setHorizontalAlignment(SwingConstants.CENTER);
-		error.setBounds(10, 11, 430, 32);
-		panel.add(error);
 		
 		username = new JTextField();
 		username.requestFocus();
 		username.setForeground(Color.GRAY);
 		username.setBorder(new MatteBorder(0, 0, 1, 0, (Color) Color.DARK_GRAY));
 		username.setFont(new Font("Arial", Font.PLAIN, 25));
-		username.setBounds(96, 96, 260, 30);
+		username.setBounds(98, 208, 260, 30);
 		username.setColumns(10);
 		panel.add(username);
 		
@@ -83,59 +70,57 @@ public class Login extends JFrame {
 		password.setForeground(Color.GRAY);
 		password.setBorder(new MatteBorder(0, 0, 1, 0, (Color) Color.DARK_GRAY));
 		password.setFont(new Font("Arial", Font.PLAIN, 25));
-		password.setBounds(96, 185, 260, 30);
+		password.setBounds(98, 297, 260, 30);
 		panel.add(password);
 		
 		JButton loginbtn = new JButton("Accedi");
-		loginbtn.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				if(ctr.checkExists(username.getText() ,String.valueOf(password.getPassword()),adminDAO)) {
-					ctr.getAll(adminDAO);
-					ctr.openDashboard();
-				}else
-					error.setText("Credenziali incorrette!");
-					
-					
-				
-				
-			}
-		});
 		loginbtn.setFont(new Font("Arial", Font.PLAIN, 25));
 		loginbtn.setForeground(Color.WHITE);
 		loginbtn.setBackground(Color.decode("#00A5FF"));
-		loginbtn.setBounds(96, 238, 260, 30);
+		loginbtn.setBounds(98, 356, 260, 35);
 		panel.add(loginbtn);
 		
 		lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setIcon(new ImageIcon(Login.class.getResource("/user.png")));
-		lblNewLabel_1.setBounds(96, 53, 32, 32);
+		lblNewLabel_1.setBounds(98, 165, 32, 32);
 		panel.add(lblNewLabel_1);
 		
 		lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Login.class.getResource("/lock.png")));
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setBounds(96, 142, 32, 32);
+		lblNewLabel_2.setBounds(98, 254, 32, 32);
 		panel.add(lblNewLabel_2);
 		
 		lblNewLabel_3 = new JLabel("Username");
 		lblNewLabel_3.setForeground(Color.GRAY);
 		lblNewLabel_3.setFont(new Font("Arial", Font.BOLD, 15));
-		lblNewLabel_3.setBounds(138, 53, 80, 32);
+		lblNewLabel_3.setBounds(140, 165, 80, 32);
 		panel.add(lblNewLabel_3);
 		
 		lblNewLabel_4 = new JLabel("Password");
 		lblNewLabel_4.setForeground(Color.GRAY);
 		lblNewLabel_4.setFont(new Font("Arial", Font.BOLD, 15));
-		lblNewLabel_4.setBounds(138, 142, 80, 32);
+		lblNewLabel_4.setBounds(140, 254, 80, 32);
 		panel.add(lblNewLabel_4);
+		
+		JLabel lblNewLabel_5 = new JLabel("");
+		lblNewLabel_5.setBounds(166, 11, 120, 120);
+		panel.add(lblNewLabel_5);
+		lblNewLabel_5.setIcon(new ImageIcon(Login.class.getResource("/icon_app.png")));
+		
+		JLabel error = new JLabel("");
+		error.setForeground(Color.RED);
+		error.setFont(new Font("Arial", Font.PLAIN, 15));
+		error.setHorizontalAlignment(SwingConstants.CENTER);
+		error.setBounds(10, 132, 430, 32);
+		panel.add(error);
 		
 		JLabel lblNewLabel = new JLabel("Cinemates Admin Panel");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Arial Black", Font.BOLD, 25));
 		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setBounds(10, 26, 834, 44);
+		lblNewLabel.setBounds(10, 11, 694, 44);
 		contentPane.add(lblNewLabel);
 		
 		username.addFocusListener(new FocusAdapter() {
@@ -144,6 +129,22 @@ public class Login extends JFrame {
 				if (username.getText().equals("Username..."))
 					username.setText("");
 			}
-		});		
+		});
+		
+		//BOTTONE LOGIN
+		loginbtn.addActionListener(new ActionListener() {			
+			public void actionPerformed(ActionEvent e) {
+				
+				if((username.getText().equals("")) || (password.getText()).equals(""))
+					error.setText("Credenziali incorrette!");
+				
+				else if(ctr.checkExists(username.getText() ,password.getText(),adminDAO)) {
+					Controller.admin.setAll(adminDAO.getDAO(Controller.admin));
+					System.out.println(Controller.admin.getNome());
+					ctr.openDashboard(adminDAO);
+				}else
+					error.setText("Credenziali incorrette!");		
+			}
+		});
 	}
 }

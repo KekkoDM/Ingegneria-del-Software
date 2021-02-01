@@ -26,7 +26,8 @@ public class Connessione{
 			System.err.println("Classe non trovata");
 		}
 		
-		String url = "jdbc:postgresql://cinemates.cxnubr8ec2ra.eu-central-1.rds.amazonaws.com:5448/cinemates";
+		//String url = "jdbc:postgresql://cinemates.cxnubr8ec2ra.eu-central-1.rds.amazonaws.com:5448/cinemates";
+		String url = "jdbc:postgresql://localhost:5432/cinemates";
 		Properties props = new Properties();
 		props.setProperty("user","postgres");
 		props.setProperty("password","unina2021");
