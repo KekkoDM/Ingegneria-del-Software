@@ -3,7 +3,7 @@ package DAO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import classes.Amministatore;
+import classes.Amministratore;
 import controller.Controller;
 
 public class Amministratore_DAO implements DAO_Interface {
@@ -19,8 +19,8 @@ public class Amministratore_DAO implements DAO_Interface {
 		try {
 			ResultSet rs = Controller.conn.Query(select,"amministratore",where);
 			while(rs.next()) {
-				((Amministatore) admin).setUsername(usrname);
-				((Amministatore) admin).setPassword(pw);
+				((Amministratore) admin).setUsername(usrname);
+				((Amministratore) admin).setPassword(pw);
 				return true;
 			}
 				
@@ -34,8 +34,9 @@ public class Amministratore_DAO implements DAO_Interface {
 	
 	
 	public void updatePassword(String newPw) {
+		System.out.println(this);
 		String values = "password='"+newPw+"'";
-		String where = "username='"+Controller.admin.getUsername()+"'";
+		String where = "idamministratore="+Controller.admin.getID();
 		Controller.conn.Update("amministratore", values, where);
 	}
 	
@@ -46,7 +47,7 @@ public class Amministratore_DAO implements DAO_Interface {
 		
 		ResultSet rs = null;
 		try {
-			rs = Controller.conn.Query("*", "amministratore", "username='"+ ((Amministatore) admin).getUsername() + "'");
+			rs = Controller.conn.Query("*", "amministratore", "username='"+ ((Amministratore) admin).getUsername() + "'");
 		}catch(Error e) {
 			System.err.println("Errore SQL");
 			e.printStackTrace();

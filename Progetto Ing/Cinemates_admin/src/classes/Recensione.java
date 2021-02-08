@@ -1,5 +1,8 @@
 package classes;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Recensione {
 	
 	private int idRecensione;
@@ -7,7 +10,9 @@ public class Recensione {
 	private String descrizione;
 	private int valPositive;
 	private int valNegative;
+	private int valTotali;
 	private String utenteProp;
+	private int film;
 	
 	public int getIdRecensione() {
 		return idRecensione;
@@ -45,7 +50,33 @@ public class Recensione {
 	public void setValNegative(int valNegative) {
 		this.valNegative = valNegative;
 	}
+	public int getValTotali() {
+		return valTotali;
+	}
+	public void setValTotali(int valTotali) {
+		this.valTotali = valTotali;
+	}
+	public int getFilm() {
+		return film;
+	}
+	public void setFilm(int film) {
+		this.film = film;
+	}
 	
-	
+	public void setAll(ResultSet rs) {
+		try {
+			while (rs.next()) {
+				this.utenteProp=rs.getString("utente");
+				this.titolo=rs.getString("titolo");
+				this.descrizione=rs.getString("descrizione");
+				this.valPositive=rs.getInt("val_positive");
+				this.valNegative=rs.getInt("val_negative");
+				this.valTotali=rs.getInt("val_totali");
+				this.film=rs.getInt("film");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

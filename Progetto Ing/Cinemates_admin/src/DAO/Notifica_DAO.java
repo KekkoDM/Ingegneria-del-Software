@@ -15,7 +15,7 @@ public class Notifica_DAO implements DAO_Interface {
 		int idnotifica = Integer.getInteger(id);
 		
 		String select = "utente,idnotifica";
-		String where = "username = '" + utente + "' AND password = " + idnotifica;
+		String where = "utente = '" + utente + "' AND idnotifica = " + idnotifica;
 		
 		System.out.println(select + where);
 		try {
@@ -23,7 +23,7 @@ public class Notifica_DAO implements DAO_Interface {
 			if(rs.wasNull()) 
 				return false;
 			else {
-				((Notifica) notifica).setUtente(utente);
+				((Notifica) notifica).setMittente(utente);
 				((Notifica) notifica).setIdNotifica(idnotifica);
 					
 				return true;
@@ -41,14 +41,19 @@ public class Notifica_DAO implements DAO_Interface {
 		notifica = Controller.notifica;
 		
 		ResultSet rs = null;
-		String where = "idnotifica = '" + ((Notifica) notifica).getIdNotifica();
+		String where = "idnotifica = " + ((Notifica) notifica).getIdNotifica();
 		try {
-			rs = Controller.conn.Query("*", "notifica", "utente='" + where);
+			rs = Controller.conn.Query("*", "notifica",where);
 		}catch(Error e) {
 			System.err.println("Errore SQL");
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void sendReportDecision() {
+		String attr = "titolo, tipo, descrizione, amministratore, mittente, destinatario";
+		Controller.conn.Insert("notifica", attr, Controller.notifica.getAllInOne());
 	}
 
 }

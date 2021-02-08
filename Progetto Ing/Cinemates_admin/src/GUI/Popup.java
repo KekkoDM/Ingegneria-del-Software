@@ -22,13 +22,15 @@ import java.awt.SystemColor;
 public class Popup extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	public JLabel messaggio = new JLabel();
+	public JLabel messaggio2 = new JLabel();
+	public String ctx = null;
 
 	/**
 	 * Create the dialog.
 	 */
-	public Popup(Controller ctr, String msg) {
-		messaggio.setText(msg);
+	public Popup(Controller ctr, String msg, String context) {
+		messaggio2.setText(msg);
+		ctx = context;
 		inizializzaPopup(ctr);
 		setLocationRelativeTo(null);
 	}
@@ -40,45 +42,76 @@ public class Popup extends JDialog {
 		contentPanel.setBackground(Color.WHITE);
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		setModal(true);
 		contentPanel.setLayout(null);
-		
+				
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(Popup.class.getResource("/warning.png")));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(0, 11, 434, 64);
+		lblNewLabel.setBounds(0, 0, 454, 64);
 		contentPanel.add(lblNewLabel);
 		
+		JLabel messaggio = new JLabel();
+		messaggio.setText("Sei sicuro?");
 		messaggio.setForeground(Color.GRAY);
 		messaggio.setHorizontalAlignment(SwingConstants.CENTER);
-		messaggio.setFont(new Font("Arial", Font.PLAIN, 20));
-		messaggio.setBounds(10, 86, 424, 58);
+		messaggio.setFont(new Font("Arial", Font.BOLD, 20));
+		messaggio.setBounds(0, 80, 454, 30);
 		contentPanel.add(messaggio);
 		
 		JButton btnSi = new JButton("Si");
 		btnSi.setForeground(Color.WHITE);
 		btnSi.setFont(new Font("Arial", Font.PLAIN, 20));
 		btnSi.setBackground(new Color(0, 165, 255));
-		btnSi.setBounds(228, 166, 99, 30);
+		btnSi.setBounds(234, 164, 99, 30);
+		btnSi.setFocusPainted(false);
 		contentPanel.add(btnSi);
 		
 		JButton btnNo = new JButton("No");
 		btnNo.setForeground(Color.WHITE);
 		btnNo.setFont(new Font("Arial", Font.PLAIN, 20));
-		btnNo.setBackground(SystemColor.controlHighlight);
-		btnNo.setBounds(118, 166, 99, 30);
+		btnNo.setBackground(SystemColor.scrollbar);
+		btnNo.setBounds(120, 164, 99, 30);
+		btnNo.setFocusPainted(false);
 		contentPanel.add(btnNo);
 		
+		messaggio2.setHorizontalAlignment(SwingConstants.CENTER);
+		messaggio2.setForeground(Color.GRAY);
+		messaggio2.setFont(new Font("Arial", Font.PLAIN, 15));
+		messaggio2.setBounds(0, 110, 454, 30);
+		contentPanel.add(messaggio2);
+		
+		
+		// PRESSIONE TASTO NO
 		btnNo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
 		});
 		
+		
+		// PRESSIONE TASTO SI
 		btnSi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
-				ctr.closeDashboard();
-				ctr.openLogin();
+				switch (ctx) {
+				case "approva":
+					ctr.sendReportResult(true);
+					ctr.showReports();
+					dispose();
+					break;
+						
+				case "disapprova":
+					ctr.sendReportResult(false);
+					ctr.showReports();
+					dispose();
+					break;
+				
+				default:
+					dispose();
+					ctr.closeDashboard();
+					ctr.openLogin();
+					System.out.println("LOG: Logout effettuato");
+				}
 			}
 		});
 	}
