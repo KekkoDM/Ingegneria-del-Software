@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Cinemates</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_favorites">Preferiti</string>
+    <string name="tab_search">Cerca</string>
+    <string name="tab_notification">Notifiche</string>
+    <string name="tab_account">Account</string>
+    <string name="search_field">Cerca un film, serie tv, attore...</string>
+    <string name="search_button_text">Cerca</string>
+</resources>
