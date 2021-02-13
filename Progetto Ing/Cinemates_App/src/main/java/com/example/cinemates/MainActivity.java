@@ -2,18 +2,18 @@ package com.example.cinemates;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainer;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
-import GUI.AccountFragment;
-import GUI.FavoritesFragment;
-import GUI.HomeFragment;
-import GUI.LoginFragment;
-import GUI.NotificationFragment;
-import GUI.SearchFragment;
+import main_fragments.FavoritesFragment;
+import main_fragments.HomeFragment;
+import main_fragments.LoginFragment;
+import main_fragments.NotificationFragment;
+import main_fragments.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
     ChipNavigationBar bottomNav;
