@@ -1,19 +1,16 @@
 package com.example.cinemates;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainer;
-import androidx.fragment.app.FragmentManager;
-
 import android.os.Bundle;
 
-import com.ismaeldivita.chipnavigation.ChipNavigationBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-import main_fragments.FavoritesFragment;
-import main_fragments.HomeFragment;
-import main_fragments.LoginFragment;
-import main_fragments.NotificationFragment;
-import main_fragments.SearchFragment;
+import com.example.cinemates.fragments.HomeFragment;
+import com.example.cinemates.fragments.LoginFragment;
+import com.example.cinemates.fragments.RequiredLoginFragment;
+import com.example.cinemates.fragments.SearchFragment;
+import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
 public class MainActivity extends AppCompatActivity {
     ChipNavigationBar bottomNav;
@@ -43,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.favoritesItem:
-                        selectedFragment = new FavoritesFragment();
+                        selectedFragment = new RequiredLoginFragment();
                         break;
 
                     case R.id.searchItem:
@@ -51,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.notificationItem:
-                        selectedFragment = new NotificationFragment();
+                        selectedFragment = new RequiredLoginFragment();
                         break;
 
                     case R.id.accountItem:
