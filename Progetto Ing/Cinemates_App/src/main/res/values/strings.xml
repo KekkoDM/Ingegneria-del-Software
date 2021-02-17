@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Cinemates</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_favorites">Preferiti</string>
+    <string name="tab_search">Cerca</string>
+    <string name="tab_notification">Notifiche</string>
+    <string name="tab_account">Account</string>
+    <string name="search_field">Cerca un film, serie tv, attore...</string>
+    <string name="search_button_text">Cerca</string>
+    <string name="username_fiedl">Username</string>
+    <string name="password_field">Password</string>
+    <string name="genre_list">Genere</string>
+    <string name="forgot_pw">Hai dimenticato la password?</string>
+    <string name="submit_botton">Accedi</string>
+    <string name="login_with_facebook">Accedi con Facebook</string>
+    <string name="login_with_google">Accedi con Google</string>
+    <string name="register_label">Sei nuovo? Registrati</string>
+    <string name="label_recovery_pw">Inserisci il tuo indirizzo e-mail che hai fornito in fase di registrazione per ricevere le tue credenziali di accesso a Cinemates</string>
+    <string name="title_activity_password_recovery">Recupera credenziali accesso</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="recovery_button">Recupera credenziali</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login_required">Questa funzionalità è riservata esclusivamente agli utenti registrati</string>
+    <string name="notification_center">Centro notifiche</string>
+</resources>
