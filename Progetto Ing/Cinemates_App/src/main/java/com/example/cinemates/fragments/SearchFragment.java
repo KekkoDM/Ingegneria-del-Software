@@ -21,7 +21,8 @@ import com.android.volley.toolbox.Volley;
 import com.example.cinemates.R;
 import com.example.cinemates.activities.ResultsActivity;
 import com.example.cinemates.adapters.SearchSuggestionsAdapter;
-import com.example.cinemates.classes.SearchSuggestion;
+import com.example.cinemates.classes.Film;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +35,7 @@ public class SearchFragment extends Fragment {
     private Button searchButton;
     private RecyclerView rv;
     private SearchSuggestionsAdapter adapter;
-    private ArrayList<SearchSuggestion> list;
+    private ArrayList<Film> list;
     private RequestQueue requestQueue;
 
     public SearchFragment() {
@@ -101,7 +102,7 @@ public class SearchFragment extends Fragment {
                                 }
 
                                 String cover = hit.getString("backdrop_path");
-                                list.add(new SearchSuggestion(cover, title));
+                                list.add(new Film(cover, title,null,null,null));
                             }
                             adapter = new SearchSuggestionsAdapter(SearchFragment.this.getContext(), list);
                             rv.setAdapter(adapter);
