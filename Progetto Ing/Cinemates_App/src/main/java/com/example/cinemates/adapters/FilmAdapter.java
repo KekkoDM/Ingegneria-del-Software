@@ -21,9 +21,14 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
     private Context context;
     private ArrayList<Film> listFilm;
 
+
     public FilmAdapter(ArrayList<Film> listFilm,Context context) {
         this.context = context;
         this.listFilm = listFilm;
+    }
+
+    public Film getItem(int position) {
+        return listFilm.get(position);
     }
 
 
@@ -34,10 +39,17 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
         return new FilmAdapter.MyViewHolder(v);
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull FilmAdapter.MyViewHolder holder, int position) {
         holder.setFilm(listFilm.get(position));
-
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("PROVA CLICK:"+listFilm.get(position).getTitle());
+            }
+        });
     }
 
     @Override
@@ -66,5 +78,6 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
             }
 
         }
+
     }
 }

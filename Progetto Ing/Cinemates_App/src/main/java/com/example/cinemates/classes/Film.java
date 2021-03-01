@@ -6,25 +6,21 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Film {
+    private String id;
     private String title;
     private String cover;
     private String description;
     private String releaseDate;
     private String valutation;
-    private ArrayList<Film> listFilm;
-
-
-    public ArrayList<Film> getListFilm() {
-        return listFilm;
-    }
-
-    public void setListFilm(ArrayList<Film> listFilm) {
-        this.listFilm = listFilm;
-    }
 
 
 
-    public Film(String cover, String title, String description, String releaseDate, String valutation) {
+
+
+
+
+    public Film(String id,String cover, String title, String description, String releaseDate, String valutation) {
+        this.id=id;
         this.cover = cover;
         this.title = title;
         this.description = description;

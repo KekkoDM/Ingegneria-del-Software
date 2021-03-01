@@ -13,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.cinemates.R;
 import com.example.cinemates.classes.Film;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -41,6 +42,19 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderView
     @Override
     public void onBindViewHolder(@NonNull SliderViewHolder holder, int position) {
         holder.setSlide(sliderItems.get(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("PROVA CLICK:"+sliderItems.get(position).getDescription());
+            }
+        });
+        FloatingActionButton button = holder.itemView.findViewById(R.id.goto_film);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("PROVA CLICK:"+sliderItems.get(position).getTitle());
+            }
+        });
     }
 
     @Override

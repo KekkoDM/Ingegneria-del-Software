@@ -90,6 +90,7 @@ public class SearchFragment extends Fragment {
 
                                 String title = "";
                                 String type = hit.getString("media_type");
+                                String id = hit.getString("id");
 
                                 switch (type) {
                                     case "movie":
@@ -102,7 +103,7 @@ public class SearchFragment extends Fragment {
                                 }
 
                                 String cover = hit.getString("backdrop_path");
-                                list.add(new Film(cover, title,null,null,null));
+                                list.add(new Film(id,cover, title,null,null,null));
                             }
                             adapter = new SearchSuggestionsAdapter(SearchFragment.this.getContext(), list);
                             rv.setAdapter(adapter);

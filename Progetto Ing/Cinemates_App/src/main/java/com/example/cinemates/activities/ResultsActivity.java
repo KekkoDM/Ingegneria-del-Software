@@ -50,7 +50,7 @@ public class ResultsActivity extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
         results = new ArrayList<>();
 
-        parseJSON(textToSearch,rv);
+//        parseJSON(textToSearch,rv);
 
         backBtn = findViewById(R.id.backButton2);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +61,7 @@ public class ResultsActivity extends AppCompatActivity {
         });
     }
 
-    private void parseJSON(String query, RecyclerView rv) {
+   /* private void parseJSON(String query, RecyclerView rv) {
         String url = "https://api.themoviedb.org/3/search/multi?api_key=d6f6fde62b39251f66a180f2c13ac19f&language=it-IT&query="+ Uri.parse(query)+"&include_adult=true";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -79,5 +79,5 @@ public class ResultsActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(request);
-    }
+    }*/
 }
