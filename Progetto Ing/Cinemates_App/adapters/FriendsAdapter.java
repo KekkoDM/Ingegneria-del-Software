@@ -30,7 +30,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull FriendsAdapter.MyViewHolder holder, int position) {
         Utente friend = friends.get(position);
-        System.out.println("ADAPTER: " +friend.getUsername());
         holder.setFriend(friend);
     }
 
