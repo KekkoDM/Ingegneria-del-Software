@@ -2,63 +2,60 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/friendItem"
+    android:id="@+id/notificationItem"
     android:layout_width="match_parent"
     android:layout_height="80dp"
     android:layout_margin="4dp"
-    android:layout_marginLeft="0dp"
-    android:layout_marginRight="0dp"
-    android:clickable="true"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="15dp"
-    app:cardElevation="5dp">
+    app:cardElevation="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageView7"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:id="@+id/imageView9"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_account_circle_24"
-            app:tint="@color/purple_hype" />
+            app:srcCompat="@drawable/ic_circle_notifications_24"
+            app:tint="@color/orange_hype" />
 
         <TextView
-            android:id="@+id/usernameFriend"
+            android:id="@+id/notificationTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="TextView"
-            android:textAlignment="center"
             android:textColor="@color/purple_hype"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/showFriendFilmBtn"
-            app:layout_constraintStart_toEndOf="@+id/imageView7"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView9"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
-            android:id="@+id/showFriendFilmBtn"
+        <TextView
+            android:id="@+id/notificationDescription"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="@color/blue_hype"
-            android:text="Liste in comune"
-            android:textColor="@color/white"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/purple_hype"
             android:textSize="15dp"
-            app:cornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
+            app:layout_constraintStart_toEndOf="@+id/imageView9"
+            app:layout_constraintTop_toBottomOf="@+id/notificationTitle" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.cardview.widget.CardView>
