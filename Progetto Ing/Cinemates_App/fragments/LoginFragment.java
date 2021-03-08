@@ -7,20 +7,18 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
-import com.example.cinemates.activities.RecoveryPassword;
+import com.example.cinemates.activities.RecoveryPasswordActivity;
 import com.example.cinemates.activities.RegisterActivity;
 import com.example.cinemates.classes.Utente;
 import com.example.cinemates.handlers.RequestHandler;
@@ -57,7 +55,7 @@ public class LoginFragment extends Fragment {
         forgotPW.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), RecoveryPassword.class);
+                Intent intent = new Intent(getActivity(), RecoveryPasswordActivity.class);
                 startActivity(intent);
             }
         });
@@ -125,8 +123,6 @@ public class LoginFragment extends Fragment {
                         //if no error in response
                         if (!obj.getBoolean("error")) {
                             Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-
-                            System.out.println("CIao");
 
                             //getting the user from the response
                             JSONObject userJson = obj.getJSONObject("utente");
