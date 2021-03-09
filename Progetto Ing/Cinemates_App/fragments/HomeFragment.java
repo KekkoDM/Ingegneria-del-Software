@@ -44,48 +44,48 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         viewPager2 = view.findViewById(R.id.viewPagerSlide);
+
         recyclerViewFilm = view.findViewById(R.id.list_film);
         recyclerViewFilm.setHasFixedSize(true);
+
         recyclerViewLatest = view.findViewById(R.id.latest_film);
         recyclerViewLatest.setHasFixedSize(true);
-        RequestJson requestJson = new RequestJson(HomeFragment.this.getContext());
 
+        RequestJson requestJson = new RequestJson(HomeFragment.this.getContext());
 
         LinearLayoutManager ll = new LinearLayoutManager(this.getContext());
         ll.setOrientation(LinearLayoutManager.HORIZONTAL);
+
         LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
 
         recyclerViewFilm.setLayoutManager(ll);
         recyclerViewLatest.setLayoutManager(llm);
 
-        requestJson.parseJSONSlide(viewPager2,adapter);
+        requestJson.parseJSONSlide(viewPager2, adapter);
 
-        requestJson.parseJSONFilm(recyclerViewFilm,filmAdapter,"movie");
-        requestJson.parseJSONFilm(recyclerViewLatest,filmAdapter,"tv");
+        requestJson.parseJSONFilm(recyclerViewFilm, filmAdapter,"movie");
+        requestJson.parseJSONFilm(recyclerViewLatest, filmAdapter,"tv");
 
         Handler handler = new Handler();
 
         handler.postDelayed(new Runnable() {
             int currentSlide = 0;
+
             @Override
             public void run() {
-
                 viewPager2.setCurrentItem(currentSlide);
+
                 if (currentSlide == viewPager2.getAdapter().getItemCount()) {
                     currentSlide = 0;
                 }
                 else {
                     currentSlide++;
                 }
-                handler.postDelayed(this, 3000);
+                handler.postDelayed(this, 5000);
             }
-        } , 3000);
-
-
-
+        } , 5000);
 
         return view;
     }
-
 }

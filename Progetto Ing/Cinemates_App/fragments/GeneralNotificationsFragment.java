@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cinemates.MainActivity;
@@ -48,9 +50,23 @@ public class GeneralNotificationsFragment extends Fragment {
         rvGeneral.setHasFixedSize(true);
         rvGeneral.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
+        ImageView icon = v.findViewById(R.id.iconNoGeneralNotification);
+        TextView label = v.findViewById(R.id.noGeneralLabel);
+
         generalNotifications = new ArrayList<>();
 
         loadGeneralNotifications(MainActivity.utente);
+
+        if (generalNotifications.size() == 0) {
+            icon.setImageResource(R.drawable.ic_no_notification);
+            label.setText("Non ci sono nuove notifiche");
+        }
+        else {
+            icon.setVisibility(View.INVISIBLE);
+            label.setVisibility(View.INVISIBLE);
+            generalAdapter = new GeneralNotificationAdapter(GeneralNotificationsFragment.this.getContext(), generalNotifications);
+            rvGeneral.setAdapter(generalAdapter);
+        }
 
         return v;
     }

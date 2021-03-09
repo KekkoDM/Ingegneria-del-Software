@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cinemates.MainActivity;
@@ -48,9 +50,23 @@ public class FollowNotificationsFragment extends Fragment {
         rvFollow.setHasFixedSize(true);
         rvFollow.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
+        ImageView icon = v.findViewById(R.id.iconNoFollowNotification);
+        TextView label = v.findViewById(R.id.noFollowLabel);
+
         followNotifications = new ArrayList<>();
 
         loadFollowNotification(MainActivity.utente);
+
+        if (followNotifications.size() == 0) {
+            icon.setImageResource(R.drawable.ic_no_notification);
+            label.setText("Non ci sono nuove notifiche");
+        }
+        else {
+            icon.setVisibility(View.INVISIBLE);
+            label.setVisibility(View.INVISIBLE);
+            followAdapter = new FollowNotificationAdapter(FollowNotificationsFragment.this.getContext(), followNotifications);
+            rvFollow.setAdapter(followAdapter);
+        }
 
         return v;
     }
@@ -92,19 +108,17 @@ public class FollowNotificationsFragment extends Fragment {
                     //if no error in response
                     if (!obj.getBoolean("error")) {
                         //getting the list friends from the response
-                        JSONArray usersJson = obj.getJSONArray("notifica");
-                        for (int i = 0; i < usersJson.length(); i++) {
-                            JSONObject userJson = usersJson.getJSONObject(i);
+                        JSONArray notificationJson = obj.getJSONArray("notifica");
+                        for (int i = 0; i < notificationJson.length(); i++) {
+                            JSONObject notification = notificationJson.getJSONObject(i);
                             Notifica notifica = new Notifica(
-                                    userJson.getString("titolo"),
-                                    userJson.getString("descrizione"),
-                                    userJson.getString("tipo")
+                                    notification.getString("titolo"),
+                                    notification.getString("descrizione"),
+                                    notification.getString("tipo")
                             );
 
                             if (notifica.getTipo().equals("Collegamento")) {
                                 followNotifications.add(notifica);
-                                followAdapter = new FollowNotificationAdapter(FollowNotificationsFragment.this.getContext(), followNotifications);
-                                rvFollow.setAdapter(followAdapter);
                             }
                         }
                     } else {

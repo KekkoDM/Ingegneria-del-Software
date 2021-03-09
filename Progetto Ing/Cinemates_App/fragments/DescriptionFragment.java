@@ -1,31 +1,21 @@
 package com.example.cinemates.fragments;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
 import com.example.cinemates.R;
-import com.example.cinemates.activities.MovieDescriptor;
+import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.adapters.DescriptionFilmAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
-import com.example.cinemates.adapters.PageAdapter;
-import com.example.cinemates.adapters.SearchSuggestionsAdapter;
 import com.example.cinemates.classes.Film;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 public class DescriptionFragment extends Fragment {
     private FilmAdapter filmAdapter;
@@ -62,7 +52,7 @@ public class DescriptionFragment extends Fragment {
 
         favorites = view.findViewById(R.id.favorites);
         flag = view.findViewById(R.id.to_see);
-        film = ((MovieDescriptor)getActivity()).getFilm();
+        film = ((MovieDescriptorActivity)getActivity()).getFilm();
         adapter = new DescriptionFilmAdapter(film,getContext());
         System.out.println("FILM : "+ film.getTitle());
 
