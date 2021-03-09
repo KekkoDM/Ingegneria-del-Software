@@ -16,8 +16,9 @@
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ResultsActivity" />
         <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".activities.SplashActivity">
+        <activity android:name=".activities.MovieDescriptor" />
+        <activity android:name=".activities.SplashActivity"/>
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
