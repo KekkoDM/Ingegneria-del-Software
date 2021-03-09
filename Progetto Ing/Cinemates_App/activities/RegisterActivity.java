@@ -1,6 +1,7 @@
 package com.example.cinemates.activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +10,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
+import com.example.cinemates.MainActivity;
+import com.example.cinemates.classes.Utente;
+import com.example.cinemates.fragments.LoginFragment;
 import com.example.cinemates.restapi.CinematesDB;
 import com.example.cinemates.R;
 import com.example.cinemates.handlers.RequestHandler;
@@ -103,16 +109,32 @@ public class RegisterActivity extends AppCompatActivity {
                         JSONObject obj = new JSONObject(s);
                         //if no error in response
                         if (!obj.getBoolean("error")) {
-                            Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                             JSONObject userJson = obj.getJSONObject("utente");
-                            onBackPressed();
+                            Utente utente = new Utente(
+                                    userJson.getString("username"),
+                                    userJson.getString("nome"),
+                                    userJson.getString("cognome"),
+                                    userJson.getString("email"),
+                                    userJson.getString("password")
+                            );
+
+                            MainActivity.utente = utente;
+                            MainActivity.utente.setAutenticato(true);
+
+                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                            startActivity(intent);
+
+                            // MainActivity mainActivity = new MainActivity();
+                            // mainActivity.showPopup();
+
+                            Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                         }
                         else {
                             Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(RegisterActivity.this, "Mammt co cul stuort!"+e, Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, "Ops! Qualcosa è andato storto", Toast.LENGTH_LONG).show();
                     }
                 }
             }
