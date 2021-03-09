@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/custom_background"
-    android:backgroundTint="@color/purple_hype"
+    android:background="@drawable/ic_login_background"
     tools:context=".activities.ResultsActivity">
 
     <ImageButton

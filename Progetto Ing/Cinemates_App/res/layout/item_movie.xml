@@ -9,13 +9,15 @@
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/item_movie_img"
         android:layout_width="0dp"
         android:layout_height="175dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:scaleType="centerCrop"
+        app:riv_corner_radius="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,11 +27,19 @@
         android:id="@+id/item_movie_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:cursorVisible="false"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="@+id/item_movie_img"
-        app:layout_constraintStart_toStartOf="@+id/item_movie_img"
+        android:textColor="@color/purple_hype"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_movie_img" />
 </androidx.constraintlayout.widget.ConstraintLayout>

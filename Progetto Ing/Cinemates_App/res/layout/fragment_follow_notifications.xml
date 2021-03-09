@@ -6,6 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FollowNotificationsFragment">
 
+    <ImageView
+        android:id="@+id/iconNoFollowNotification"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/noFollowLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/purple_hype"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.474"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iconNoFollowNotification" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/followNotificationsRV"
         android:layout_width="match_parent"
