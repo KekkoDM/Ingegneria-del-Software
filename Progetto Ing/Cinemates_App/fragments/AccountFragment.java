@@ -44,7 +44,7 @@ public class AccountFragment extends Fragment {
         });
 
         accountName = view.findViewById(R.id.nameProfile);
-        accountName.setText("Ciao, " + MainActivity.utente.getNome() + " " + MainActivity.utente.getCognome());
+        accountName.setText(MainActivity.utente.getNome() + " " + MainActivity.utente.getCognome());
 
         accountUsername = view.findViewById(R.id.usernameProfile);
         accountUsername.setText("@" + MainActivity.utente.getUsername());

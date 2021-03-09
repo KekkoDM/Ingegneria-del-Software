@@ -9,8 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.cinemates.classes.Utente;
 import com.example.cinemates.restapi.CinematesDB;
 import com.example.cinemates.R;
 import com.example.cinemates.handlers.RequestHandler;
@@ -105,16 +103,8 @@ public class RegisterActivity extends AppCompatActivity {
                         JSONObject obj = new JSONObject(s);
                         //if no error in response
                         if (!obj.getBoolean("error")) {
-                            JSONObject userJson = obj.getJSONObject("utente");
-                            Utente utente = new Utente(
-                                    userJson.getString("username"),
-                                    userJson.getString("nome"),
-                                    userJson.getString("cognome"),
-                                    userJson.getString("email"),
-                                    userJson.getString("password")
-                            );
-
                             Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                            JSONObject userJson = obj.getJSONObject("utente");
                             onBackPressed();
                         }
                         else {
@@ -122,7 +112,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(RegisterActivity.this, "Ops! Qualcosa è andato storto", Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, "Mammt co cul stuort!"+e, Toast.LENGTH_LONG).show();
                     }
                 }
             }

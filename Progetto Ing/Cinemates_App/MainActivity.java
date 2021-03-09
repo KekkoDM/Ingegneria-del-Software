@@ -1,10 +1,12 @@
 package com.example.cinemates;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
 import com.example.cinemates.classes.Utente;
 import com.example.cinemates.fragments.AccountFragment;
 import com.example.cinemates.fragments.FavoritesFragment;
@@ -15,11 +17,17 @@ import com.example.cinemates.fragments.RequiredLoginFragment;
 import com.example.cinemates.fragments.SearchFragment;
 import com.ismaeldivita.chipnavigation.ChipNavigationBar;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.sql.Connection;
+
 public class MainActivity extends AppCompatActivity {
     public static Utente utente = new Utente(null, null, null, null, null);
     private ChipNavigationBar bottomNav;
     private FragmentManager fragmentManager;
-    private Fragment selectedFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +43,9 @@ public class MainActivity extends AppCompatActivity {
                 homeFragment).commit();
 
         bottomNav.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
             @Override
             public void onItemSelected(int i) {
-                selectedFragment = null;
+                Fragment selectedFragment = null;
 
                 switch (i) {
                     case R.id.homeItem:

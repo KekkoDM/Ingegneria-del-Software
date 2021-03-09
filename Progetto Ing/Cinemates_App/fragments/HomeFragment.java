@@ -1,36 +1,39 @@
 package com.example.cinemates.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.cinemates.R;
+import com.example.cinemates.adapters.FilmAdapter;
 import com.example.cinemates.adapters.SliderAdapter;
-import com.example.cinemates.classes.Slide;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.cinemates.classes.Film;
+import com.example.cinemates.classes.RequestJson;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+
 public class HomeFragment extends Fragment {
-    private ArrayList<Slide> sliderItems;
+
     private ViewPager2 viewPager2;
     private SliderAdapter adapter;
-    private RequestQueue requestQueue;
+    private RecyclerView recyclerViewFilm;
+    private RecyclerView recyclerViewLatest;
+    private FilmAdapter filmAdapter;
 
+    public static ArrayList<Film> listFilm;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -41,10 +44,25 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         viewPager2 = view.findViewById(R.id.viewPagerSlide);
-        sliderItems = new ArrayList<>();
-        requestQueue = Volley.newRequestQueue(this.getContext());
+        recyclerViewFilm = view.findViewById(R.id.list_film);
+        recyclerViewFilm.setHasFixedSize(true);
+        recyclerViewLatest = view.findViewById(R.id.latest_film);
+        recyclerViewLatest.setHasFixedSize(true);
+        RequestJson requestJson = new RequestJson(HomeFragment.this.getContext());
 
-        parseJSON();
+
+        LinearLayoutManager ll = new LinearLayoutManager(this.getContext());
+        ll.setOrientation(LinearLayoutManager.HORIZONTAL);
+        LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
+        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        recyclerViewFilm.setLayoutManager(ll);
+        recyclerViewLatest.setLayoutManager(llm);
+
+        requestJson.parseJSONSlide(viewPager2,adapter);
+
+        requestJson.parseJSONFilm(recyclerViewFilm,filmAdapter,"movie");
+        requestJson.parseJSONFilm(recyclerViewLatest,filmAdapter,"tv");
 
         Handler handler = new Handler();
 
@@ -52,47 +70,22 @@ public class HomeFragment extends Fragment {
             int currentSlide = 0;
             @Override
             public void run() {
-                viewPager2.setCurrentItem(currentSlide);
 
-                if (currentSlide == sliderItems.size()) {
+                viewPager2.setCurrentItem(currentSlide);
+                if (currentSlide == viewPager2.getAdapter().getItemCount()) {
                     currentSlide = 0;
                 }
                 else {
                     currentSlide++;
                 }
-                handler.postDelayed(this, 5000);
+                handler.postDelayed(this, 3000);
             }
         } , 3000);
+
+
+
 
         return view;
     }
 
-    private void parseJSON() {
-        String url = "https://api.themoviedb.org/3/movie/popular?api_key=d6f6fde62b39251f66a180f2c13ac19f&language=it-IT&page=1";
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray jsonArray = response.getJSONArray("results");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject hit = jsonArray.getJSONObject(i);
-                                String movieTitle = hit.getString("title");
-                                String coverPath = "https://image.tmdb.org/t/p/w500" + hit.getString("backdrop_path");
-                                sliderItems.add(new Slide(movieTitle, coverPath));
-                            }
-                            adapter = new SliderAdapter(sliderItems, viewPager2, getContext());
-                            viewPager2.setAdapter(adapter);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-        requestQueue.add(request);
-    }
 }

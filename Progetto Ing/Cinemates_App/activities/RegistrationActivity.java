@@ -4,24 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.cinemates.R;
 
-public class SettingsActivity extends AppCompatActivity {
-    private EditText oldPw;
-    private EditText newPw;
+public class RegistrationActivity extends AppCompatActivity {
     private ImageButton backBtn;
-    private Button updateBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_registration);
 
-        backBtn = findViewById(R.id.backBtnSettings);
+        backBtn = findViewById(R.id.backButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
