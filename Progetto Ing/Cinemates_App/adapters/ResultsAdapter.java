@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.R;
-import com.example.cinemates.activities.MovieDescriptor;
+import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.classes.Film;
 import com.squareup.picasso.Picasso;
 
@@ -30,7 +29,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
 
     @Override
     public ResultsAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.results_item_cardview, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.result_cardview, parent, false);
         return new ResultsAdapter.MyViewHolder(v);
     }
 
@@ -41,7 +40,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MovieDescriptor.class);
+                Intent intent = new Intent(context, MovieDescriptorActivity.class);
                 intent.putExtra("Film",results.get(position));
                 context.startActivity(intent);
             }
@@ -67,7 +66,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
             mTitle = itemView.findViewById(R.id.titleResult);
             mDescription = itemView.findViewById(R.id.descriptionResult);
             mReleaseDate = itemView.findViewById(R.id.dateResult);
-            mValutation = itemView.findViewById(R.id.valutationResult);
+            mValutation = itemView.findViewById(R.id.typeResult);
         }
 
         public void setResult(Film result) {

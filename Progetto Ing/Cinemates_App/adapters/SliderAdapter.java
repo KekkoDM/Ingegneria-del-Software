@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.cinemates.R;
-import com.example.cinemates.activities.MovieDescriptor;
+import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.classes.Film;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
@@ -50,7 +50,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderView
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, MovieDescriptor.class);
+                        Intent intent = new Intent(context, MovieDescriptorActivity.class);
                         intent.putExtra("Film",sliderItems.get(position));
                         context.startActivity(intent);
                     }
@@ -61,7 +61,7 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderView
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MovieDescriptor.class);
+                Intent intent = new Intent(context, MovieDescriptorActivity.class);
                 intent.putExtra("Film",sliderItems.get(position));
                 context.startActivity(intent);
             }

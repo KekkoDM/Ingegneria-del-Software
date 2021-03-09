@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.R;
-import com.example.cinemates.activities.MovieDescriptor;
+import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.classes.Film;
 
 import com.squareup.picasso.Picasso;
@@ -40,7 +40,7 @@ public class SearchSuggestionsAdapter extends RecyclerView.Adapter<SearchSuggest
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MovieDescriptor.class);
+                Intent intent = new Intent(context, MovieDescriptorActivity.class);
                 intent.putExtra("Film",listSearchSuggestions.get(position));
                 context.startActivity(intent);
             }
