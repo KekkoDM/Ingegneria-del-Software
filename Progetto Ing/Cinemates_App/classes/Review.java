@@ -2,7 +2,7 @@ package com.example.cinemates.classes;
 
 public class Review {
 
-    String title,Descrizione,Data;
+    String title,descrizione,data;
     int userPhoto;
 
     public Review() {
@@ -10,8 +10,8 @@ public class Review {
 
     public Review(String title, String descrizione, String data, int userPhoto) {
         this.title = title;
-        Descrizione = descrizione;
-        Data = data;
+        descrizione = descrizione;
+        data = data;
         this.userPhoto = userPhoto;
     }
 
@@ -24,19 +24,19 @@ public class Review {
     }
 
     public String getDescrizione() {
-        return Descrizione;
+        return descrizione;
     }
 
     public void setDescrizione(String descrizione) {
-        Descrizione = descrizione;
+        descrizione = descrizione;
     }
 
     public String getData() {
-        return Data;
+        return data;
     }
 
     public void setData(String data) {
-        Data = data;
+        data = data;
     }
 
     public int getUserPhoto() {

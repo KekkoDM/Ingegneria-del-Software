@@ -59,7 +59,7 @@ public class ResultsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.getStringExtra("type").equals("film")) {
-            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("moviesearched"));
+            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("textSearched"));
         }
         else {
             users = new ArrayList<>();
@@ -125,7 +125,6 @@ public class ResultsActivity extends AppCompatActivity {
                                     null,
                                     null
                             );
-
                             users.add(utente);
                         }
                     } else {
