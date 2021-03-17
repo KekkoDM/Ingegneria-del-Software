@@ -1,10 +1,13 @@
 package com.example.cinemates.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,23 +19,31 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.ResultsAdapter;
+import com.example.cinemates.adapters.SearchUserAdapter;
 import com.example.cinemates.classes.Film;
 import com.example.cinemates.classes.RequestJson;
+import com.example.cinemates.classes.Utente;
 import com.example.cinemates.fragments.HomeFragment;
+import com.example.cinemates.handlers.RequestHandler;
+import com.example.cinemates.restapi.CinematesDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ResultsActivity extends AppCompatActivity {
     private ImageButton backBtn;
     private ArrayList<Film> results;
+    private ArrayList<Utente> users;
     private RecyclerView rv;
-    private ResultsAdapter adapter;
+    private ResultsAdapter resultsAdapter;
+    private SearchUserAdapter searchUserAdapter;
     private RequestQueue requestQueue;
 
     @Override
@@ -40,18 +51,22 @@ public class ResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
 
-        Intent intent = getIntent();
-        String textToSearch = intent.getStringExtra("textSearched");
-
         rv = findViewById(R.id.resultContainer);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        requestQueue = Volley.newRequestQueue(this);
-        results = new ArrayList<>();
-
         RequestJson requestJson = new RequestJson(this);
-        requestJson.parseJSONSearch(rv,adapter,textToSearch);
+
+        Intent intent = getIntent();
+        if (intent.getStringExtra("type").equals("film")) {
+            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("moviesearched"));
+        }
+        else {
+            users = new ArrayList<>();
+            searchUser(intent.getStringExtra("friendsearched"));
+            searchUserAdapter = new SearchUserAdapter(ResultsActivity.this, users);
+            rv.setAdapter(searchUserAdapter);
+        }
 
         backBtn = findViewById(R.id.backButton2);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -62,4 +77,67 @@ public class ResultsActivity extends AppCompatActivity {
         });
     }
 
+    private void searchUser(String friendsearched) {
+        class SearchUser extends AsyncTask<Void, Void, String> {
+            ProgressDialog pdLoading = new ProgressDialog(ResultsActivity.this);
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                pdLoading.setMessage("\tRicerca in corso...");
+                pdLoading.setCancelable(false);
+                pdLoading.show();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("usersearched", friendsearched);
+
+                //returning the response
+                return requestHandler.sendPostRequest(CinematesDB.SEARCH_USER, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                pdLoading.dismiss();
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        //getting the list friends from the response
+                        JSONArray usersJson = obj.getJSONArray("utente");
+                        for (int i = 0; i < usersJson.length(); i++) {
+                            JSONObject userJson = usersJson.getJSONObject(i);
+                            Utente utente = new Utente(
+                                    userJson.getString("username"),
+                                    userJson.getString("nome"),
+                                    userJson.getString("cognome"),
+                                    null,
+                                    null
+                            );
+
+                            users.add(utente);
+                        }
+                    } else {
+                        Toast.makeText(ResultsActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        SearchUser searchUser = new SearchUser();
+        searchUser.execute();
+    }
 }
