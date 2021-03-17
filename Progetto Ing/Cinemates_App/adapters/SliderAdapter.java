@@ -47,22 +47,18 @@ public class SliderAdapter extends RecyclerView.Adapter<SliderAdapter.SliderView
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(context, MovieDescriptorActivity.class);
-                        intent.putExtra("Film",sliderItems.get(position));
-                        context.startActivity(intent);
-                    }
-                });
+                Intent intent = new Intent(context, MovieDescriptorActivity.class);
+                intent.putExtra("Film", sliderItems.get(position));
+                context.startActivity(intent);
             }
         });
+
         FloatingActionButton button = holder.itemView.findViewById(R.id.goto_film);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDescriptorActivity.class);
-                intent.putExtra("Film",sliderItems.get(position));
+                intent.putExtra("Film", sliderItems.get(position));
                 context.startActivity(intent);
             }
         });

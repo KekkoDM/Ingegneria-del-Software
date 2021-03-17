@@ -22,7 +22,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
     private Context context;
     private ArrayList<Film> results;
 
-    public ResultsAdapter( ArrayList<Film> results,Context context) {
+    public ResultsAdapter( ArrayList<Film> results, Context context) {
         this.context = context;
         this.results = results;
     }
@@ -41,7 +41,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDescriptorActivity.class);
-                intent.putExtra("Film",results.get(position));
+                intent.putExtra("Film", results.get(position));
                 context.startActivity(intent);
             }
         });

@@ -10,9 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.cinemates.R;
 import com.example.cinemates.classes.Film;
-import com.example.cinemates.fragments.DescriptionFragment;
 import com.squareup.picasso.Picasso;
-import java.util.ArrayList;
 
 public class DescriptionFilmAdapter extends RecyclerView.Adapter<DescriptionFilmAdapter.MyViewHolder> {
     private Context context;
@@ -29,7 +27,6 @@ public class DescriptionFilmAdapter extends RecyclerView.Adapter<DescriptionFilm
 
     @Override
     public void onBindViewHolder(@NonNull DescriptionFilmAdapter.MyViewHolder holder, int position) {
-
         Film result = results;
         holder.setResult(results);
     }
@@ -44,7 +41,6 @@ public class DescriptionFilmAdapter extends RecyclerView.Adapter<DescriptionFilm
         public ImageView mCover;
         public TextView mTitle;
         public TextView mDescription;
-        public TextView mDuration;
         public TextView mReleaseDate;
         public TextView mValutation;
 
@@ -53,7 +49,6 @@ public class DescriptionFilmAdapter extends RecyclerView.Adapter<DescriptionFilm
             mCover = itemView.findViewById(R.id.detail_movie_cover);
             mTitle = itemView.findViewById(R.id.detail_movie_title);
             mDescription = itemView.findViewById(R.id.detail_movie_desc);
-            mDuration = itemView.findViewById(R.id.detail_movie_duration);
             mReleaseDate = itemView.findViewById(R.id.detail_movie_realise_date);
             mValutation = itemView.findViewById(R.id.detail_movie_valutation);
         }
@@ -63,14 +58,13 @@ public class DescriptionFilmAdapter extends RecyclerView.Adapter<DescriptionFilm
                 mCover.setImageResource(R.drawable.no_cover_found);
             }
             else {
-                Picasso.with(context).load("https://image.tmdb.org/t/p/w500"+result.getCover()).into(mCover);
+                Picasso.with(context).load("https://image.tmdb.org/t/p/w500" + result.getCover()).into(mCover);
             }
+
             mTitle.setText(result.getTitle());
             mDescription.setText(result.getDescription());
             mReleaseDate.setText(result.getReleaseDate());
-            //mDuration.setText(result.getDuration());
             mValutation.setText(result.getValutation());
         }
     }
-
 }
