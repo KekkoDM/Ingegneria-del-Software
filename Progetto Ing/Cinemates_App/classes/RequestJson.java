@@ -103,7 +103,8 @@ public class RequestJson<JSONParser>{
     }
 
     public void parseJSONSearch(RecyclerView recyclerView,ResultsAdapter resultsAdapter, String query){
-        String url = "https://api.themoviedb.org/3/search/multi?api_key=d6f6fde62b39251f66a180f2c13ac19f&language=it-IT&query="+ Uri.parse(query)+"&include_adult=true";
+        String url = "https://api.themoviedb.org/3/search/multi?api_key=6ff4c2846a2910d753ff91a81eee4f6c&language=it-IT&query="+query+"&include_adult=false";
+
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -194,12 +195,27 @@ public class RequestJson<JSONParser>{
         JSONObject hit = jsonArray.getJSONObject(i);
         String id = hit.getString("id");
         String cover = hit.getString("poster_path");
-        String backdrop = hit.getString("backdrop_path");
+
         String title = hit.getString("title");
         String description = hit.getString("overview");
-        String releaseD = hit.getString("release_date");
         String valutation = hit.getString("vote_average");
         String type = hit.getString("media_type");
+        String releaseD;
+        String backdrop ;
+
+        if (hit.isNull("release_date")){
+            backdrop = "";
+        }else
+        {
+            backdrop = hit.getString("backdrop_path");
+        }
+        if (hit.isNull("release_date")){
+            releaseD = "Da Definire";
+        }else
+        {
+            releaseD = hit.getString("release_date");
+        }
+
         listFilm.add(new Film(id,cover,backdrop, title, description, releaseD, valutation,type));
 
 

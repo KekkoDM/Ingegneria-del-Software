@@ -56,22 +56,19 @@ public class ReviewFragment extends Fragment {
 
         mData = new ArrayList<>();
         alert = new Dialog(getContext());
-        reviewRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        username = view.findViewById(R.id.username_review);
-        titleReview = view.findViewById(R.id.title_review);
-        detailReview = view.findViewById(R.id.detail_review);
-        dateReview = view.findViewById(R.id.date_review);
-        alertImg = view.findViewById(R.id.alert);
-        like = view.findViewById(R.id.like2);
-        dislike = view.findViewById(R.id.dislike2);
-        comment = view.findViewById(R.id.comment_review1);
-        contatorLike = view.findViewById(R.id.contLike1);
-        contatorDislike = view.findViewById(R.id.contDislike1);
+
+
         reviewRecyclerView = view.findViewById(R.id.review_rv);
         reviewRecyclerView.setHasFixedSize(true);
-
         LinearLayoutManager l = new LinearLayoutManager(this.getContext());
         l.setOrientation(LinearLayoutManager.HORIZONTAL);
+        reviewRecyclerView.setLayoutManager(l);
+
+
+        //ReviewAdapter reviewAdapter = new ReviewAdapter();
+        //reviewRecyclerView.setAdapter(reviewAdapter);
+
+
 
         return view;
     }
