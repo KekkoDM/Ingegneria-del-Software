@@ -11,14 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Cinemates">
-        <activity android:name=".activities.FriendsActivity"></activity>
-        <activity android:name=".activities.RecoveryPassword" />
+        <activity android:name=".activities.FriendsActivity" />
+        <activity android:name=".activities.MovieDescriptorActivity" />
+        <activity android:name=".activities.RecoveryPasswordActivity" />
         <activity android:name=".activities.SettingsActivity" />
         <activity android:name=".activities.ResultsActivity" />
         <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.MovieDescriptorActivity" />
-        <activity android:name=".activities.SplashActivity"/>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
