@@ -14,13 +14,14 @@ import android.widget.TextView;
 
 import com.example.cinemates.R;
 import com.example.cinemates.activities.MovieDescriptorActivity;
+import com.example.cinemates.adapters.DescriptionFilmAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
 import com.example.cinemates.classes.Film;
 import com.squareup.picasso.Picasso;
 
 public class DescriptionFragment extends Fragment {
     private FilmAdapter filmAdapter;
-
+    private DescriptionFilmAdapter adapter;
     private ImageView mCover;
     private TextView mTitle;
     private TextView mDescription;
@@ -50,7 +51,7 @@ public class DescriptionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_descriptor, container, false);
 
         film = ((MovieDescriptorActivity)getActivity()).getFilm();
-
+        adapter = new DescriptionFilmAdapter(film,getContext());
         System.out.println("FILM : "+ film.getTitle());
 
         addTo = view.findViewById(R.id.addToBtn);
