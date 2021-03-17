@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.cinemates.R;
@@ -27,6 +29,8 @@ public class DescriptionFragment extends Fragment {
     private TextView mReleaseDate;
     private TextView mValutation;
     private ImageView mBackdrop;
+    private Button addTo;
+    private Film film;
 
     public Film getFilm() {
         return film;
@@ -36,12 +40,8 @@ public class DescriptionFragment extends Fragment {
         this.film = film;
     }
 
-    private Film film;
-    private ImageView favorites;
-    private ImageView flag;
-
-
     public DescriptionFragment() {
+        // blank
     }
 
     @Override
@@ -50,20 +50,17 @@ public class DescriptionFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_descriptor, container, false);
 
-        favorites = view.findViewById(R.id.favorites);
-        flag = view.findViewById(R.id.to_see);
         film = ((MovieDescriptorActivity)getActivity()).getFilm();
         adapter = new DescriptionFilmAdapter(film,getContext());
         System.out.println("FILM : "+ film.getTitle());
 
+        addTo = view.findViewById(R.id.addToBtn);
         mCover = view.findViewById(R.id.detail_movie_img);
         mTitle = view.findViewById(R.id.detail_movie_title);
         mDescription = view.findViewById(R.id.detail_movie_desc);
-        mDuration = view.findViewById(R.id.detail_movie_duration);
         mReleaseDate = view.findViewById(R.id.detail_movie_realise_date);
         mValutation = view.findViewById(R.id.detail_movie_valutation);
         mBackdrop = view.findViewById(R.id.detail_movie_cover);
-
 
         if (film.getCover().equals("null")) {
             mCover.setImageResource(R.drawable.no_cover_found);
@@ -77,11 +74,20 @@ public class DescriptionFragment extends Fragment {
         else {
             Picasso.with(this.getContext()).load("https://image.tmdb.org/t/p/w500"+film.getBackdrop()).into(mBackdrop);
         }
+
+        addTo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(DescriptionFragment.this.getContext(), v);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_add_to, popupMenu.getMenu());
+                popupMenu.show();
+            }
+        });
+
         mTitle.setText(film.getTitle());
         mDescription.setText(film.getDescription());
-        mReleaseDate.setText(film.getReleaseDate());
-        //mDuration.setText(result.getDuration());
-        mValutation.setText(film.getValutation());
+        mReleaseDate.setText("Data di rilascio: " + film.getReleaseDate());
+        mValutation.setText("Valutazione: " + film.getValutation());
 
         return view;
     }

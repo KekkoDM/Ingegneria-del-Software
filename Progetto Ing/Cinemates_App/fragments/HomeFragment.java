@@ -24,9 +24,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-
 public class HomeFragment extends Fragment {
-
     private ViewPager2 viewPager2;
     private SliderAdapter adapter;
     private RecyclerView recyclerViewFilm;
