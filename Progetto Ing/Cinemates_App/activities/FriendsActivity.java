@@ -6,15 +6,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.FriendsAdapter;
+import com.example.cinemates.adapters.ResultsAdapter;
 import com.example.cinemates.classes.Utente;
 import com.example.cinemates.fragments.AccountFragment;
 import com.example.cinemates.handlers.RequestHandler;
@@ -29,9 +33,11 @@ import java.util.HashMap;
 
 public class FriendsActivity extends AppCompatActivity {
     private ImageButton backBtn;
+    private Button searchBtn;
+    private EditText friendSearched;
     private ArrayList<Utente> friends;
     private RecyclerView rv;
-    private FriendsAdapter adapter;
+    private FriendsAdapter friendsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +58,37 @@ public class FriendsActivity extends AppCompatActivity {
         friends = new ArrayList<>();
 
         loadFriendsList(MainActivity.utente);
+
+        friendSearched = findViewById(R.id.friendSearched);
+
+        searchBtn = findViewById(R.id.searchFriendBtn);
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (friendSearched.getText().length() == 0) {
+                    friendSearched.setHintTextColor(getResources().getColor(R.color.google_color));
+                    Toast.makeText(FriendsActivity.this, "Il campo di ricerca è vuoto", Toast.LENGTH_SHORT).show();
+                } else {
+                    friendSearched.setHintTextColor(getResources().getColor(R.color.light_grey));
+                    Intent intent = new Intent(FriendsActivity.this, ResultsActivity.class);
+                    intent.putExtra("type", "friend");
+                    intent.putExtra("friendsearched", friendSearched.getText().toString());
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     public void loadFriendsList(Utente utente) {
         class FriendsLoader extends AsyncTask<Void, Void, String> {
-            ProgressDialog pdLoading = new ProgressDialog(FriendsActivity.this);
+            //ProgressDialog pdLoading = new ProgressDialog(FriendsActivity.this);
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                pdLoading.setMessage("\tCarico la lista amici...");
+                /*pdLoading.setMessage("\tCarico la lista amici...");
                 pdLoading.setCancelable(false);
-                pdLoading.show();
+                pdLoading.show();*/
             }
 
             @Override
@@ -75,16 +100,14 @@ public class FriendsActivity extends AppCompatActivity {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("username", utente.getUsername());
 
-                System.out.println(params);
-
-                //returing the response
+                //returning the response
                 return requestHandler.sendPostRequest(CinematesDB.FRIENDS_URL, params);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                pdLoading.dismiss();
+                //pdLoading.dismiss();
 
                 try {
                     //converting response to json object
@@ -103,8 +126,9 @@ public class FriendsActivity extends AppCompatActivity {
 
                             friends.add(utente);
                         }
-                        adapter = new FriendsAdapter(FriendsActivity.this, friends);
-                        rv.setAdapter(adapter);
+
+                        friendsAdapter = new FriendsAdapter(FriendsActivity.this, friends);
+                        rv.setAdapter(friendsAdapter);
                     } else {
                         Toast.makeText(FriendsActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
                     }

@@ -10,6 +10,9 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Intent;
 import android.database.sqlite.SQLiteTableLockedException;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
+
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.PageAdapter;
 import com.example.cinemates.classes.Film;
@@ -22,6 +25,7 @@ import com.google.android.material.tabs.TabLayout;
 public class MovieDescriptorActivity extends AppCompatActivity {
     private TabLayout tabDescriptorFilm;
     private ViewPager viewPager;
+    private ImageButton backButton;
 
     public Film getFilm() {
         return film;
@@ -41,6 +45,14 @@ public class MovieDescriptorActivity extends AppCompatActivity {
         Intent intent = getIntent();
         film = (Film) intent.getSerializableExtra("Film");
         System.out.println("FILM ACTIVITY: "+ film.getTitle());
+
+        backButton = findViewById(R.id.backButtonDescr);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         tabDescriptorFilm = (TabLayout)findViewById(R.id.Tab_DescriptorFilm);
         viewPager = findViewById(R.id.viewPager);
