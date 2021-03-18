@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardReview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -52,15 +53,13 @@
             android:id="@+id/like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="58dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/circle_style"
             android:backgroundTint="@color/blue_hype"
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/dislike"
-            app:layout_constraintTop_toBottomOf="@+id/detail_review"
+            app:layout_constraintStart_toEndOf="@+id/date_review"
             app:srcCompat="@drawable/ic_baseline_thumb_up_alt_24"
             app:tint="@color/white" />
 
@@ -68,15 +67,13 @@
             android:id="@+id/dislike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/circle_style"
             android:backgroundTint="@color/red"
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/comment_review"
-            app:layout_constraintTop_toBottomOf="@+id/detail_review"
+            app:layout_constraintStart_toEndOf="@+id/cont_like"
             app:srcCompat="@drawable/ic_baseline_thumb_down_alt_24"
             app:tint="@color/white" />
 
@@ -84,8 +81,8 @@
             android:id="@+id/comment_review"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/circle_style"
             android:backgroundTint="@color/light_grey"
@@ -112,14 +109,12 @@
             android:id="@+id/date_review"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
             android:text="TextView"
             android:textAlignment="center"
             android:textSize="15sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.267"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_review" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/detail_review" />
 
         <ImageView
             android:id="@+id/image_user"
@@ -136,29 +131,29 @@
             android:id="@+id/cont_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="16dp"
             android:text="234"
             android:textAlignment="center"
             android:textColor="@color/blue_hype"
             android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/dislike"
-            app:layout_constraintStart_toStartOf="@+id/like"
-            app:layout_constraintTop_toBottomOf="@+id/like" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/like" />
 
         <TextView
             android:id="@+id/cont_dislike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginStart="4dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             android:text="122"
             android:textAlignment="center"
             android:textColor="@color/red"
             android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/comment_review"
-            app:layout_constraintStart_toStartOf="@+id/dislike"
-            app:layout_constraintTop_toBottomOf="@+id/dislike" />
+            app:layout_constraintStart_toEndOf="@+id/dislike" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
