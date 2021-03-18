@@ -53,29 +53,32 @@
             android:id="@+id/like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="58dp"
+            android:layout_marginTop="25dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/circle_style"
             android:backgroundTint="@color/blue_hype"
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/date_review"
+            app:layout_constraintTop_toBottomOf="@+id/detail_review"
+            app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/ic_baseline_thumb_up_alt_24"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            tools:layout_editor_absoluteX="212dp" />
 
         <ImageView
             android:id="@+id/dislike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/circle_style"
             android:backgroundTint="@color/red"
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/cont_like"
+            app:layout_constraintTop_toBottomOf="@+id/detail_review"
+            app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/ic_baseline_thumb_down_alt_24"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            tools:layout_editor_absoluteX="286dp" />
 
         <ImageView
             android:id="@+id/comment_review"
@@ -89,6 +92,8 @@
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/cont_dislike"
             app:layout_constraintTop_toBottomOf="@+id/detail_review"
             app:srcCompat="@drawable/ic_baseline_chat_bubble_24"
             app:tint="@color/white" />
@@ -145,14 +150,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:text="122"
             android:textAlignment="center"
             android:textColor="@color/red"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/comment_review"
             app:layout_constraintStart_toEndOf="@+id/dislike" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
