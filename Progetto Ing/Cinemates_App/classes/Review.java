@@ -8,11 +8,10 @@ public class Review {
     public Review() {
     }
 
-    public Review(String title, String descrizione, String data, int userPhoto) {
+    public Review(String title, String descrizione, String data) {
         this.title = title;
-        descrizione = descrizione;
-        data = data;
-        this.userPhoto = userPhoto;
+        this.descrizione = descrizione;
+        this.data = data;
     }
 
     public String getTitle() {

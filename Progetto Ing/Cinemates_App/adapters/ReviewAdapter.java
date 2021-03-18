@@ -20,8 +20,13 @@ import java.util.List;
 public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder>{
 
     Context mContext;
-    List<Review>mData;
-    RelativeLayout container;
+    List<Review> mData;
+
+
+    public ReviewAdapter(List<Review> list,Context c){
+        mContext=c;
+        mData = list;
+    }
 
     @NonNull
     @Override
@@ -37,7 +42,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
         holder.setReview(mData.get(position));
         holder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
-        holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
+        //holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
 
     }
 
@@ -48,7 +53,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder{
 
-        TextView review_title,review_description,review_date;
+        TextView review_title,review_description,review_date,username_review;
         ImageView img_user;
         RelativeLayout container;
 
@@ -56,17 +61,18 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
             container = itemView.findViewById(R.id.container);
-            review_title=itemView.findViewById(R.id.title_review);
+            review_title=itemView.findViewById(R.id.review_title);
             review_description=itemView.findViewById(R.id.detail_review);
             review_date=itemView.findViewById(R.id.date_review);
-            img_user=itemView.findViewById(R.id.img_user);
+            img_user=itemView.findViewById(R.id.image_user);
+            username_review=itemView.findViewById(R.id.username_review);
         }
 
         void setReview(Review review){
             review_title.setText(review.getTitle());
             review_description.setText(review.getDescrizione());
             review_date.setText(review.getData());
-            img_user.setImageResource(review.getUserPhoto());
+            //img_user.setImageResource(review.getUserPhoto());
         }
     }
 }

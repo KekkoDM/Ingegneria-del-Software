@@ -29,17 +29,8 @@ public class ReviewFragment extends Fragment {
     private Dialog alert;
     private RecyclerView reviewRecyclerView;
     private ReviewAdapter reviewAdapter;
-    private List<Review> mData;
-    private TextView username;
-    private TextView titleReview;
-    private TextView detailReview;
-    private TextView dateReview;
-    private ImageView alertImg;
-    private ImageView like;
-    private ImageView dislike;
-    private ImageView comment;
-    private TextView contatorLike;
-    private TextView contatorDislike;
+    private List<Review> reviews;
+
 
     private Review review;
 
@@ -54,19 +45,21 @@ public class ReviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review, container, false);
 
-        mData = new ArrayList<>();
+        reviews = new ArrayList<>();
         alert = new Dialog(getContext());
+        reviews.add(new Review("titolo","descrizione","data"));
+        reviews.add(new Review("Bello","Mammamia lo schifo atomico nucleare. La regia è ottima, ma la trama è stupida e sensa senso","2021-03-18"));
 
 
         reviewRecyclerView = view.findViewById(R.id.review_rv);
         reviewRecyclerView.setHasFixedSize(true);
         LinearLayoutManager l = new LinearLayoutManager(this.getContext());
-        l.setOrientation(LinearLayoutManager.HORIZONTAL);
+        l.setOrientation(LinearLayoutManager.VERTICAL);
         reviewRecyclerView.setLayoutManager(l);
 
 
-        //ReviewAdapter reviewAdapter = new ReviewAdapter();
-        //reviewRecyclerView.setAdapter(reviewAdapter);
+        ReviewAdapter reviewAdapter = new ReviewAdapter(reviews,this.getContext());
+        reviewRecyclerView.setAdapter(reviewAdapter);
 
 
 
