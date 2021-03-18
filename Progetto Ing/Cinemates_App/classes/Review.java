@@ -1,18 +1,32 @@
 package com.example.cinemates.classes;
 
-public class Review {
+import java.io.Serializable;
 
-    String title,descrizione,data;
+public class Review implements Serializable {
+
+    String title;
+    String descrizione;
+
+
+
+    String data;
+    String id;
+    String user;
     int userPhoto;
 
     public Review() {
     }
 
-    public Review(String title, String descrizione, String data) {
-        this.title = title;
+    public Review(String id,String user, String descrizione, String data) {
+        this.id =id;
+        this.user = user;
         this.descrizione = descrizione;
         this.data = data;
     }
+
+    public String getUser() { return user; }
+
+    public void setUser(String user) { this.user = user; }
 
     public String getTitle() {
         return title;

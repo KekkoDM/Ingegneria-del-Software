@@ -20,6 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.cinemates.adapters.FilmAdapter;
 
 import com.example.cinemates.adapters.ResultsAdapter;
+import com.example.cinemates.adapters.ReviewAdapter;
 import com.example.cinemates.adapters.SearchSuggestionsAdapter;
 import com.example.cinemates.adapters.SliderAdapter;
 
@@ -39,6 +40,7 @@ public class RequestJson<JSONParser>{
 
 
     private ArrayList listFilm;
+    private ArrayList reviews;
 
     private RequestQueue requestQueue;
     private String tmdb="https://api.themoviedb.org/3/trending/";
@@ -122,6 +124,46 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
+
+    public void parseJSONReviews(RecyclerView recyclerView, RecyclerView.Adapter adapter,String id,String type) {
+        String base_url = "https://api.themoviedb.org/3/";
+        if(type.equals("Film"))
+            base_url=base_url+"movie/";
+        else
+            base_url=base_url+"tv/";
+        base_url=base_url+id;
+        String api = "/reviews?api_key=6ff4c2846a2910d753ff91a81eee4f6c&language=en-US&page=1";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, base_url+api, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        getReviews(recyclerView, adapter,response);
+                    }
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        requestQueue.add(request);
+    }
+
+    public void getReviews(RecyclerView recyclerView, RecyclerView.Adapter adapter,JSONObject response){
+        try {
+            reviews = new ArrayList<Review>();
+            JSONArray jsonArray = response.getJSONArray("results");
+
+            setReview(jsonArray);
+
+            adapter=new ReviewAdapter(reviews,context);
+            recyclerView.setAdapter(adapter);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public void getFilmHome(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
@@ -218,7 +260,20 @@ public class RequestJson<JSONParser>{
 
         listFilm.add(new Film(id,cover,backdrop, title, description, releaseD, valutation,type));
 
+    }
 
+    protected void setReview(JSONArray jsonArray) throws JSONException {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject hit = jsonArray.getJSONObject(i);
+
+            String id = hit.getString("id");
+            String username = hit.getString("author");
+            String description = hit.getString("content");
+            String data = hit.getString("created_at").substring(0,10);
+
+            reviews.add(new Review(id,username,description,data));
+
+        }
     }
 
 
@@ -240,7 +295,7 @@ public class RequestJson<JSONParser>{
             JSONObject hit = jsonArray.getJSONObject(i);
 
             String type = hit.getString("media_type");
-            System.out.println("RESULTS : "+i);
+
 
             switch (type) {
                 case "movie":

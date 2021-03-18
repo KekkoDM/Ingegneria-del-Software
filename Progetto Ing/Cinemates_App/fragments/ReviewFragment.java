@@ -18,7 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cinemates.R;
+import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.adapters.ReviewAdapter;
+import com.example.cinemates.classes.Film;
+import com.example.cinemates.classes.RequestJson;
 import com.example.cinemates.classes.Review;
 
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ public class ReviewFragment extends Fragment {
     private RecyclerView reviewRecyclerView;
     private ReviewAdapter reviewAdapter;
     private List<Review> reviews;
+    private Film film;
 
 
     private Review review;
@@ -47,8 +51,9 @@ public class ReviewFragment extends Fragment {
 
         reviews = new ArrayList<>();
         alert = new Dialog(getContext());
-        reviews.add(new Review("titolo","descrizione","data"));
-        reviews.add(new Review("Bello","Mammamia lo schifo atomico nucleare. La regia è ottima, ma la trama è stupida e sensa senso","2021-03-18"));
+        film = ((MovieDescriptorActivity)getActivity()).getFilm();
+
+
 
 
         reviewRecyclerView = view.findViewById(R.id.review_rv);
@@ -58,8 +63,8 @@ public class ReviewFragment extends Fragment {
         reviewRecyclerView.setLayoutManager(l);
 
 
-        ReviewAdapter reviewAdapter = new ReviewAdapter(reviews,this.getContext());
-        reviewRecyclerView.setAdapter(reviewAdapter);
+        RequestJson requestJson = new RequestJson(getContext());
+        requestJson.parseJSONReviews(reviewRecyclerView,reviewAdapter,film.getId(),film.getType());
 
 
 

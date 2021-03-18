@@ -77,4 +77,5 @@ public class MovieDescriptorActivity extends AppCompatActivity {
 
         });
     }
+
 }
