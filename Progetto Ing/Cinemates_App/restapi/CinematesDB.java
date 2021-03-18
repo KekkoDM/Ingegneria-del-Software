@@ -8,6 +8,7 @@ public class CinematesDB {
     public static final String UPDATE_URL = BASE_URL + "utente/updatePassword.php";
     public static final String DELETE_URL = BASE_URL + "utente/delete.php";
     public static final String FRIENDS_URL = BASE_URL + "utente/getFriendsList.php";
-    public static final String NOTIFICATION_URL = BASE_URL + "notifica/getNotifications.php";
+    public static final String GENERAL_NOTIFICATION_URL = BASE_URL + "notifica/getGeneralNotifications.php";
+    public static final String FOLLOW_NOTIFICATION_URL = BASE_URL + "notifica/getFollowNotifications.php";
     public static final String SEARCH_USER = BASE_URL + "utente/searchUser.php";
 }

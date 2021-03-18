@@ -35,6 +35,8 @@ public class GeneralNotificationsFragment extends Fragment {
     private RecyclerView rvGeneral;
     private ArrayList<Notifica> generalNotifications;
     private GeneralNotificationAdapter generalAdapter;
+    private ImageView icon;
+    private TextView label;
 
     public GeneralNotificationsFragment() {
         // Required empty public constructor
@@ -50,37 +52,21 @@ public class GeneralNotificationsFragment extends Fragment {
         rvGeneral.setHasFixedSize(true);
         rvGeneral.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        ImageView icon = v.findViewById(R.id.iconNoGeneralNotification);
-        TextView label = v.findViewById(R.id.noGeneralLabel);
-
         generalNotifications = new ArrayList<>();
+        icon = v.findViewById(R.id.iconNoGeneralNotification);
+        label = v.findViewById(R.id.noGeneralLabel);
 
         loadGeneralNotifications(MainActivity.utente);
-
-        if (generalNotifications.size() == 0) {
-            icon.setImageResource(R.drawable.ic_no_notification);
-            label.setText("Non ci sono nuove notifiche");
-        }
-        else {
-            icon.setVisibility(View.INVISIBLE);
-            label.setVisibility(View.INVISIBLE);
-            generalAdapter = new GeneralNotificationAdapter(GeneralNotificationsFragment.this.getContext(), generalNotifications);
-            rvGeneral.setAdapter(generalAdapter);
-        }
 
         return v;
     }
 
     private void loadGeneralNotifications(Utente utente) {
         class NotificationsLoader extends AsyncTask<Void, Void, String> {
-            ProgressDialog pdLoading = new ProgressDialog(GeneralNotificationsFragment.this.getContext());
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                pdLoading.setMessage("\tCarico le notifiche...");
-                pdLoading.setCancelable(false);
-                pdLoading.show();
             }
 
             @Override
@@ -93,13 +79,12 @@ public class GeneralNotificationsFragment extends Fragment {
                 params.put("username", utente.getUsername());
 
                 //returing the response
-                return requestHandler.sendPostRequest(CinematesDB.NOTIFICATION_URL, params);
+                return requestHandler.sendPostRequest(CinematesDB.GENERAL_NOTIFICATION_URL, params);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                pdLoading.dismiss();
 
                 try {
                     //converting response to json object
@@ -107,7 +92,6 @@ public class GeneralNotificationsFragment extends Fragment {
 
                     //if no error in response
                     if (!obj.getBoolean("error")) {
-                        //getting the list friends from the response
                         JSONArray usersJson = obj.getJSONArray("notifica");
                         for (int i = 0; i < usersJson.length(); i++) {
                             JSONObject userJson = usersJson.getJSONObject(i);
@@ -116,15 +100,18 @@ public class GeneralNotificationsFragment extends Fragment {
                                     userJson.getString("descrizione"),
                                     userJson.getString("tipo")
                             );
-
-                            if (notifica.getTipo().equals("Segnalazione")) {
-                                generalNotifications.add(notifica);
-                                generalAdapter = new GeneralNotificationAdapter(GeneralNotificationsFragment.this.getContext(), generalNotifications);
-                                rvGeneral.setAdapter(generalAdapter);
-                            }
+                            generalNotifications.add(notifica);
                         }
+
+                        generalAdapter = new GeneralNotificationAdapter(GeneralNotificationsFragment.this.getContext(), generalNotifications);
+                        rvGeneral.setAdapter(generalAdapter);
                     } else {
                         Toast.makeText(GeneralNotificationsFragment.this.getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                        icon.setImageResource(R.drawable.ic_no_notification);
+                        label.setText("Non ci sono nuove notifiche");
+                        rvGeneral.setVisibility(View.INVISIBLE);
+                        icon.setVisibility(View.VISIBLE);
+                        label.setVisibility(View.VISIBLE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

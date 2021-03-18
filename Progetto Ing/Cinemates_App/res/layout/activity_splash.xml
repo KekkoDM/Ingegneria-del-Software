@@ -7,31 +7,26 @@
     android:background="@color/white"
     tools:context=".activities.SplashActivity">
 
-
     <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="246dp"
-        android:layout_height="172dp"
-        android:layout_marginTop="184dp"
+        android:id="@+id/iconSplash"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_app_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_app_icon" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/bangers"
-        android:text="Cinemates"
+        android:layout_marginTop="32dp"
+        android:text="CINEMATES"
         android:textAlignment="center"
         android:textColor="@color/purple_hype"
-        android:textSize="40dp"
-        android:textStyle="bold"
+        android:textSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+        app:layout_constraintTop_toBottomOf="@+id/iconSplash" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class FollowNotificationAdapter extends RecyclerView.Adapter<FollowNotificationAdapter.MyViewHolder>{
     private Context context;
-    private ArrayList<Notifica> notifications;
+    private ArrayList<Notifica> notifications = new ArrayList<>() ;
 
     public FollowNotificationAdapter(Context context, ArrayList<Notifica> notifications) {
         this.context = context;
@@ -56,7 +56,6 @@ public class FollowNotificationAdapter extends RecyclerView.Adapter<FollowNotifi
             notificationDescription = itemView.findViewById(R.id.followDescription);
             rejectBtn = itemView.findViewById(R.id.rejectBtn);
             confirmBtn = itemView.findViewById(R.id.confirmBtn);
-
         }
 
         public void setNotification(Notifica notifica) {

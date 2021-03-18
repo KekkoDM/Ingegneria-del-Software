@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.toolbox.Volley;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.FollowNotificationAdapter;
@@ -35,6 +36,8 @@ public class FollowNotificationsFragment extends Fragment {
     private RecyclerView rvFollow;
     private ArrayList<Notifica> followNotifications;
     private FollowNotificationAdapter followAdapter;
+    private ImageView icon;
+    private TextView label;
 
     public FollowNotificationsFragment() {
         // Required empty public constructor
@@ -50,37 +53,21 @@ public class FollowNotificationsFragment extends Fragment {
         rvFollow.setHasFixedSize(true);
         rvFollow.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        ImageView icon = v.findViewById(R.id.iconNoFollowNotification);
-        TextView label = v.findViewById(R.id.noFollowLabel);
-
         followNotifications = new ArrayList<>();
+        icon = v.findViewById(R.id.iconNoFollowNotification);
+        label = v.findViewById(R.id.noFollowLabel);
 
         loadFollowNotification(MainActivity.utente);
-
-        if (followNotifications.size() == 0) {
-            icon.setImageResource(R.drawable.ic_no_notification);
-            label.setText("Non ci sono nuove notifiche");
-        }
-        else {
-            icon.setVisibility(View.INVISIBLE);
-            label.setVisibility(View.INVISIBLE);
-            followAdapter = new FollowNotificationAdapter(FollowNotificationsFragment.this.getContext(), followNotifications);
-            rvFollow.setAdapter(followAdapter);
-        }
 
         return v;
     }
 
     private void loadFollowNotification(Utente utente) {
         class NotificationsLoader extends AsyncTask<Void, Void, String> {
-            ProgressDialog pdLoading = new ProgressDialog(FollowNotificationsFragment.this.getContext());
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                pdLoading.setMessage("\tCarico le richieste di collegamento...");
-                pdLoading.setCancelable(false);
-                pdLoading.show();
             }
 
             @Override
@@ -93,13 +80,12 @@ public class FollowNotificationsFragment extends Fragment {
                 params.put("username", utente.getUsername());
 
                 //returing the response
-                return requestHandler.sendPostRequest(CinematesDB.NOTIFICATION_URL, params);
+                return requestHandler.sendPostRequest(CinematesDB.FOLLOW_NOTIFICATION_URL, params);
             }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                pdLoading.dismiss();
 
                 try {
                     //converting response to json object
@@ -107,7 +93,6 @@ public class FollowNotificationsFragment extends Fragment {
 
                     //if no error in response
                     if (!obj.getBoolean("error")) {
-                        //getting the list friends from the response
                         JSONArray notificationJson = obj.getJSONArray("notifica");
                         for (int i = 0; i < notificationJson.length(); i++) {
                             JSONObject notification = notificationJson.getJSONObject(i);
@@ -116,13 +101,18 @@ public class FollowNotificationsFragment extends Fragment {
                                     notification.getString("descrizione"),
                                     notification.getString("tipo")
                             );
-
-                            if (notifica.getTipo().equals("Collegamento")) {
-                                followNotifications.add(notifica);
-                            }
+                            followNotifications.add(notifica);
                         }
+
+                        followAdapter = new FollowNotificationAdapter(FollowNotificationsFragment.this.getContext(), followNotifications);
+                        rvFollow.setAdapter(followAdapter);
                     } else {
                         Toast.makeText(FollowNotificationsFragment.this.getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                        icon.setImageResource(R.drawable.ic_no_notification);
+                        label.setText("Non ci sono nuove richieste di collegamento");
+                        rvFollow.setVisibility(View.INVISIBLE);
+                        icon.setVisibility(View.VISIBLE);
+                        label.setVisibility(View.VISIBLE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

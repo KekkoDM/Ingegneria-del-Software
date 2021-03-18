@@ -22,7 +22,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
     private Context context;
     private ArrayList<Film> results;
 
-    public ResultsAdapter( ArrayList<Film> results,Context context) {
+    public ResultsAdapter( ArrayList<Film> results, Context context) {
         this.context = context;
         this.results = results;
     }
@@ -40,11 +40,9 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!result.getType().equals("Persona")) {
-                    Intent intent = new Intent(context, MovieDescriptorActivity.class);
-                    intent.putExtra("Film",results.get(position));
-                    context.startActivity(intent);
-                }
+                Intent intent = new Intent(context, MovieDescriptorActivity.class);
+                intent.putExtra("Film", results.get(position));
+                context.startActivity(intent);
             }
         });
     }
@@ -60,7 +58,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
         public TextView mTitle;
         public TextView mDescription;
         public TextView mReleaseDate;
-        public TextView mType;
+        public TextView mValutation;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -68,7 +66,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
             mTitle = itemView.findViewById(R.id.titleResult);
             mDescription = itemView.findViewById(R.id.descriptionResult);
             mReleaseDate = itemView.findViewById(R.id.dateResult);
-            mType = itemView.findViewById(R.id.typeResult);
+            mValutation = itemView.findViewById(R.id.typeResult);
         }
 
         public void setResult(Film result) {
@@ -81,7 +79,7 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
             mTitle.setText(result.getTitle());
             mDescription.setText(result.getDescription());
             mReleaseDate.setText(result.getReleaseDate());
-            mType.setText(result.getType());
+            mValutation.setText(result.getValutation());
         }
     }
 }

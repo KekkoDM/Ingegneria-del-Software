@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class GeneralNotificationAdapter extends RecyclerView.Adapter<GeneralNotificationAdapter.MyViewHolder>{
     private Context context;
-    private ArrayList<Notifica> notifications;
+    private ArrayList<Notifica> notifications = new ArrayList<>();
 
     public GeneralNotificationAdapter(Context context, ArrayList<Notifica> notifications) {
         this.context = context;
@@ -49,7 +49,6 @@ public class GeneralNotificationAdapter extends RecyclerView.Adapter<GeneralNoti
             super(itemView);
             notificationTitle = itemView.findViewById(R.id.notificationTitle);
             notificationDescription = itemView.findViewById(R.id.notificationDescription);
-
         }
 
         public void setNotification(Notifica notifica) {
