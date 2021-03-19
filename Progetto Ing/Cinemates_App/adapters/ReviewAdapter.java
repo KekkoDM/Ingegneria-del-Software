@@ -19,13 +19,13 @@ import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder>{
 
-    Context mContext;
-    List<Review>mData;
+    Context context;
+    List<Review> reviews;
     RelativeLayout container;
 
     public ReviewAdapter(List<Review> list, Context c){
-        this.mContext=c;
-        this.mData=list;
+        this.context = c;
+        this.reviews = list;
     }
 
     @NonNull
@@ -33,7 +33,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View layout;
-        layout= LayoutInflater.from(mContext).inflate(R.layout.item_review,parent,false);
+        layout= LayoutInflater.from(context).inflate(R.layout.item_review,parent,false);
         return new ReviewViewHolder(layout);
     }
 
@@ -43,16 +43,15 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         //holder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
         //holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
 
-
-
-        holder.review_description.setText(mData.get(position).getDescrizione());
-        holder.review_date.setText(mData.get(position).getData());
+        holder.review_description.setText(reviews.get(position).getDescrizione());
+        holder.review_date.setText(reviews.get(position).getData());
+        holder.username.setText(reviews.get(position).getUser());
 
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return reviews.size();
     }
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder{
