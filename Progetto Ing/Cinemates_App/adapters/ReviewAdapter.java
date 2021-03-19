@@ -23,6 +23,11 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     List<Review>mData;
     RelativeLayout container;
 
+    public ReviewAdapter(List<Review> list, Context c){
+        this.mContext=c;
+        this.mData=list;
+    }
+
     @NonNull
     @Override
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -35,14 +40,14 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
 
-        holder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
-        holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
+        //holder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
+        //holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
 
 
-        holder.review_title.setText(mData.get(position).getTitle());
+
         holder.review_description.setText(mData.get(position).getDescrizione());
         holder.review_date.setText(mData.get(position).getData());
-        holder.img_user.setImageResource(mData.get(position).getUserPhoto());
+
     }
 
     @Override
@@ -52,7 +57,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder{
 
-        TextView review_title,review_description,review_date;
+        TextView username,review_description,review_date;
         ImageView img_user;
         RelativeLayout container;
 
@@ -60,10 +65,9 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
             container = itemView.findViewById(R.id.container);
-            review_title=itemView.findViewById(R.id.review_title);
-            review_description=itemView.findViewById(R.id.review_description);
-            review_date=itemView.findViewById(R.id.review_date);
-            img_user=itemView.findViewById(R.id.img_user);
+            review_description=itemView.findViewById(R.id.detail_review);
+            review_date=itemView.findViewById(R.id.date_review);
+            username=itemView.findViewById(R.id.username_review);
         }
     }
 }
