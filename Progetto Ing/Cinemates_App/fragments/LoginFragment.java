@@ -8,11 +8,15 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,9 +36,11 @@ import java.util.HashMap;
 public class LoginFragment extends Fragment {
     private TextView forgotPW;
     private TextView register;
+    private ImageView showPassword;
     private EditText usernameField;
     private EditText passwordField;
     private Button loginBtn;
+    private Boolean isShowed;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -51,12 +57,28 @@ public class LoginFragment extends Fragment {
         forgotPW = view.findViewById(R.id.forgotPw);
         register = view.findViewById(R.id.register);
         loginBtn = view.findViewById(R.id.loginButton);
+        showPassword = view.findViewById(R.id.showPw);
+        isShowed = false;
 
         forgotPW.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), RecoveryPasswordActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        showPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isShowed) {
+                    passwordField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());;
+                    isShowed = false;
+                }
+                else {
+                    passwordField.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    isShowed = true;
+                }
             }
         });
 
@@ -93,7 +115,7 @@ public class LoginFragment extends Fragment {
                 protected void onPreExecute() {
                     super.onPreExecute();
                     pdLoading.setMessage("\tAccesso in corso...");
-                    pdLoading.setCancelable(false);
+                    pdLoading.setCancelable(true);
                     pdLoading.show();
                 }
 
@@ -107,7 +129,7 @@ public class LoginFragment extends Fragment {
                     params.put("username", username);
                     params.put("password", password);
 
-                    //returing the response
+                    //returning the response
                     return requestHandler.sendPostRequest(CinematesDB.LOGIN_URL, params);
                 }
 

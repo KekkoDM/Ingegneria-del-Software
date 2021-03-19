@@ -1,6 +1,9 @@
 package com.example.cinemates.fragments;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -37,6 +40,7 @@ public class GeneralNotificationsFragment extends Fragment {
     private GeneralNotificationAdapter generalAdapter;
     private ImageView icon;
     private TextView label;
+    private Dialog loading;
 
     public GeneralNotificationsFragment() {
         // Required empty public constructor
@@ -67,6 +71,10 @@ public class GeneralNotificationsFragment extends Fragment {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                loading = new Dialog(getActivity());
+                loading.setContentView(R.layout.loading);
+                loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                loading.show();
             }
 
             @Override
@@ -85,6 +93,7 @@ public class GeneralNotificationsFragment extends Fragment {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+                loading.dismiss();
 
                 try {
                     //converting response to json object
