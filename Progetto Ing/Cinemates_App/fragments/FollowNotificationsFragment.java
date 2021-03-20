@@ -110,7 +110,6 @@ public class FollowNotificationsFragment extends Fragment {
                         followAdapter = new FollowNotificationAdapter(FollowNotificationsFragment.this.getContext(), followNotifications);
                         rvFollow.setAdapter(followAdapter);
                     } else {
-                        Toast.makeText(FollowNotificationsFragment.this.getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
                         icon.setImageResource(R.drawable.ic_no_notification);
                         label.setText("Non ci sono nuove richieste di collegamento");
                         rvFollow.setVisibility(View.INVISIBLE);

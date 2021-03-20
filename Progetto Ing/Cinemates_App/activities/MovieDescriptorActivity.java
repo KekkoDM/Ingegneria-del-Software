@@ -74,8 +74,6 @@ public class MovieDescriptorActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-
         });
     }
-
 }

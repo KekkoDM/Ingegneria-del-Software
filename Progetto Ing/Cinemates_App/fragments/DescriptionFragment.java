@@ -14,21 +14,20 @@ import android.widget.TextView;
 
 import com.example.cinemates.R;
 import com.example.cinemates.activities.MovieDescriptorActivity;
+import com.example.cinemates.adapters.DescriptionFilmAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
 import com.example.cinemates.classes.Film;
 import com.squareup.picasso.Picasso;
 
 public class DescriptionFragment extends Fragment {
     private FilmAdapter filmAdapter;
-
+    private DescriptionFilmAdapter adapter;
     private ImageView mCover;
     private TextView mTitle;
     private TextView mDescription;
-    private TextView mDuration;
     private TextView mReleaseDate;
     private TextView mValutation;
     private ImageView mBackdrop;
-    private Button addTo;
     private Film film;
 
     public Film getFilm() {
@@ -50,10 +49,9 @@ public class DescriptionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_descriptor, container, false);
 
         film = ((MovieDescriptorActivity)getActivity()).getFilm();
-
+        adapter = new DescriptionFilmAdapter(film,getContext());
         System.out.println("FILM : "+ film.getTitle());
 
-        addTo = view.findViewById(R.id.addToBtn);
         mCover = view.findViewById(R.id.detail_movie_img);
         mTitle = view.findViewById(R.id.detail_movie_title);
         mDescription = view.findViewById(R.id.detail_movie_desc);
@@ -73,15 +71,6 @@ public class DescriptionFragment extends Fragment {
         else {
             Picasso.with(this.getContext()).load("https://image.tmdb.org/t/p/w500"+film.getBackdrop()).into(mBackdrop);
         }
-
-        addTo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(DescriptionFragment.this.getContext(), v);
-                popupMenu.getMenuInflater().inflate(R.menu.menu_add_to, popupMenu.getMenu());
-                popupMenu.show();
-            }
-        });
 
         mTitle.setText(film.getTitle());
         mDescription.setText(film.getDescription());

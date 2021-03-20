@@ -7,12 +7,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.cinemates.classes.Film;
 import com.example.cinemates.classes.Review;
 import com.example.cinemates.R;
+import com.example.cinemates.fragments.DescriptionFragment;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
@@ -28,6 +31,7 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView alertComment;
     private ReviewAdapter adapter;
     private Review review;
+    private ImageButton backBtn;
 
     public Review getReview() { return review; }
     public void setReview(Review review) { this.review = review; }
@@ -40,6 +44,14 @@ public class CommentsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         review = (Review) intent.getSerializableExtra("recensione");
+
+        backBtn = findViewById(R.id.backBtnComments);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         detailReview = findViewById(R.id.detail_review_comment);
         detailReview.setText(review.getDescrizione());
@@ -56,6 +68,14 @@ public class CommentsActivity extends AppCompatActivity {
         commentReview = findViewById(R.id.comment_review_comment);
 
         alertComment = findViewById(R.id.alert_comment);
+        alertComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(CommentsActivity.this, v);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_report, popupMenu.getMenu());
+                popupMenu.show();
+            }
+        });
 
         rvComments = findViewById(R.id.list_comment);
 

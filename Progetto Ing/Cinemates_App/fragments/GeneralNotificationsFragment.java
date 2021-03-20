@@ -115,7 +115,6 @@ public class GeneralNotificationsFragment extends Fragment {
                         generalAdapter = new GeneralNotificationAdapter(GeneralNotificationsFragment.this.getContext(), generalNotifications);
                         rvGeneral.setAdapter(generalAdapter);
                     } else {
-                        Toast.makeText(GeneralNotificationsFragment.this.getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
                         icon.setImageResource(R.drawable.ic_no_notification);
                         label.setText("Non ci sono nuove notifiche");
                         rvGeneral.setVisibility(View.INVISIBLE);

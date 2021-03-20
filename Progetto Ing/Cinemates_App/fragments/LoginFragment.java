@@ -144,8 +144,6 @@ public class LoginFragment extends Fragment {
 
                         //if no error in response
                         if (!obj.getBoolean("error")) {
-                            Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-
                             //getting the user from the response
                             JSONObject userJson = obj.getJSONObject("utente");
                             Utente utente = new Utente(

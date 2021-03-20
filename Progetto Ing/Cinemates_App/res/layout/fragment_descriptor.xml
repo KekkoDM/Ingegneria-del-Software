@@ -60,21 +60,6 @@
             app:layout_constraintStart_toEndOf="@+id/detail_movie_img"
             app:layout_constraintTop_toBottomOf="@+id/detail_movie_cover" />
 
-        <Button
-            android:id="@+id/addToBtn"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="Aggiungi a..."
-            android:textColor="@color/white"
-            android:backgroundTint="@color/purple_hype"
-            app:cornerRadius="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/detail_movie_img"
-            app:layout_constraintTop_toBottomOf="@+id/detail_movie_title" />
-
         <androidx.cardview.widget.CardView
             android:id="@+id/film_description"
             android:layout_width="match_parent"
