@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cinemates_app.activities.CommentsActivity">
+    tools:context="com.example.cinemates.activities.CommentsActivity">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardReview_comment"
@@ -76,7 +76,7 @@
                     android:layout_marginEnd="100dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/circle_style"
-                    android:backgroundTint="@color/red"
+                    android:backgroundTint="@color/google_color"
                     android:padding="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -163,7 +163,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="122"
                     android:textAlignment="center"
-                    android:textColor="@color/red"
+                    android:textColor="@color/google_color"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/dislike_comment"
                     app:layout_constraintStart_toEndOf="@+id/dislike_comment" />
@@ -246,7 +246,7 @@
             android:drawablePadding="12dp"
             android:drawableTint="@color/light_grey"
             android:ems="10"
-            android:hint="@string/write_comment"
+            android:hint="Commenta..."
             android:inputType="text"
             android:paddingStart="12dp"
             android:textColor="@color/purple_hype"
@@ -256,4 +256,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView13" />
     </androidx.cardview.widget.CardView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="120dp"
+        tools:layout_editor_absoluteY="487dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
