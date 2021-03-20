@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cinemates.activities.CommentsActivity">
+    tools:context="com.example.cinemates_app.activities.CommentsActivity">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardReview_comment"
@@ -14,6 +14,8 @@
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="15dp"
             app:cardElevation="8dp"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -29,6 +31,8 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbars="vertical"
                     android:lineSpacingExtra="8dp"
                     android:text="TextView"
                     android:textColor="@color/purple_hype"
@@ -76,7 +80,7 @@
                     android:layout_marginEnd="100dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/circle_style"
-                    android:backgroundTint="@color/google_color"
+                    android:backgroundTint="@color/red"
                     android:padding="5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -163,7 +167,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="122"
                     android:textAlignment="center"
-                    android:textColor="@color/google_color"
+                    android:textColor="@color/red"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="@+id/dislike_comment"
                     app:layout_constraintStart_toEndOf="@+id/dislike_comment" />
@@ -192,8 +196,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:scrollbarStyle="insideInset"
-                    android:scrollbars="horizontal"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbars="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -246,7 +250,7 @@
             android:drawablePadding="12dp"
             android:drawableTint="@color/light_grey"
             android:ems="10"
-            android:hint="Commenta..."
+            android:hint="@string/write_comment"
             android:inputType="text"
             android:paddingStart="12dp"
             android:textColor="@color/purple_hype"
@@ -256,10 +260,4 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView13" />
     </androidx.cardview.widget.CardView>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="120dp"
-        tools:layout_editor_absoluteY="487dp"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
