@@ -1,6 +1,7 @@
 package com.example.cinemates.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.R;
+import com.example.cinemates.activities.CommentsActivity;
+import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.classes.Review;
 
 import java.util.List;
@@ -43,10 +46,18 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         //holder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
         //holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
 
+        holder.comment_review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CommentsActivity.class);
+                intent.putExtra("recensione",reviews.get(position));
+                context.startActivity(intent);
+            }
+        });
+
         holder.review_description.setText(reviews.get(position).getDescrizione());
         holder.review_date.setText(reviews.get(position).getData());
         holder.username.setText(reviews.get(position).getUser());
-
     }
 
     @Override
@@ -57,7 +68,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     public class ReviewViewHolder extends RecyclerView.ViewHolder{
 
         TextView username,review_description,review_date;
-        ImageView img_user;
+        ImageView img_user,comment_review;
         RelativeLayout container;
 
 
@@ -67,6 +78,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             review_description=itemView.findViewById(R.id.detail_review);
             review_date=itemView.findViewById(R.id.date_review);
             username=itemView.findViewById(R.id.username_review);
+            comment_review = itemView.findViewById(R.id.comment_review);
         }
     }
 }

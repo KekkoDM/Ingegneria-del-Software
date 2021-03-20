@@ -49,12 +49,19 @@ public class CommentsActivity extends AppCompatActivity {
         dateReview.setText(review.getData());
 
         contLike = findViewById(R.id.cont_like_comment);
+
         contDislike = findViewById(R.id.cont_dislike_comment);
+
         like = findViewById(R.id.like_comment);
+
         dislike = findViewById(R.id.dislike_comment);
+
         commentReview = findViewById(R.id.comment_review_comment);
+
         alertComment = findViewById(R.id.alert_comment);
+
         rvComments = findViewById(R.id.list_comment);
+
         rvComments.setHasFixedSize(true);
 
 
