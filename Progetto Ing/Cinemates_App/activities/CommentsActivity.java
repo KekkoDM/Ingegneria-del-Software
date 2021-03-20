@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -32,6 +36,7 @@ public class CommentsActivity extends AppCompatActivity {
     private ReviewAdapter adapter;
     private Review review;
     private ImageButton backBtn;
+    private Dialog dialog;
 
     public Review getReview() { return review; }
     public void setReview(Review review) { this.review = review; }
@@ -73,6 +78,18 @@ public class CommentsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(CommentsActivity.this, v);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_report, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.reportItem:
+                                dialog = new Dialog(CommentsActivity.this);
+                                return showPopup();
+                            default:
+                                return false;
+                        }
+                    }
+                });
                 popupMenu.show();
             }
         });
@@ -86,6 +103,25 @@ public class CommentsActivity extends AppCompatActivity {
         rvComments.setLayoutManager(l);
 
         sampleCenterLeft();
+    }
+
+    private boolean showPopup() {
+        ImageView close;
+
+        close = findViewById(R.id.closealert);
+
+        dialog.setContentView(R.layout.popup_report);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        return true;
     }
 
     private void sampleCenterLeft() {
