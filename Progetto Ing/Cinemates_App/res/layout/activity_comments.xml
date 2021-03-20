@@ -5,8 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cinemates.activities.CommentsActivity">
+    tools:context="com.example.cinemates_app.activities.CommentsActivity">
 
+<<<<<<< HEAD
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -14,6 +15,175 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+=======
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardReview_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="8dp"
+            android:scrollbarStyle="outsideInset"
+            android:scrollbars="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/detail_review_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbars="vertical"
+                    android:lineSpacingExtra="8dp"
+                    android:text="TextView"
+                    android:textColor="@color/purple_hype"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@+id/alert_comment"
+                    app:layout_constraintStart_toEndOf="@+id/image_user_comment"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/username_review_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="TextView"
+                    android:textAlignment="center"
+                    android:textColor="@color/purple_hype"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="@+id/image_user_comment"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/image_user_comment" />
+
+                <ImageView
+                    android:id="@+id/like_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginEnd="176dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/circle_style"
+                    android:backgroundTint="@color/blue_hype"
+                    android:padding="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_review_comment"
+                    app:layout_constraintVertical_bias="1.0"
+                    app:srcCompat="@drawable/ic_baseline_thumb_up_alt_24"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/dislike_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="100dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/circle_style"
+                    android:backgroundTint="@color/red"
+                    android:padding="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_review_comment"
+                    app:layout_constraintVertical_bias="1.0"
+                    app:srcCompat="@drawable/ic_baseline_thumb_down_alt_24"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/comment_review_comment"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/circle_style"
+                    android:backgroundTint="@color/light_grey"
+                    android:padding="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/cont_dislike_comment"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_review_comment"
+                    app:srcCompat="@drawable/ic_baseline_chat_bubble_24"
+                    app:tint="@color/white" />
+
+                <ImageView
+                    android:id="@+id/alert_comment"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:padding="5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ellipsis"
+                    app:tint="@color/light_grey" />
+
+                <TextView
+                    android:id="@+id/date_review_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="TextView"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/like_comment"
+                    app:layout_constraintHorizontal_bias="0.682"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_review_comment"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <ImageView
+                    android:id="@+id/image_user_comment"
+                    android:layout_width="70dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_user_image" />
+
+                <TextView
+                    android:id="@+id/cont_like_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="234"
+                    android:textAlignment="center"
+                    android:textColor="@color/blue_hype"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/like_comment"
+                    app:layout_constraintStart_toEndOf="@+id/like_comment" />
+
+                <TextView
+                    android:id="@+id/cont_dislike_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="122"
+                    android:textAlignment="center"
+                    android:textColor="@color/red"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/dislike_comment"
+                    app:layout_constraintStart_toEndOf="@+id/dislike_comment" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+>>>>>>> 48f2c3cf513d0c6583441c7ee1b1636fd7fb51a4
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -165,6 +335,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/list_comment_container"
                 android:layout_width="match_parent"
+<<<<<<< HEAD
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
@@ -196,6 +367,24 @@
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+=======
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbars="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+>>>>>>> 48f2c3cf513d0c6583441c7ee1b1636fd7fb51a4
 
     <androidx.cardview.widget.CardView
         android:id="@+id/comment_"
@@ -238,7 +427,11 @@
             android:drawablePadding="12dp"
             android:drawableTint="@color/light_grey"
             android:ems="10"
+<<<<<<< HEAD
             android:hint="Scrivi un commento..."
+=======
+            android:hint="@string/write_comment"
+>>>>>>> 48f2c3cf513d0c6583441c7ee1b1636fd7fb51a4
             android:inputType="text"
             android:paddingStart="12dp"
             android:textColor="@color/purple_hype"
@@ -248,4 +441,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView13" />
     </androidx.cardview.widget.CardView>
+<<<<<<< HEAD
 </androidx.constraintlayout.widget.ConstraintLayout>
+=======
+    </androidx.constraintlayout.widget.ConstraintLayout>
+>>>>>>> 48f2c3cf513d0c6583441c7ee1b1636fd7fb51a4
