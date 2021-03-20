@@ -53,23 +53,18 @@ public class ReviewFragment extends Fragment {
         alert = new Dialog(getContext());
         film = ((MovieDescriptorActivity)getActivity()).getFilm();
 
-
-
-
         reviewRecyclerView = view.findViewById(R.id.review_rv);
         reviewRecyclerView.setHasFixedSize(true);
         LinearLayoutManager l = new LinearLayoutManager(this.getContext());
         l.setOrientation(LinearLayoutManager.VERTICAL);
         reviewRecyclerView.setLayoutManager(l);
 
-
         RequestJson requestJson = new RequestJson(getContext());
         requestJson.parseJSONReviews(reviewRecyclerView,reviewAdapter,film.getId(),film.getType());
 
-
-
         return view;
     }
+
     public void showDialog(View v){
         Button btnOk;
         ImageButton btnClose = null;

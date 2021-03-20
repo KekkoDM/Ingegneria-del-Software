@@ -2,6 +2,8 @@ package com.example.cinemates.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +19,14 @@ import com.example.cinemates.R;
 import com.example.cinemates.activities.CommentsActivity;
 import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.classes.Review;
+import com.example.cinemates.fragments.ReviewFragment;
+import com.github.pgreze.reactions.ReactionPopup;
+import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
 import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder>{
-
+    private final String[] strings = {"like", "love", "ahah", "wow", "triste", "argh!"};
     Context context;
     List<Review> reviews;
     RelativeLayout container;
@@ -37,6 +42,9 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
         View layout;
         layout= LayoutInflater.from(context).inflate(R.layout.item_review,parent,false);
+
+        sampleCenterLeft(layout);
+
         return new ReviewViewHolder(layout);
     }
 
@@ -50,14 +58,14 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CommentsActivity.class);
-                intent.putExtra("recensione",reviews.get(position));
+                intent.putExtra("recensione", reviews.get(position));
                 context.startActivity(intent);
             }
         });
 
         holder.review_description.setText(reviews.get(position).getDescrizione());
         holder.review_date.setText(reviews.get(position).getData());
-        holder.username.setText(reviews.get(position).getUser());
+        holder.username.setText(reviews.get(position).getUser() + " ha scritto:");
     }
 
     @Override
@@ -75,10 +83,28 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
             container = itemView.findViewById(R.id.container);
-            review_description=itemView.findViewById(R.id.detail_review);
-            review_date=itemView.findViewById(R.id.date_review);
-            username=itemView.findViewById(R.id.username_review);
+            review_description = itemView.findViewById(R.id.detail_review);
+            review_date = itemView.findViewById(R.id.date_review);
+            username = itemView.findViewById(R.id.username_review);
             comment_review = itemView.findViewById(R.id.comment_review);
         }
+    }
+
+    private void sampleCenterLeft(View v) {
+        ReactionPopup popup = new ReactionPopup(
+                context,
+                new ReactionsConfigBuilder(context)
+                        .withReactions(new int[]{
+                                R.drawable.ic_like,
+                                R.drawable.ic_love,
+                                R.drawable.ic_laugh,
+                                R.drawable.ic_wow,
+                                R.drawable.ic_sad,
+                                R.drawable.ic_angry,
+                        })
+                        .withReactionTexts(position -> strings[position])
+                        .build());
+
+        v.findViewById(R.id.likeBtn).setOnTouchListener(popup);
     }
 }
