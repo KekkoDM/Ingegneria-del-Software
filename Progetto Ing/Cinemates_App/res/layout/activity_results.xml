@@ -36,13 +36,11 @@
         android:id="@+id/resultContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:background="@android:color/transparent"
         android:fadingEdgeLength="20dp"
-        android:requiresFadingEdge="vertical"
         android:padding="0dp"
+        android:requiresFadingEdge="vertical"
         android:scrollbarStyle="outsideInset"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -50,4 +48,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/resultFor" />
 
+    <ImageView
+        android:id="@+id/noResultIcon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="64dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultFor"
+        app:srcCompat="@drawable/ic_search_error" />
+
+    <TextView
+        android:id="@+id/noResultLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:text="Ops! La ricerca non ha prodotto risultati"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noResultIcon" />
 </androidx.constraintlayout.widget.ConstraintLayout>

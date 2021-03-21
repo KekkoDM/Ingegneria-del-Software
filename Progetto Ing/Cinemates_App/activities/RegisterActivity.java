@@ -10,12 +10,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.classes.Utente;
-import com.example.cinemates.fragments.LoginFragment;
-import com.example.cinemates.restapi.CinematesDB;
+import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.R;
 import com.example.cinemates.handlers.RequestHandler;
 import org.json.JSONException;

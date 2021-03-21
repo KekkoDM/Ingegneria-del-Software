@@ -1,7 +1,6 @@
 package com.example.cinemates.activities;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -12,14 +11,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
-import com.example.cinemates.adapters.FriendsAdapter;
-import com.example.cinemates.classes.Utente;
 import com.example.cinemates.handlers.RequestHandler;
-import com.example.cinemates.restapi.CinematesDB;
+import com.example.cinemates.api.CinematesDB;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -78,8 +73,7 @@ public class RecoveryPasswordActivity extends AppCompatActivity {
                     params.put("email", email);
 
                     //returing the response
-                    //return requestHandler.sendPostRequest(CinematesDB.RECOVERY_PASSWORD, params);
-                    return null;
+                    return requestHandler.sendPostRequest(CinematesDB.RECOVERY_PASSWORD, params);
                 }
 
                 @Override

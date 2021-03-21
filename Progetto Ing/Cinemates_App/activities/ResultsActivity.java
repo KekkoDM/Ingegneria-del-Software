@@ -2,23 +2,18 @@ package com.example.cinemates.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.ResultsAdapter;
@@ -26,9 +21,8 @@ import com.example.cinemates.adapters.SearchUserAdapter;
 import com.example.cinemates.classes.Film;
 import com.example.cinemates.classes.RequestJson;
 import com.example.cinemates.classes.Utente;
-import com.example.cinemates.fragments.HomeFragment;
 import com.example.cinemates.handlers.RequestHandler;
-import com.example.cinemates.restapi.CinematesDB;
+import com.example.cinemates.api.CinematesDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +35,9 @@ public class ResultsActivity extends AppCompatActivity {
     private ImageButton backBtn;
     private ArrayList<Film> results;
     private ArrayList<Utente> users;
-    private RecyclerView rv;
+    public static RecyclerView rv;
+    public static ImageView noResultIcon;
+    public static TextView noResultLabel;
     private ResultsAdapter resultsAdapter;
     private SearchUserAdapter searchUserAdapter;
     private RequestQueue requestQueue;
@@ -57,9 +53,12 @@ public class ResultsActivity extends AppCompatActivity {
 
         RequestJson requestJson = new RequestJson(this);
 
+        noResultIcon = findViewById(R.id.noResultIcon);
+        noResultLabel = findViewById(R.id.noResultLabel);
+
         Intent intent = getIntent();
         if (intent.getStringExtra("type").equals("film")) {
-            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("textSearched"));
+            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("moviesearched"));
         }
         else {
             users = new ArrayList<>();
@@ -125,10 +124,13 @@ public class ResultsActivity extends AppCompatActivity {
                                     null,
                                     null
                             );
+
                             users.add(utente);
                         }
                     } else {
-                        Toast.makeText(ResultsActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                        noResultIcon.setVisibility(View.VISIBLE);
+                        noResultLabel.setVisibility(View.VISIBLE);
+                        rv.setVisibility(View.INVISIBLE);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

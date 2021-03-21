@@ -21,7 +21,7 @@ import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.classes.Utente;
 import com.example.cinemates.handlers.RequestHandler;
-import com.example.cinemates.restapi.CinematesDB;
+import com.example.cinemates.api.CinematesDB;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,6 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
         icon.setImageResource(R.drawable.ic_user_delete);
         title.setText("Sei sicuro?");
         subtitle.setText("Eliminando il tuo account verranno cancellati tutti i tuoi dati. L'operazione è irreversibile");
+        btnPop.setText("Conferma eliminazione");
 
         btnPop.setOnClickListener(new View.OnClickListener() {
             @Override

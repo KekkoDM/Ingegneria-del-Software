@@ -1,11 +1,9 @@
 package com.example.cinemates.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,11 +18,9 @@ import android.widget.Toast;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.FriendsAdapter;
-import com.example.cinemates.adapters.ResultsAdapter;
 import com.example.cinemates.classes.Utente;
-import com.example.cinemates.fragments.AccountFragment;
 import com.example.cinemates.handlers.RequestHandler;
-import com.example.cinemates.restapi.CinematesDB;
+import com.example.cinemates.api.CinematesDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;

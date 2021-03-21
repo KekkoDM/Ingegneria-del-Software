@@ -1,9 +1,5 @@
 package com.example.cinemates.fragments;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -16,17 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.toolbox.Volley;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.FollowNotificationAdapter;
-import com.example.cinemates.adapters.GeneralNotificationAdapter;
 import com.example.cinemates.classes.Notifica;
 import com.example.cinemates.classes.Utente;
 import com.example.cinemates.handlers.RequestHandler;
-import com.example.cinemates.restapi.CinematesDB;
+import com.example.cinemates.api.CinematesDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,9 +29,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FollowNotificationsFragment extends Fragment {
-    private RecyclerView rvFollow;
+    public static RecyclerView rvFollow;
     private ArrayList<Notifica> followNotifications;
-    private FollowNotificationAdapter followAdapter;
+    public static FollowNotificationAdapter followAdapter;
     private ImageView icon;
     private TextView label;
 
@@ -100,9 +93,13 @@ public class FollowNotificationsFragment extends Fragment {
                         for (int i = 0; i < notificationJson.length(); i++) {
                             JSONObject notification = notificationJson.getJSONObject(i);
                             Notifica notifica = new Notifica(
+                                    notification.getInt("id"),
                                     notification.getString("titolo"),
                                     notification.getString("descrizione"),
-                                    notification.getString("tipo")
+                                    notification.getString("tipo"),
+                                    notification.getString("mittente"),
+                                    notification.getString("destinatario"),
+                                    notification.getString("amministratore")
                             );
                             followNotifications.add(notifica);
                         }

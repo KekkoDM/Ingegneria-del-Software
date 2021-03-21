@@ -1,7 +1,6 @@
 package com.example.cinemates.fragments;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -16,16 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
-import com.example.cinemates.adapters.FollowNotificationAdapter;
 import com.example.cinemates.adapters.GeneralNotificationAdapter;
 import com.example.cinemates.classes.Notifica;
 import com.example.cinemates.classes.Utente;
 import com.example.cinemates.handlers.RequestHandler;
-import com.example.cinemates.restapi.CinematesDB;
+import com.example.cinemates.api.CinematesDB;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -103,11 +100,15 @@ public class GeneralNotificationsFragment extends Fragment {
                     if (!obj.getBoolean("error")) {
                         JSONArray usersJson = obj.getJSONArray("notifica");
                         for (int i = 0; i < usersJson.length(); i++) {
-                            JSONObject userJson = usersJson.getJSONObject(i);
+                            JSONObject notification = usersJson.getJSONObject(i);
                             Notifica notifica = new Notifica(
-                                    userJson.getString("titolo"),
-                                    userJson.getString("descrizione"),
-                                    userJson.getString("tipo")
+                                    notification.getInt("id"),
+                                    notification.getString("titolo"),
+                                    notification.getString("descrizione"),
+                                    notification.getString("tipo"),
+                                    notification.getString("mittente"),
+                                    notification.getString("destinatario"),
+                                    notification.getString("amministratore")
                             );
                             generalNotifications.add(notifica);
                         }
