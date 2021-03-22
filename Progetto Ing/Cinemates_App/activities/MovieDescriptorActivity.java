@@ -44,7 +44,6 @@ public class MovieDescriptorActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         film = (Film) intent.getSerializableExtra("Film");
-        System.out.println("FILM ACTIVITY: "+ film.getTitle());
 
         backButton = findViewById(R.id.backButtonDescr);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +73,8 @@ public class MovieDescriptorActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
+
         });
     }
+
 }

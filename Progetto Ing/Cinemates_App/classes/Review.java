@@ -6,16 +6,11 @@ public class Review implements Serializable {
 
     String title;
     String descrizione;
-
-
-
     String data;
     String id;
     String user;
     int userPhoto;
 
-    public Review() {
-    }
 
     public Review(String id,String user, String descrizione, String data) {
         this.id =id;

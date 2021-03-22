@@ -28,10 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewFragment extends Fragment {
-    public static ImageView noReviewIcon;
-    public static TextView noReviewLabel;
+
     private Dialog alert;
-    public static RecyclerView reviewRecyclerView;
+    private RecyclerView reviewRecyclerView;
     private ReviewAdapter reviewAdapter;
     private List<Review> reviews;
     private Film film;
@@ -59,9 +58,6 @@ public class ReviewFragment extends Fragment {
         LinearLayoutManager l = new LinearLayoutManager(this.getContext());
         l.setOrientation(LinearLayoutManager.VERTICAL);
         reviewRecyclerView.setLayoutManager(l);
-
-        noReviewIcon = view.findViewById(R.id.noReviewIcon);
-        noReviewLabel = view.findViewById(R.id.noReviewLabel);
 
         RequestJson requestJson = new RequestJson(getContext());
         requestJson.parseJSONReviews(reviewRecyclerView,reviewAdapter,film.getId(),film.getType());

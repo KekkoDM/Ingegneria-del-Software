@@ -26,7 +26,7 @@ import com.example.cinemates.activities.RecoveryPasswordActivity;
 import com.example.cinemates.activities.RegisterActivity;
 import com.example.cinemates.classes.Utente;
 import com.example.cinemates.handlers.RequestHandler;
-import com.example.cinemates.restapi.CinematesDB;
+import com.example.cinemates.api.CinematesDB;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -144,6 +144,8 @@ public class LoginFragment extends Fragment {
 
                         //if no error in response
                         if (!obj.getBoolean("error")) {
+                            Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+
                             //getting the user from the response
                             JSONObject userJson = obj.getJSONObject("utente");
                             Utente utente = new Utente(

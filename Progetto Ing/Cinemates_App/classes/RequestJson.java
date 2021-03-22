@@ -2,7 +2,7 @@ package com.example.cinemates.classes;
 
 import android.content.Context;
 import android.net.Uri;
-import android.view.View;
+
 
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,13 +17,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 
 import com.android.volley.toolbox.Volley;
+import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
 
 import com.example.cinemates.adapters.ResultsAdapter;
 import com.example.cinemates.adapters.ReviewAdapter;
 import com.example.cinemates.adapters.SearchSuggestionsAdapter;
 import com.example.cinemates.adapters.SliderAdapter;
-import com.example.cinemates.fragments.ReviewFragment;
+
 
 
 import org.json.JSONArray;
@@ -36,17 +37,26 @@ import java.util.ArrayList;
 
 
 public class RequestJson<JSONParser>{
+
+
+    public ArrayList getListFilm() {
+        return listFilm;
+    }
+
     private ArrayList listFilm;
     private ArrayList reviews;
+
     private RequestQueue requestQueue;
     private String tmdb="https://api.themoviedb.org/3/trending/";
     private String apikey="/week?api_key=d6f6fde62b39251f66a180f2c13ac19f&language=it-IT&page=1";
     private Context context;
 
     public RequestJson(Context c){
-        context = c;
+        context=c;
         requestQueue = Volley.newRequestQueue(c);
+
     }
+
 
     public void parseJSONSlide(ViewPager2 viewPager2, SliderAdapter adapter) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, tmdb+"all"+apikey, null,
@@ -88,7 +98,6 @@ public class RequestJson<JSONParser>{
                     public void onResponse(JSONObject response) {
                         getFilmHome(recyclerView, filmAdapter,response);
                     }
-
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -105,9 +114,7 @@ public class RequestJson<JSONParser>{
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
                         getFilmResults(recyclerView,resultsAdapter,response);
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -119,28 +126,23 @@ public class RequestJson<JSONParser>{
     }
 
 
-    public void parseJSONReviews(RecyclerView recyclerView, RecyclerView.Adapter adapter,String id,String type) {
-        String base_url = "https://api.themoviedb.org/3/";
-        if(type.equals("Film")) {
-            base_url = base_url + "movie/";
-        }
-        else {
-            base_url = base_url + "tv/";
-        }
 
-        base_url = base_url+id;
+
+    public void parseJSONReviews(RecyclerView recyclerView, RecyclerView.Adapter adapter,String id,String type) {
+
+        String base_url = "https://api.themoviedb.org/3/";
+        if(type.equals("Film"))
+            base_url=base_url+"movie/";
+        else
+            base_url=base_url+"tv/";
+        base_url=base_url+id;
         String api = "/reviews?api_key=6ff4c2846a2910d753ff91a81eee4f6c&language=en-US&page=1";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, base_url+api, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getReviews(recyclerView, adapter, response);
-                        if (reviews.isEmpty()) {
-                            ReviewFragment.noReviewIcon.setVisibility(View.VISIBLE);
-                            ReviewFragment.noReviewLabel.setVisibility(View.VISIBLE);
-                            ReviewFragment.reviewRecyclerView.setVisibility(View.INVISIBLE);
-                        }
+                        getReviews(recyclerView, adapter,response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -153,12 +155,18 @@ public class RequestJson<JSONParser>{
 
     public void getReviews(RecyclerView recyclerView, RecyclerView.Adapter adapter,JSONObject response){
         try {
-            reviews = new ArrayList<Review>();
+            reviews = new ArrayList<>();
             JSONArray jsonArray = response.getJSONArray("results");
+            ArrayList<String> error = new ArrayList<String>();
+            error.add("Non ci sono ancora recensioni");
 
             setReview(jsonArray);
 
-            adapter = new ReviewAdapter(reviews, context);
+            if (reviews.size()>0)
+                adapter = new ReviewAdapter(reviews, context);
+            else
+                adapter = new ErrorAdapter(context,error);
+
             recyclerView.setAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -175,7 +183,6 @@ public class RequestJson<JSONParser>{
 
             adapter = new FilmAdapter(listFilm,context);
             recyclerView.setAdapter(adapter);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -191,7 +198,6 @@ public class RequestJson<JSONParser>{
 
             adapter = new SearchSuggestionsAdapter(context, listFilm);
             recyclerView.setAdapter(adapter);
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -217,14 +223,20 @@ public class RequestJson<JSONParser>{
 
 
 
-    public void getFilmResults(RecyclerView recyclerView, ResultsAdapter adapter, JSONObject response){
+    public void getFilmResults(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
         try {
             listFilm = new ArrayList<Film>();
             JSONArray jsonArray = response.getJSONArray("results");
+            ArrayList<String> error = new ArrayList<String>();
+            error.add("Ops! La ricerca non ha prodotto risultati");
 
             setFMV(jsonArray);
 
-            adapter = new ResultsAdapter(listFilm, context);
+            if (listFilm.size()>0)
+                adapter = new ResultsAdapter(listFilm, context);
+            else
+                adapter = new ErrorAdapter(context,error);
+
             recyclerView.setAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -237,7 +249,6 @@ public class RequestJson<JSONParser>{
         JSONObject hit = jsonArray.getJSONObject(i);
         String id = hit.getString("id");
         String cover = hit.getString("poster_path");
-
         String title = hit.getString("title");
         String description = hit.getString("overview");
         String valutation = hit.getString("vote_average");
@@ -257,7 +268,6 @@ public class RequestJson<JSONParser>{
         {
             releaseD = hit.getString("release_date");
         }
-
         listFilm.add(new Film(id,cover,backdrop, title, description, releaseD, valutation,type));
 
     }
@@ -265,12 +275,10 @@ public class RequestJson<JSONParser>{
     protected void setReview(JSONArray jsonArray) throws JSONException {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject hit = jsonArray.getJSONObject(i);
-
             String id = hit.getString("id");
             String username = hit.getString("author");
             String description = hit.getString("content");
             String data = hit.getString("created_at").substring(0,10);
-
             reviews.add(new Review(id,username,description,data));
         }
     }
@@ -294,7 +302,6 @@ public class RequestJson<JSONParser>{
             JSONObject hit = jsonArray.getJSONObject(i);
 
             String type = hit.getString("media_type");
-
 
             switch (type) {
                 case "movie":
@@ -330,6 +337,4 @@ public class RequestJson<JSONParser>{
             }
         }
     }
-
 }
-

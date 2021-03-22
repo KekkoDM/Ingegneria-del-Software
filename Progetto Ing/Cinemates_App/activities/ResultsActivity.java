@@ -55,10 +55,12 @@ public class ResultsActivity extends AppCompatActivity {
 
         noResultIcon = findViewById(R.id.noResultIcon);
         noResultLabel = findViewById(R.id.noResultLabel);
+        //noResultIcon.setVisibility(View.VISIBLE);
+        //noResultLabel.setVisibility(View.VISIBLE);
 
         Intent intent = getIntent();
         if (intent.getStringExtra("type").equals("film")) {
-            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("moviesearched"));
+            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("textSearched"));
         }
         else {
             users = new ArrayList<>();
@@ -66,6 +68,13 @@ public class ResultsActivity extends AppCompatActivity {
             searchUserAdapter = new SearchUserAdapter(ResultsActivity.this, users);
             rv.setAdapter(searchUserAdapter);
         }
+        System.out.println("RECYCLER COUNT: "+requestJson.getListFilm());
+
+        /*if(rv.getChildCount()){
+            noResultIcon.setVisibility(View.VISIBLE);
+            noResultLabel.setVisibility(View.VISIBLE);
+            rv.setVisibility(View.INVISIBLE);
+        }*/
 
         backBtn = findViewById(R.id.backButton2);
         backBtn.setOnClickListener(new View.OnClickListener() {

@@ -14,17 +14,17 @@ import android.widget.TextView;
 
 import com.example.cinemates.R;
 import com.example.cinemates.activities.MovieDescriptorActivity;
-import com.example.cinemates.adapters.DescriptionFilmAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
 import com.example.cinemates.classes.Film;
 import com.squareup.picasso.Picasso;
 
 public class DescriptionFragment extends Fragment {
     private FilmAdapter filmAdapter;
-    private DescriptionFilmAdapter adapter;
+
     private ImageView mCover;
     private TextView mTitle;
     private TextView mDescription;
+    private TextView mDuration;
     private TextView mReleaseDate;
     private TextView mValutation;
     private ImageView mBackdrop;
@@ -49,7 +49,7 @@ public class DescriptionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_descriptor, container, false);
 
         film = ((MovieDescriptorActivity)getActivity()).getFilm();
-        adapter = new DescriptionFilmAdapter(film,getContext());
+
         System.out.println("FILM : "+ film.getTitle());
 
         mCover = view.findViewById(R.id.detail_movie_img);
@@ -71,6 +71,7 @@ public class DescriptionFragment extends Fragment {
         else {
             Picasso.with(this.getContext()).load("https://image.tmdb.org/t/p/w500"+film.getBackdrop()).into(mBackdrop);
         }
+
 
         mTitle.setText(film.getTitle());
         mDescription.setText(film.getDescription());
