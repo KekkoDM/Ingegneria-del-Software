@@ -15,15 +15,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/filmCasual_img"
         android:layout_width="125dp"
         android:layout_height="175dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_app_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_film_roll" />
+        app:riv_corner_radius="15dp" />
 
     <ImageView
         android:id="@+id/closePopBtn"
@@ -57,9 +61,10 @@
         android:id="@+id/btn_regenerate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/orange_hype"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Rigenera nuovo film"
+        android:text="Genera nuovo film"
         app:cornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
