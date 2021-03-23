@@ -72,7 +72,7 @@ public class CommentsActivity extends AppCompatActivity {
 
         commentReview = findViewById(R.id.comment_review_comment);
 
-        alertComment = findViewById(R.id.alert_comment);
+        alertComment = findViewById(R.id.alert_review_comment);
         alertComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

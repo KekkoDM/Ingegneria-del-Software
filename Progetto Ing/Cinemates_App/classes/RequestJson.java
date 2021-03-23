@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 
 import com.android.volley.toolbox.Volley;
+
 import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
 
