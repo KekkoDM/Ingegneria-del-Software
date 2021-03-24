@@ -3,6 +3,7 @@ package com.example.cinemates.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,13 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Utente result = results.get(position);
+
+        if (alreadyFriends(result)) {
+            holder.followBtn.setText("Già aggiunto");
+            holder.followBtn.setBackgroundColor(Color.LTGRAY);
+            holder.followBtn.setEnabled(false);
+        }
+
         holder.setResult(result);
 
         //send follow request
@@ -58,6 +66,18 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
                 sendFollowRequest(result, holder);
             }
         });
+    }
+
+    private Boolean alreadyFriends(Utente utente) {
+        Boolean found = false;
+
+        for (Utente friend : FriendsAdapter.friends) {
+            if (friend.getUsername().equals(utente.getUsername())) {
+                found = true;
+            }
+        }
+
+        return found;
     }
 
     private void sendFollowRequest(Utente result, MyViewHolder holder) {
@@ -93,6 +113,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
                     if (!obj.getBoolean("error")) {
                         Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
                         holder.followBtn.setText("Richiesta inviata");
+                        holder.followBtn.setBackgroundColor(Color.LTGRAY);
                         holder.followBtn.setEnabled(false);
                     } else {
                         Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
