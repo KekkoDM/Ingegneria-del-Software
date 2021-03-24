@@ -71,12 +71,14 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
     private Boolean alreadyFriends(Utente utente) {
         Boolean found = false;
 
-        for (Utente friend : FriendsAdapter.friends) {
-            if (friend.getUsername().equals(utente.getUsername())) {
-                found = true;
+        if(FriendsAdapter.friends.isEmpty()) { }
+        else{
+            for (Utente friend : FriendsAdapter.friends) {
+                if (friend.getUsername().equals(utente.getUsername())) {
+                    found = true;
+                }
             }
         }
-
         return found;
     }
 
