@@ -14,4 +14,7 @@ public class CinematesDB {
     public static final String REJECT_FOLLOW_NOTIFICATION_URL = BASE_URL + "notifica/rejectFollowNotification.php";
     public static final String SEND_FOLLOW_NOTIFICATION_URL = BASE_URL + "notifica/sendFollowNotification.php";
     public static final String SEARCH_USER = BASE_URL + "utente/searchUser.php";
+    public static final String LIST_FAVORITES_URL = BASE_URL + "film/getListFavorites.php";
+    public static final String LIST_TO_SEE_URL = BASE_URL + "film/getListToSee.php";
+    public static final String ADD_TO_LIST_URL = BASE_URL + "film/addToList.php";
 }
