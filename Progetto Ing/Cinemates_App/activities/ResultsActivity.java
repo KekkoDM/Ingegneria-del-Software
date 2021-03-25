@@ -1,6 +1,7 @@
 package com.example.cinemates.activities;
 
 import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,9 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.RequestQueue;
+
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
+import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.ResultsAdapter;
 import com.example.cinemates.adapters.SearchUserAdapter;
 import com.example.cinemates.classes.Film;
@@ -40,7 +42,7 @@ public class ResultsActivity extends AppCompatActivity {
     public static TextView noResultLabel;
     private ResultsAdapter resultsAdapter;
     private SearchUserAdapter searchUserAdapter;
-    private RequestQueue requestQueue;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +58,10 @@ public class ResultsActivity extends AppCompatActivity {
         noResultIcon = findViewById(R.id.noResultIcon);
         noResultLabel = findViewById(R.id.noResultLabel);
 
+
         Intent intent = getIntent();
         if (intent.getStringExtra("type").equals("film")) {
-            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("textsearched"));
+            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("textSearched"));
         }
         else {
             users = new ArrayList<>();
@@ -75,6 +78,8 @@ public class ResultsActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void searchUser(String friendsearched) {
         class SearchUser extends AsyncTask<Void, Void, String> {
@@ -127,6 +132,11 @@ public class ResultsActivity extends AppCompatActivity {
 
                             users.add(utente);
                         }
+                    } else {
+                        ArrayList<String> error = new ArrayList<String>();
+                        error.add("Ops! La ricerca non ha prodotto risultati");
+                        ErrorAdapter adapter = new ErrorAdapter(ResultsActivity.this,error);
+                        rv.setAdapter(adapter);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

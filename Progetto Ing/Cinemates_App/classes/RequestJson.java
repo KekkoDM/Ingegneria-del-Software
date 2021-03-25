@@ -58,7 +58,7 @@ public class RequestJson<JSONParser>{
 
     }
 
-
+    //SLIDER
     public void parseJSONSlide(ViewPager2 viewPager2, SliderAdapter adapter) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, tmdb+"all"+apikey, null,
                 new Response.Listener<JSONObject>() {
@@ -75,6 +75,22 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
+    protected void getFilmSlider(ViewPager2 viewPager, SliderAdapter adapter, JSONObject response){
+        try {
+            listFilm = new ArrayList<Film>();
+            JSONArray jsonArray = response.getJSONArray("results");
+
+            setFMV(jsonArray);
+
+            adapter =  new SliderAdapter(listFilm,viewPager,context);
+            viewPager.setAdapter(adapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //SEARCH SUGGESTION
     public void parseJSONSearchSuggestion(RecyclerView recyclerView, SearchSuggestionsAdapter adapter) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, tmdb+"all"+apikey, null,
                 new Response.Listener<JSONObject>() {
@@ -91,7 +107,22 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
+    protected void getFilmSearchSuggestion(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
+        try {
+            listFilm = new ArrayList<Film>();
+            JSONArray jsonArray = response.getJSONArray("results");
 
+            setFMV(jsonArray);
+
+            adapter = new SearchSuggestionsAdapter(context, listFilm);
+            recyclerView.setAdapter(adapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    //RECYCLERVIEW FILM
     public void parseJSONFilm(RecyclerView recyclerView, RecyclerView.Adapter filmAdapter,String type) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, tmdb+type+apikey, null,
                 new Response.Listener<JSONObject>() {
@@ -108,6 +139,23 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
+    protected void getFilmHome(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
+        try {
+            listFilm = new ArrayList<Film>();
+            JSONArray jsonArray = response.getJSONArray("results");
+
+            setFMV(jsonArray);
+
+            adapter = new FilmAdapter(listFilm,context);
+            recyclerView.setAdapter(adapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    //RICERCA
     public void parseJSONSearch(RecyclerView recyclerView,ResultsAdapter resultsAdapter, String query){
         String url = "https://api.themoviedb.org/3/search/multi?api_key=6ff4c2846a2910d753ff91a81eee4f6c&language=it-IT&query="+query+"&include_adult=false";
 
@@ -126,9 +174,29 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
+    public void getFilmResults(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
+        try {
+            listFilm = new ArrayList<Film>();
+            JSONArray jsonArray = response.getJSONArray("results");
+            ArrayList<String> error = new ArrayList<String>();
+            error.add("Ops! La ricerca non ha prodotto risultati");
+
+            setFMV(jsonArray);
+
+            if (listFilm.size()>0)
+                adapter = new ResultsAdapter(listFilm, context);
+            else
+                adapter = new ErrorAdapter(context,error);
+
+            recyclerView.setAdapter(adapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
+    //RECENSIONI
     public void parseJSONReviews(RecyclerView recyclerView, RecyclerView.Adapter adapter,String id,String type) {
 
         String base_url = "https://api.themoviedb.org/3/";
@@ -154,7 +222,7 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
-    public void getReviews(RecyclerView recyclerView, RecyclerView.Adapter adapter,JSONObject response){
+    protected void getReviews(RecyclerView recyclerView, RecyclerView.Adapter adapter,JSONObject response){
         try {
             reviews = new ArrayList<>();
             JSONArray jsonArray = response.getJSONArray("results");
@@ -175,76 +243,7 @@ public class RequestJson<JSONParser>{
     }
 
 
-    public void getFilmHome(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
-        try {
-            listFilm = new ArrayList<Film>();
-            JSONArray jsonArray = response.getJSONArray("results");
-
-            setFMV(jsonArray);
-
-            adapter = new FilmAdapter(listFilm,context);
-            recyclerView.setAdapter(adapter);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void getFilmSearchSuggestion(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
-        try {
-            listFilm = new ArrayList<Film>();
-            JSONArray jsonArray = response.getJSONArray("results");
-
-            setFMV(jsonArray);
-
-            adapter = new SearchSuggestionsAdapter(context, listFilm);
-            recyclerView.setAdapter(adapter);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-
-    public void getFilmSlider(ViewPager2 viewPager, SliderAdapter adapter, JSONObject response){
-        try {
-            listFilm = new ArrayList<Film>();
-            JSONArray jsonArray = response.getJSONArray("results");
-
-            setFMV(jsonArray);
-
-            adapter =  new SliderAdapter(listFilm,viewPager,context);
-            viewPager.setAdapter(adapter);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-
-    public void getFilmResults(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
-        try {
-            listFilm = new ArrayList<Film>();
-            JSONArray jsonArray = response.getJSONArray("results");
-            ArrayList<String> error = new ArrayList<String>();
-            error.add("Ops! La ricerca non ha prodotto risultati");
-
-            setFMV(jsonArray);
-
-            if (listFilm.size()>0)
-                adapter = new ResultsAdapter(listFilm, context);
-            else
-                adapter = new ErrorAdapter(context,error);
-
-            recyclerView.setAdapter(adapter);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    
-
+    //SET PARAMETRI
     protected void setListFilm(JSONArray jsonArray,int i) throws JSONException {
 
         JSONObject hit = jsonArray.getJSONObject(i);
