@@ -94,6 +94,8 @@ public class Film implements Serializable {
                 this.type = "Persona";
                 break;
 
+            default:
+                this.type=type;
 
         }
 
