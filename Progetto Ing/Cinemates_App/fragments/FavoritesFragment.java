@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import com.android.volley.RequestQueue;
 import com.example.cinemates.MainActivity;
+import com.example.cinemates.activities.ResultsActivity;
+import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -103,6 +105,7 @@ public class FavoritesFragment extends Fragment {
                     //if no error in response
                     if (!obj.getBoolean("error")) {
                         RequestJson requestJson = new RequestJson(getContext());
+
                         JSONArray list = obj.getJSONArray("list");
                         for (int i = 0; i < list.length(); i++) {
                             JSONObject film = list.getJSONObject(i);
@@ -117,11 +120,17 @@ public class FavoritesFragment extends Fragment {
                                     film.getString("type")
                             );
                             listItem.add(item);
-                            System.out.println("FILM: " +item.getId() +" "+item.getType());
                             requestJson.parseJSONSavedList(recyclerView, filmAdapter, item);
                         }
+
+                        for (int i = 0; i < list.length(); i++) {
+
+                        }
                     } else {
-                        Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                        ArrayList<String> error = new ArrayList<String>();
+                        error.add("La tua lista non ha ancora nessun elemento!");
+                        ErrorAdapter adapter = new ErrorAdapter(getContext(),error);
+                        recyclerView.setAdapter(adapter);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

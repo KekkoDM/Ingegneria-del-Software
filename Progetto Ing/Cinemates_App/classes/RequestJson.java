@@ -244,7 +244,7 @@ public class RequestJson<JSONParser>{
 
     //FAVORITI E DA VEDERE
     public void parseJSONSavedList(RecyclerView recyclerView,RecyclerView.Adapter adapter,Film film){
-        
+
         String url = "https://api.themoviedb.org/3/";
         String type ="";
         if (film.getType().equals("Film"))
@@ -252,12 +252,13 @@ public class RequestJson<JSONParser>{
         else
             type="tv/";
         url = url+type+film.getId()+"?api_key=6ff4c2846a2910d753ff91a81eee4f6c&language=it-IT";
-
+        listFilm = new ArrayList<Film>();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         getMediaOnId(recyclerView,adapter,response,film.getType());
+
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -270,13 +271,11 @@ public class RequestJson<JSONParser>{
 
     protected void getMediaOnId(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response,String type){
         try {
-            listFilm = new ArrayList<Film>();
-            JSONArray jsonArray = response.getJSONArray("results");
 
             if(type.equals("Film"))
-                setListFilm(jsonArray,0);
+                setListFilm(response,0);
             else
-                setListSeries(jsonArray,0);
+                setListSeries(response,0);
 
             adapter = new FilmAdapter(listFilm,context);
             recyclerView.setAdapter(adapter);
@@ -288,19 +287,25 @@ public class RequestJson<JSONParser>{
 
 
     //SET PARAMETRI
-    protected void setListFilm(JSONArray jsonArray,int i) throws JSONException {
+    protected void setListFilm(JSONObject hit,int i) throws JSONException {
 
-        JSONObject hit = jsonArray.getJSONObject(i);
         String id = hit.getString("id");
         String cover = hit.getString("poster_path");
         String title = hit.getString("title");
         String description = hit.getString("overview");
         String valutation = hit.getString("vote_average");
-        String type = hit.getString("media_type");
+        String type ;
         String releaseD;
         String backdrop ;
 
-        if (hit.isNull("release_date")){
+        if(hit.isNull("media_type")){
+            type="Film";
+        }
+        else
+            type = hit.getString("media_type");
+
+
+        if (hit.isNull("backdrop_path")){
             backdrop = "";
         }else
         {
@@ -328,16 +333,34 @@ public class RequestJson<JSONParser>{
     }
 
 
-    protected void setListSeries(JSONArray jsonArray,int i) throws JSONException {
-        JSONObject hit = jsonArray.getJSONObject(i);
+    protected void setListSeries(JSONObject hit,int i) throws JSONException {
+
         String id = hit.getString("id");
         String cover = hit.getString("poster_path");
-        String backdrop = hit.getString("backdrop_path");
+        String backdrop ;
         String description = hit.getString("overview");
-        String releaseD = hit.getString("first_air_date");
+        String releaseD ;
         String title = hit.getString("name");
         String valutation = hit.getString("vote_average");
-        String type = hit.getString("media_type");
+        String type ;
+
+        if(hit.isNull("media_type"))
+            type="Serie TV";
+
+        else
+            type = hit.getString("media_type");
+
+
+        if (hit.isNull("backdrop_path"))
+            backdrop = "";
+        else
+            backdrop = hit.getString("backdrop_path");
+
+        if (hit.isNull("release_date"))
+            releaseD = "Da Definire";
+        else
+            releaseD = hit.getString("release_date");
+
         listFilm.add(new Film(id,cover,backdrop, title, description, releaseD, valutation,type));
     }
 
@@ -349,11 +372,11 @@ public class RequestJson<JSONParser>{
 
             switch (type) {
                 case "movie":
-                    setListFilm(jsonArray,i);
+                    setListFilm(hit,i);
                     break;
 
                 case "tv":
-                    setListSeries(jsonArray,i);
+                    setListSeries(hit,i);
                     break;
 
                 case "person":
@@ -368,10 +391,10 @@ public class RequestJson<JSONParser>{
                         for (int j = 0; j < filmsOf.length(); j++) {
                             JSONObject actorFilm = filmsOf.getJSONObject(j);
                             if (actorFilm.getString("media_type").equals("movie")) {
-                                setListFilm(filmsOf,j);
+                                setListFilm(actorFilm,j);
                             }
                             else {
-                                setListSeries(filmsOf,j);
+                                setListSeries(actorFilm,j);
                             }
                         }
                     } catch (JSONException f) {
