@@ -123,6 +123,13 @@ public class DescriptionFragment extends Fragment {
         bookmarkTextView.setTranslationY(100f);
         bookmarkBtn.setTranslationY(100f);
 
+        if (MainActivity.utente.isAutenticato()) {
+            addTo.setVisibility(View.VISIBLE);
+        }
+        else {
+            addTo.setVisibility(View.INVISIBLE);
+        }
+
         addTo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,7 +168,7 @@ public class DescriptionFragment extends Fragment {
     }
 
     private void addToList(Film film, String list) {
-        class MyList extends AsyncTask<Void, Void, String> {
+        class ListAdder extends AsyncTask<Void, Void, String> {
 
             @Override
             protected void onPreExecute() {
@@ -178,6 +185,7 @@ public class DescriptionFragment extends Fragment {
                 params.put("list", list);
                 params.put("username", MainActivity.utente.getUsername());
                 params.put("item", film.getId());
+                params.put("type", film.getType());
 
                 //returing the response
                 return requestHandler.sendPostRequest(CinematesDB.ADD_TO_LIST_URL, params);
@@ -197,8 +205,8 @@ public class DescriptionFragment extends Fragment {
             }
         }
 
-        MyList myList = new MyList();
-        myList.execute();
+        ListAdder listAdder = new ListAdder();
+        listAdder.execute();
     }
 
     private void openMenu() {
@@ -211,7 +219,6 @@ public class DescriptionFragment extends Fragment {
 
         bookmarkTextView.animate().translationY(0f).alpha(1f).setInterpolator(interpolator).setDuration(300).start();
         bookmarkBtn.animate().translationY(0f).alpha(1f).setInterpolator(interpolator).setDuration(300).start();
-
     }
 
     private void closeMenu() {
@@ -224,6 +231,5 @@ public class DescriptionFragment extends Fragment {
 
         bookmarkTextView.animate().translationY(100f).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
         bookmarkBtn.animate().translationY(100f).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
-
     }
 }
