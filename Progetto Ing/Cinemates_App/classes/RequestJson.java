@@ -151,7 +151,6 @@ public class RequestJson<JSONParser>{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
 
@@ -174,7 +173,7 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
-    public void getFilmResults(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
+    protected void getFilmResults(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
         try {
             listFilm = new ArrayList<Film>();
             JSONArray jsonArray = response.getJSONArray("results");
@@ -241,6 +240,51 @@ public class RequestJson<JSONParser>{
             e.printStackTrace();
         }
     }
+
+
+    //FAVORITI E DA VEDERE
+    public void parseJSONSavedList(RecyclerView recyclerView,RecyclerView.Adapter adapter,Film film){
+        
+        String url = "https://api.themoviedb.org/3/";
+        String type ="";
+        if (film.getType().equals("Film"))
+            type="movie/";
+        else
+            type="tv/";
+        url = url+type+film.getId()+"?api_key=6ff4c2846a2910d753ff91a81eee4f6c&language=it-IT";
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        getMediaOnId(recyclerView,adapter,response,film.getType());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        requestQueue.add(request);
+    }
+
+    protected void getMediaOnId(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response,String type){
+        try {
+            listFilm = new ArrayList<Film>();
+            JSONArray jsonArray = response.getJSONArray("results");
+
+            if(type.equals("Film"))
+                setListFilm(jsonArray,0);
+            else
+                setListSeries(jsonArray,0);
+
+            adapter = new FilmAdapter(listFilm,context);
+            recyclerView.setAdapter(adapter);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     //SET PARAMETRI
