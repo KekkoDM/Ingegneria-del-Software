@@ -44,7 +44,7 @@ public class FavoritesFragment extends Fragment {
     private FilmAdapter filmAdapter;
     private RequestJson requestJson;
     private Button buttonCasual;
-    public static ArrayList<Film> listItem;
+    private ArrayList<Film> listItem;
     int id = -1;
 
     public FavoritesFragment() {
@@ -95,10 +95,10 @@ public class FavoritesFragment extends Fragment {
         int nextId;
 
         do {                       //DUALMENTE CON ALTRA RECYCLERVIEW
-            nextId= random.nextInt(recyclerViewFavorites.getAdapter().getItemCount());
-        }while(id==nextId);
+            nextId = random.nextInt(recyclerViewFavorites.getAdapter().getItemCount());
+        }while(id == nextId);
 
-        id=nextId;
+        id = nextId;
         filmAdapter = (FilmAdapter) recyclerViewFavorites.getAdapter();
 
         //DA CAMBIARE CON POPUP
@@ -153,10 +153,6 @@ public class FavoritesFragment extends Fragment {
                             );
                             listItem.add(item);
                             requestJson.parseJSONSavedList(recyclerView, filmAdapter, item);
-                        }
-
-                        for (int i = 0; i < list.length(); i++) {
-
                         }
                     } else {
                         ArrayList<String> error = new ArrayList<String>();

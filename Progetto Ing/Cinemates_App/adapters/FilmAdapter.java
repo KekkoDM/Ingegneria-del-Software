@@ -22,7 +22,7 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
     private Context context;
     private ArrayList<Film> listFilm;
 
-    public FilmAdapter(ArrayList<Film> listFilm,Context context) {
+    public FilmAdapter(ArrayList<Film> listFilm, Context context) {
         this.context = context;
         this.listFilm = listFilm;
     }

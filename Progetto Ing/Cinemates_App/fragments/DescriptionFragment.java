@@ -50,6 +50,7 @@ public class DescriptionFragment extends Fragment {
     private FloatingActionButton addTo, favoritesBtn, bookmarkBtn;
     private TextView favoritesTextView, bookmarkTextView;
     private Boolean menuOpen = false;
+    private Boolean exist = false;
     private OvershootInterpolator interpolator = new OvershootInterpolator();
 
     public Film getFilm() {
@@ -72,7 +73,6 @@ public class DescriptionFragment extends Fragment {
 
         film = ((MovieDescriptorActivity)getActivity()).getFilm();
         adapter = new DescriptionFilmAdapter(film,getContext());
-        System.out.println("FILM : "+ film.getId());
 
         mCover = view.findViewById(R.id.detail_movie_img);
         mTitle = view.findViewById(R.id.detail_movie_title);
@@ -87,6 +87,7 @@ public class DescriptionFragment extends Fragment {
         else {
             Picasso.with(this.getContext()).load("https://image.tmdb.org/t/p/w500"+film.getCover()).into(mCover);
         }
+
         if (film.getBackdrop().equals("null")) {
             mBackdrop.setImageResource(R.drawable.no_cover_found);
         }
@@ -125,6 +126,8 @@ public class DescriptionFragment extends Fragment {
 
         if (MainActivity.utente.isAutenticato()) {
             addTo.setVisibility(View.VISIBLE);
+            checkExistInList(film, "Preferiti");
+            checkExistInList(film, "Da vedere");
         }
         else {
             addTo.setVisibility(View.INVISIBLE);
@@ -145,11 +148,11 @@ public class DescriptionFragment extends Fragment {
         favoritesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.utente.isAutenticato()) {
+                if (favoritesTextView.getText().equals("Aggiungi a Preferiti")) {
                     addToList(film, "Preferiti");
                 }
                 else {
-                    Toast.makeText(getContext(), "Devi prima effettuare l'accesso", Toast.LENGTH_SHORT).show();
+                    removeFromList(film, "Preferiti");
                 }
             }
         });
@@ -157,14 +160,116 @@ public class DescriptionFragment extends Fragment {
         bookmarkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.utente.isAutenticato()) {
+                if (bookmarkTextView.getText().equals("Aggiungi a Da Vedere")) {
                     addToList(film, "Da vedere");
                 }
                 else {
-                    Toast.makeText(getContext(), "Devi prima effettuare l'accesso", Toast.LENGTH_SHORT).show();
+                    removeFromList(film, "Da vedere");
                 }
             }
         });
+    }
+
+    private void removeFromList(Film film, String list) {
+        class Remover extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("item", film.getId());
+                params.put("list", list);
+
+                //returing the response
+                return requestHandler.sendPostRequest(CinematesDB.REMOVE_FROM_LIST, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+                    if (!obj.getBoolean("error")) {
+                        if (list.equals("Preferiti")) {
+                            favoritesBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.light_grey));
+                            favoritesTextView.setText("Aggiungi a Preferiti");
+                        }
+                        else {
+                            bookmarkBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.light_grey));
+                            bookmarkTextView.setText("Aggiungi a Da Vedere");
+                        }
+                    }
+
+                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Remover remover = new Remover();
+        remover.execute();
+    }
+
+    private void checkExistInList(Film film, String list) {
+        class Checker extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("item", film.getId());
+                params.put("list", list);
+
+                //returing the response
+                return requestHandler.sendPostRequest(CinematesDB.CHECK_EXIST_IN_LIST, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+                    if (obj.getBoolean("error")) {
+                        if (list.equals("Preferiti")) {
+                            favoritesBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.favorites_button));
+                            favoritesTextView.setText("Rimuovi da Preferiti");
+                        }
+                        else {
+                            bookmarkBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.bookmark_button));
+                            bookmarkTextView.setText("Rimuovi da lista Da Vedere");
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Checker checker = new Checker();
+        checker.execute();
     }
 
     private void addToList(Film film, String list) {
@@ -198,6 +303,16 @@ public class DescriptionFragment extends Fragment {
                 try {
                     //converting response to json object
                     JSONObject obj = new JSONObject(s);
+                    if (!obj.getBoolean("error")) {
+                        if (list.equals("Preferiti")) {
+                            favoritesBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.favorites_button));
+                            favoritesTextView.setText("Rimuovi da Preferiti");
+                        }
+                        else {
+                            bookmarkBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.bookmark_button));
+                            bookmarkTextView.setText("Rimuovi da lista Da Vedere");
+                        }
+                    }
                     Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
