@@ -40,9 +40,15 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, MovieDescriptorActivity.class);
-                intent.putExtra("Film", results.get(position));
-                context.startActivity(intent);
+                if(result.getType().equals("Persona")){
+
+                }
+                else{
+                    Intent intent = new Intent(context, MovieDescriptorActivity.class);
+                    intent.putExtra("Film", results.get(position));
+                    context.startActivity(intent);
+                }
+                
             }
         });
     }
