@@ -38,6 +38,7 @@ public class FavoritesFragment extends Fragment {
     private RecyclerView recyclerViewToSee;
     private RecyclerView recyclerViewFavorites;
     private FilmAdapter filmAdapter;
+    private RequestJson requestJson;
     public static ArrayList<Film> listItem;
 
     public FavoritesFragment() {
@@ -66,6 +67,7 @@ public class FavoritesFragment extends Fragment {
         recyclerViewFavorites.setLayoutManager(llm);
 
         listItem = new ArrayList<>();
+        requestJson = new RequestJson(getContext());
 
         loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL);
         loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL);
@@ -104,8 +106,6 @@ public class FavoritesFragment extends Fragment {
 
                     //if no error in response
                     if (!obj.getBoolean("error")) {
-                        RequestJson requestJson = new RequestJson(getContext());
-
                         JSONArray list = obj.getJSONArray("list");
                         for (int i = 0; i < list.length(); i++) {
                             JSONObject film = list.getJSONObject(i);

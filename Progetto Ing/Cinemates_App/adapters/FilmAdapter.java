@@ -42,7 +42,7 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull FilmAdapter.MyViewHolder holder, int position) {
         holder.setFilm(listFilm.get(position));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.poster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDescriptorActivity.class);
