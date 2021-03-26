@@ -1,6 +1,7 @@
 package com.example.cinemates.fragments;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 
 import com.android.volley.RequestQueue;
 import com.example.cinemates.MainActivity;
+import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.activities.ResultsActivity;
 import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.cinemates.R;
@@ -33,13 +36,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class FavoritesFragment extends Fragment {
     private RecyclerView recyclerViewToSee;
     private RecyclerView recyclerViewFavorites;
     private FilmAdapter filmAdapter;
     private RequestJson requestJson;
+    private Button buttonCasual;
     public static ArrayList<Film> listItem;
+    int id = -1;
 
     public FavoritesFragment() {
         // Required empty public constructor
@@ -66,6 +72,15 @@ public class FavoritesFragment extends Fragment {
         recyclerViewToSee.setLayoutManager(ll);
         recyclerViewFavorites.setLayoutManager(llm);
 
+        buttonCasual = view.findViewById(R.id.btn_casual);
+        buttonCasual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(recyclerViewFavorites.getAdapter()!=null)
+                    casualFilm();
+            }
+        });
+
         listItem = new ArrayList<>();
         requestJson = new RequestJson(getContext());
 
@@ -73,6 +88,23 @@ public class FavoritesFragment extends Fragment {
         loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL);
 
         return view;
+    }
+
+    private void casualFilm(){
+        Random random = new Random();
+        int nextId;
+
+        do {                       //DUALMENTE CON ALTRA RECYCLERVIEW
+            nextId= random.nextInt(recyclerViewFavorites.getAdapter().getItemCount());
+        }while(id==nextId);
+
+        id=nextId;
+        filmAdapter = (FilmAdapter) recyclerViewFavorites.getAdapter();
+
+        //DA CAMBIARE CON POPUP
+        Intent intent = new Intent(getContext(), MovieDescriptorActivity.class);
+        intent.putExtra("Film",filmAdapter.getItem(id));
+        getContext().startActivity(intent);
     }
 
     private void loadList(RecyclerView recyclerView, String url) {
