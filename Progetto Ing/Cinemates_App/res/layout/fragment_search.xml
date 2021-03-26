@@ -31,7 +31,7 @@
         android:background="@drawable/custom_edit_text"
         android:drawableStart="@drawable/ic_search_24"
         android:drawablePadding="12dp"
-        android:drawableTint="@color/light_grey"
+        android:drawableTint="@color/purple_hype"
         android:ems="10"
         android:hint="@string/search_field"
         android:inputType="text"
@@ -67,7 +67,7 @@
         android:layout_marginTop="24dp"
         android:text="I più cercati"
         android:textColor="@color/purple_hype"
-        android:textSize="24dp"
+        android:textSize="18dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchBtn" />

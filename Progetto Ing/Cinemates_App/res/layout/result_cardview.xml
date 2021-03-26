@@ -36,7 +36,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:textAlignment="center"
-            android:textColor="@color/dark_grey"
+            android:textColor="@color/purple_hype"
             android:textSize="18dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/textView11"
@@ -46,7 +46,7 @@
         <TextView
             android:id="@+id/descriptionResult"
             android:layout_width="0dp"
-            android:layout_height="75dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
@@ -54,7 +54,7 @@
             android:ellipsize="end"
             android:maxLines="4"
             android:textAlignment="center"
-            android:textColor="@color/purple_hype"
+            android:textColor="@color/light_grey"
             android:textSize="15dp"
             app:layout_constraintBottom_toTopOf="@+id/dateResult"
             app:layout_constraintEnd_toStartOf="@+id/textView11"
@@ -62,6 +62,17 @@
             app:layout_constraintStart_toEndOf="@+id/coverResult"
             app:layout_constraintTop_toBottomOf="@+id/titleResult"
             app:layout_constraintVertical_bias="0.363" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/coverResult"
+            app:srcCompat="@drawable/ic_baseline_calendar"
+            app:tint="@color/light_grey" />
 
         <TextView
             android:id="@+id/dateResult"
@@ -73,7 +84,18 @@
             android:textColor="@color/light_grey"
             android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/coverResult" />
+            app:layout_constraintStart_toEndOf="@+id/imageView8" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/typeResult"
+            app:srcCompat="@drawable/ic_baseline_star"
+            app:tint="@color/light_grey" />
 
         <TextView
             android:id="@+id/typeResult"
