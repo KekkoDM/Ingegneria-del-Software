@@ -42,8 +42,10 @@ public class FavoritesFragment extends Fragment {
     private RecyclerView recyclerViewToSee;
     private RecyclerView recyclerViewFavorites;
     private FilmAdapter filmAdapter;
+    ErrorAdapter errorAdapter;
     private RequestJson requestJson;
-    private Button buttonCasual;
+    private Button buttonCasualFavorites;
+    private Button buttonCasualToSee;
     private ArrayList<Film> listItem;
     int id = -1;
 
@@ -72,14 +74,28 @@ public class FavoritesFragment extends Fragment {
         recyclerViewToSee.setLayoutManager(ll);
         recyclerViewFavorites.setLayoutManager(llm);
 
-        buttonCasual = view.findViewById(R.id.btn_casual);
-        buttonCasual.setOnClickListener(new View.OnClickListener() {
+        buttonCasualFavorites = view.findViewById(R.id.btn_casual);
+        buttonCasualFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(recyclerViewFavorites.getAdapter()!=null)
-                    casualFilm();
+                if(String.valueOf(recyclerViewFavorites.getAdapter()).substring(31,35).equals("Film")){
+                    casualFilm(recyclerViewFavorites);
+                }
+
+            }
+
+
+        });
+
+        buttonCasualToSee = view.findViewById(R.id.btn_casual2);
+        buttonCasualToSee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(String.valueOf(recyclerViewToSee.getAdapter()).substring(31,35).equals("Film"))
+                    casualFilm(recyclerViewToSee);
             }
         });
+
 
         listItem = new ArrayList<>();
         requestJson = new RequestJson(getContext());
@@ -90,17 +106,20 @@ public class FavoritesFragment extends Fragment {
         return view;
     }
 
-    private void casualFilm(){
+    private void casualFilm(RecyclerView rv){
         Random random = new Random();
-        int nextId;
+        int nextId = 0;
 
-        do {                       //DUALMENTE CON ALTRA RECYCLERVIEW
-            nextId = random.nextInt(recyclerViewFavorites.getAdapter().getItemCount());
-        }while(id == nextId);
+        filmAdapter = (FilmAdapter) rv.getAdapter();
+        if (filmAdapter.getItemCount()>1){
+            do {
+                nextId = random.nextInt(rv.getAdapter().getItemCount());
+            }while(id == nextId);
+
+        }
 
         id = nextId;
-        filmAdapter = (FilmAdapter) recyclerViewFavorites.getAdapter();
-
+        
         //DA CAMBIARE CON POPUP
         Intent intent = new Intent(getContext(), MovieDescriptorActivity.class);
         intent.putExtra("Film",filmAdapter.getItem(id));
@@ -157,8 +176,8 @@ public class FavoritesFragment extends Fragment {
                     } else {
                         ArrayList<String> error = new ArrayList<String>();
                         error.add("La tua lista non ha ancora nessun elemento!");
-                        ErrorAdapter adapter = new ErrorAdapter(getContext(),error);
-                        recyclerView.setAdapter(adapter);
+                        errorAdapter = new ErrorAdapter(getContext(),error);
+                        recyclerView.setAdapter(errorAdapter);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
