@@ -54,7 +54,7 @@
             android:ellipsize="end"
             android:maxLines="4"
             android:textAlignment="center"
-            android:textColor="@color/light_grey"
+            android:textColor="@color/purple_hype"
             android:textSize="15dp"
             app:layout_constraintBottom_toTopOf="@+id/dateResult"
             app:layout_constraintEnd_toStartOf="@+id/textView11"

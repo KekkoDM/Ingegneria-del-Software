@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_login_background"
+    android:background="@color/light_background"
     tools:context=".activities.ResultsActivity">
 
     <ImageButton
@@ -15,7 +15,7 @@
         android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_baseline_arrow_back_24"
-        android:tint="@color/white"
+        android:tint="@color/purple_hype"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +26,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="Risultati"
-        android:textColor="@color/white"
+        android:textColor="@color/purple_hype"
         android:textSize="24dp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/backButton2"

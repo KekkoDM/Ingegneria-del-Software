@@ -30,14 +30,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_height="match_parent">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/formLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="8dp"
@@ -127,12 +127,12 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="32dp"
-                        android:backgroundTint="@color/dark_grey"
                         android:src="@drawable/ic_show_password"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toEndOf="@+id/forgotPw"
-                        app:layout_constraintTop_toBottomOf="@+id/password" />
+                        app:layout_constraintTop_toBottomOf="@+id/password"
+                        app:tint="@color/dark_grey" />
 
                     <Button
                         android:id="@+id/loginButton"
@@ -205,7 +205,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:clickable="true"
                 android:text="Non hai un account? Registrati"
                 android:textAlignment="center"

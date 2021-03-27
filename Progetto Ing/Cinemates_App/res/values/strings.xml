@@ -18,7 +18,7 @@
     <string name="label_recovery_pw">Inserisci il tuo indirizzo e-mail che hai fornito in fase di registrazione per ricevere le tue credenziali di accesso a Cinemates</string>
     <string name="title_activity_password_recovery">Recupera credenziali accesso</string>
     <string name="recovery_button">Recupera credenziali</string>
-    <string name="login_required">Questa funzionalità è riservata esclusivamente agli utenti registrati</string>
+    <string name="login_required">Accedi per scoprire questa pagina</string>
     <string name="notification_center">Centro notifiche</string>
     <string name="my_account">Il mio account</string>
     <string name="Description">Descrizione</string>
@@ -27,6 +27,5 @@
     <string name="movie_title">Titolo</string>
     <string name="movie_durata">Durata</string>
     <string name="movie_release_data">Release data</string>
-    <string name="movie_genre">Genere</string>
     <string name="movie_valutation">Valutazione</string>
 </resources>
