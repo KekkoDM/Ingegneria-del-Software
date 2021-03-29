@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import com.android.volley.toolbox.Volley;
 
+import com.example.cinemates.MainActivity;
 import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
 
@@ -25,7 +26,8 @@ import com.example.cinemates.adapters.ResultsAdapter;
 import com.example.cinemates.adapters.ReviewAdapter;
 import com.example.cinemates.adapters.SearchSuggestionsAdapter;
 import com.example.cinemates.adapters.SliderAdapter;
-
+import com.example.cinemates.fragments.FavoritesFragment;
+import com.example.cinemates.fragments.HomeFragment;
 
 
 import org.json.JSONArray;
@@ -258,7 +260,6 @@ public class RequestJson<JSONParser>{
                     @Override
                     public void onResponse(JSONObject response) {
                         getMediaOnId(recyclerView,adapter,response,film.getType());
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -270,14 +271,20 @@ public class RequestJson<JSONParser>{
     }
 
     protected void getMediaOnId(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response,String type){
-        try {
 
+        try {
             if(type.equals("Film"))
                 setListFilm(response,0);
             else
                 setListSeries(response,0);
 
-            adapter = new FilmAdapter(listFilm,context);
+            if(context.equals(MainActivity.selectedFragment.getContext()))
+                adapter = new FilmAdapter(listFilm,context);
+
+            else
+                adapter = new ResultsAdapter(listFilm,context);
+
+
             recyclerView.setAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -294,29 +301,25 @@ public class RequestJson<JSONParser>{
         String title = hit.getString("title");
         String description = hit.getString("overview");
         String valutation = hit.getString("vote_average");
-        String type ;
+        String type;
         String releaseD;
         String backdrop ;
 
-        if(hit.isNull("media_type")){
+        if(hit.isNull("media_type"))
             type="Film";
-        }
         else
             type = hit.getString("media_type");
 
-
-        if (hit.isNull("backdrop_path")){
+        if (hit.isNull("backdrop_path"))
             backdrop = "";
-        }else
-        {
+        else
             backdrop = hit.getString("backdrop_path");
-        }
-        if (hit.isNull("release_date")){
+
+        if (hit.isNull("release_date"))
             releaseD = "Da Definire";
-        }else
-        {
+        else
             releaseD = hit.getString("release_date");
-        }
+
         listFilm.add(new Film(id,cover,backdrop, title, description, releaseD, valutation,type));
 
     }

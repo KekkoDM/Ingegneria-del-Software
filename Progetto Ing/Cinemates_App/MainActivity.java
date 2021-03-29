@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     public static Utente utente = new Utente(null, null, null, null, null);
     private ChipNavigationBar bottomNav;
     private FragmentManager fragmentManager;
-    private Fragment selectedFragment = null;
+    public static Fragment selectedFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
