@@ -11,10 +11,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cinemates.classes.Film;
 import com.example.cinemates.classes.Review;
@@ -24,7 +28,7 @@ import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
 public class CommentsActivity extends AppCompatActivity {
-    private final String[] strings = {"like", "love", "ahah", "wow", "triste", "argh!"};
+    private final String[] strings = {"like", "love", "ahah", "triste", "argh!"};
     private RecyclerView rvComments;
     private TextView detailReview;
     private TextView usernameReview;
@@ -37,6 +41,9 @@ public class CommentsActivity extends AppCompatActivity {
     private Review review;
     private ImageButton backBtn;
     private Dialog dialog;
+    private RadioGroup alertGroup;
+    private RadioButton radioButton;
+    private Button sendAlert;
 
     public Review getReview() { return review; }
     public void setReview(Review review) { this.review = review; }
@@ -107,21 +114,43 @@ public class CommentsActivity extends AppCompatActivity {
 
     private boolean showPopup() {
         ImageView close;
-
-        close = findViewById(R.id.closealert);
-
         dialog.setContentView(R.layout.popup_report);
+        alertGroup = dialog.findViewById(R.id.radioGroup2);
+        sendAlert = dialog.findViewById(R.id.sendAlert);
+        close = dialog.findViewById(R.id.closealert);
+        sendAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int radioId = alertGroup.getCheckedRadioButtonId();
+                radioButton = dialog.findViewById(radioId);
+            }
+        });
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
+        sendAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String motivation = new String((String) radioButton.getText());
 
+                dialog.dismiss();
+            }
+        });
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
+
         return true;
+    }
+
+    public void checkButton(View v){
+        int radioId = alertGroup.getCheckedRadioButtonId();
+        radioButton = dialog.findViewById(radioId);
+        Toast.makeText(this,"Motivo della segnalazione : "+ radioButton.getText(), Toast.LENGTH_SHORT).show();
+
     }
 
     private void sampleCenterLeft() {
@@ -132,7 +161,6 @@ public class CommentsActivity extends AppCompatActivity {
                                 R.drawable.ic_like,
                                 R.drawable.ic_love,
                                 R.drawable.ic_laugh,
-                                R.drawable.ic_wow,
                                 R.drawable.ic_sad,
                                 R.drawable.ic_angry,
                         })
