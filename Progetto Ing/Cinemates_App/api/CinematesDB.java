@@ -19,4 +19,5 @@ public class CinematesDB {
     public static final String ADD_TO_LIST_URL = BASE_URL + "film/addToList.php";
     public static final String CHECK_EXIST_IN_LIST = BASE_URL + "film/checkExistInList.php";
     public static final String REMOVE_FROM_LIST = BASE_URL + "film/removeFromList.php";
+    public static final String SHARED_CONTENT = BASE_URL + "utente/seeSharedContents.php";
 }

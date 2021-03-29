@@ -1,15 +1,12 @@
 package com.example.cinemates.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,13 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
-import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.api.CinematesDB;
-import com.example.cinemates.classes.Film;
 import com.example.cinemates.classes.Utente;
-import com.example.cinemates.fragments.FollowNotificationsFragment;
 import com.example.cinemates.handlers.RequestHandler;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,14 +64,13 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
     private Boolean alreadyFriends(Utente utente) {
         Boolean found = false;
 
-        if(FriendsAdapter.friends.isEmpty()) { }
-        else{
-            for (Utente friend : FriendsAdapter.friends) {
-                if (friend.getUsername().equals(utente.getUsername())) {
-                    found = true;
-                }
+        System.out.println("SIZE: " +FriendsAdapter.friends.size());
+        for (Utente friend : FriendsAdapter.friends) {
+            if (friend.getUsername().equals(utente.getUsername())) {
+                found = true;
             }
         }
+
         return found;
     }
 
@@ -143,7 +135,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
         public MyViewHolder(View itemView) {
             super(itemView);
             friendUsername = itemView.findViewById(R.id.friendUsername);
-            friendName = itemView.findViewById(R.id.friendName);
+            friendName = itemView.findViewById(R.id.friendNameSurname);
             followBtn = itemView.findViewById(R.id.followBtn);
         }
 

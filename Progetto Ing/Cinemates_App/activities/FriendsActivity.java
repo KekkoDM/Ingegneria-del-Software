@@ -84,14 +84,10 @@ public class FriendsActivity extends AppCompatActivity {
 
     public void loadFriendsList(Utente utente) {
         class FriendsLoader extends AsyncTask<Void, Void, String> {
-            //ProgressDialog pdLoading = new ProgressDialog(FriendsActivity.this);
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                /*pdLoading.setMessage("\tCarico la lista amici...");
-                pdLoading.setCancelable(false);
-                pdLoading.show();*/
             }
 
             @Override
@@ -124,7 +120,8 @@ public class FriendsActivity extends AppCompatActivity {
                             JSONObject userJson = usersJson.getJSONObject(i);
                             Utente utente = new Utente(
                                     userJson.getString("username"),
-                                   null,null,null,null
+                                    userJson.getString("nome"),
+                                    userJson.getString("cognome"),null,null
                             );
 
                             friends.add(utente);

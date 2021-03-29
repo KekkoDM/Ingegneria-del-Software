@@ -1,7 +1,6 @@
 package com.example.cinemates.activities;
 
 import android.app.ProgressDialog;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,10 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+import com.android.volley.RequestQueue;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.ErrorAdapter;
+import com.example.cinemates.adapters.FriendsAdapter;
 import com.example.cinemates.adapters.ResultsAdapter;
 import com.example.cinemates.adapters.SearchUserAdapter;
 import com.example.cinemates.classes.Film;
@@ -40,9 +40,11 @@ public class ResultsActivity extends AppCompatActivity {
     public static RecyclerView rv;
     public static ImageView noResultIcon;
     public static TextView noResultLabel;
+    private RequestJson requestJson;
     private ResultsAdapter resultsAdapter;
+    private ErrorAdapter errorAdapter;
     private SearchUserAdapter searchUserAdapter;
-
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,21 +55,24 @@ public class ResultsActivity extends AppCompatActivity {
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        RequestJson requestJson = new RequestJson(this);
+        requestJson = new RequestJson(this);
 
         noResultIcon = findViewById(R.id.noResultIcon);
         noResultLabel = findViewById(R.id.noResultLabel);
 
-
         Intent intent = getIntent();
         if (intent.getStringExtra("type").equals("film")) {
-            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("textSearched"));
+            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("textsearched"));
         }
-        else {
+        else if (intent.getStringExtra("type").equals("friend")) {
             users = new ArrayList<>();
             searchUser(intent.getStringExtra("friendsearched"));
             searchUserAdapter = new SearchUserAdapter(ResultsActivity.this, users);
             rv.setAdapter(searchUserAdapter);
+        }
+        else {
+            String friend = intent.getStringExtra("Friend");
+            showSharedContents(friend);
         }
 
         backBtn = findViewById(R.id.backButton2);
@@ -78,8 +83,6 @@ public class ResultsActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void searchUser(String friendsearched) {
         class SearchUser extends AsyncTask<Void, Void, String> {
@@ -132,11 +135,6 @@ public class ResultsActivity extends AppCompatActivity {
 
                             users.add(utente);
                         }
-                    } else {
-                        ArrayList<String> error = new ArrayList<String>();
-                        error.add("Ops! La ricerca non ha prodotto risultati");
-                        ErrorAdapter adapter = new ErrorAdapter(ResultsActivity.this,error);
-                        rv.setAdapter(adapter);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -146,5 +144,74 @@ public class ResultsActivity extends AppCompatActivity {
 
         SearchUser searchUser = new SearchUser();
         searchUser.execute();
+    }
+
+    private void showSharedContents(String friend) {
+        class SharedContent extends AsyncTask<Void, Void, String> {
+            ProgressDialog pdLoading = new ProgressDialog(ResultsActivity.this);
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                pdLoading.setMessage("\tCaricamento in corso...");
+                pdLoading.setCancelable(true);
+                pdLoading.show();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("friend", friend);
+
+                //returning the response
+                return requestHandler.sendPostRequest(CinematesDB.SHARED_CONTENT, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                pdLoading.dismiss();
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        //getting the list friends from the response
+                        JSONArray sharedItems = obj.getJSONArray("comune");
+                        for (int i = 0; i < sharedItems.length(); i++) {
+                            JSONObject item = sharedItems.getJSONObject(i);
+                            Film film = new Film(
+                                    item.getString("item"),
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    item.getString("type")
+                            );
+                            requestJson.parseJSONSavedList(rv, resultsAdapter, film);
+                        }
+                    } else {
+                        ArrayList<String> error = new ArrayList<String>();
+                        error.add("Non hai nessun elemento in comune con " +friend);
+                        errorAdapter = new ErrorAdapter(ResultsActivity.this, error);
+                        rv.setAdapter(errorAdapter);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        SharedContent sharedContent = new SharedContent();
+        sharedContent.execute();
     }
 }
