@@ -36,6 +36,12 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     List<Review> reviews;
     RelativeLayout container;
 
+    private ImageButton backBtn;
+    private Dialog dialog;
+    private RadioGroup alertGroup;
+    private RadioButton radioButton;
+    private Button sendAlert;
+
     public ReviewAdapter(List<Review> list, Context c){
         this.context = c;
         this.reviews = list;
@@ -82,8 +88,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.reportItem:
-                                holder.dialog = new Dialog(context);
-                                return holder.showPopup();
+                                dialog = new Dialog(context);
+                                return showPopup();
                             default:
                                 return false;
                         }
@@ -92,6 +98,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                 popupMenu.show();
             }
         });
+
     }
 
     @Override
@@ -100,15 +107,9 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     }
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder{
-        TextView username, review_description, review_date;
-        ImageView img_user, comment_review, report;
-        RelativeLayout container;
-        private ImageButton backBtn;
-        private Dialog dialog;
-        private RadioGroup alertGroup;
-        private RadioButton radioButton;
-        private Button sendAlert;
-
+        private TextView username, review_description, review_date;
+        private ImageView img_user, comment_review, report;
+        private RelativeLayout container;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -119,38 +120,38 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             username = itemView.findViewById(R.id.username_review);
             comment_review = itemView.findViewById(R.id.comment_review);
         }
+    }
+    
+    private boolean showPopup() {
+        ImageView close;
+        dialog.setContentView(R.layout.popup_report);
+        alertGroup = dialog.findViewById(R.id.radioGroup2);
+        sendAlert = dialog.findViewById(R.id.sendAlert);
+        close = dialog.findViewById(R.id.closealert);
 
-        private boolean showPopup() {
-            ImageView close;
-            dialog.setContentView(R.layout.popup_report);
-            close = dialog.findViewById(R.id.closealert);
-            alertGroup = dialog.findViewById(R.id.radioGroup2);
-            sendAlert = dialog.findViewById(R.id.sendAlert);
-            radioButton = dialog.findViewById(R.id.radio_offensive);
-            sendAlert.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int radioId = alertGroup.getCheckedRadioButtonId();
-                    radioButton = dialog.findViewById(radioId);
-                }
-            });
-            close.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-            sendAlert.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String motivation = new String(radioButton.getText().toString());
-                    dialog.dismiss();
-                }
-            });
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dialog.show();
-            return true;
-        }
+        sendAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkButton(v);
+                dialog.dismiss();
+            }
+        });
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+        return true;
+    }
+
+    public void checkButton(View v){
+        int radioId = alertGroup.getCheckedRadioButtonId();
+        radioButton = dialog.findViewById(radioId);
+        Toast.makeText(context,"Motivo della segnalazione : "+ radioButton.getText(), Toast.LENGTH_SHORT).show();
     }
 
 
