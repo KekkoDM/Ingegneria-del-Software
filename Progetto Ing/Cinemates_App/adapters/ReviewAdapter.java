@@ -1,14 +1,23 @@
 package com.example.cinemates.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +31,7 @@ import com.github.pgreze.reactions.ReactionsConfigBuilder;
 import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder> {
-    private final String[] strings = {"like", "love", "ahah", "wow", "triste", "argh!"};
+    private final String[] strings = {"like", "love", "ahah", "triste", "argh!"};
     Context context;
     List<Review> reviews;
     RelativeLayout container;
@@ -68,6 +77,18 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(context, v);
                 popupMenu.getMenuInflater().inflate(R.menu.menu_report, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.reportItem:
+                                holder.dialog = new Dialog(context);
+                                return holder.showPopup();
+                            default:
+                                return false;
+                        }
+                    }
+                });
                 popupMenu.show();
             }
         });
@@ -82,6 +103,11 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         TextView username, review_description, review_date;
         ImageView img_user, comment_review, report;
         RelativeLayout container;
+        private ImageButton backBtn;
+        private Dialog dialog;
+        private RadioGroup alertGroup;
+        private RadioButton radioButton;
+        private Button sendAlert;
 
 
         public ReviewViewHolder(@NonNull View itemView) {
@@ -93,7 +119,40 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             username = itemView.findViewById(R.id.username_review);
             comment_review = itemView.findViewById(R.id.comment_review);
         }
+
+        private boolean showPopup() {
+            ImageView close;
+            dialog.setContentView(R.layout.popup_report);
+            close = dialog.findViewById(R.id.closealert);
+            alertGroup = dialog.findViewById(R.id.radioGroup2);
+            sendAlert = dialog.findViewById(R.id.sendAlert);
+            radioButton = dialog.findViewById(R.id.radio_offensive);
+            sendAlert.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int radioId = alertGroup.getCheckedRadioButtonId();
+                    radioButton = dialog.findViewById(radioId);
+                }
+            });
+            close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            sendAlert.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String motivation = new String(radioButton.getText().toString());
+                    dialog.dismiss();
+                }
+            });
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+            return true;
+        }
     }
+
 
     private void sampleCenterLeft(View v) {
         ReactionPopup popup = new ReactionPopup(
@@ -103,7 +162,6 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                                 R.drawable.ic_like,
                                 R.drawable.ic_love,
                                 R.drawable.ic_laugh,
-                                R.drawable.ic_wow,
                                 R.drawable.ic_sad,
                                 R.drawable.ic_angry,
                         })
