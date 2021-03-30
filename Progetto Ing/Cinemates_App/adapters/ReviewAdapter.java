@@ -2,13 +2,11 @@ package com.example.cinemates.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,15 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.R;
 import com.example.cinemates.activities.CommentsActivity;
-import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.classes.Review;
-import com.example.cinemates.fragments.ReviewFragment;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
 import java.util.List;
 
-public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder>{
+public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder> {
     private final String[] strings = {"like", "love", "ahah", "wow", "triste", "argh!"};
     Context context;
     List<Review> reviews;
@@ -41,7 +37,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View layout;
-        layout= LayoutInflater.from(context).inflate(R.layout.item_review,parent,false);
+        layout = LayoutInflater.from(context).inflate(R.layout.item_review,parent,false);
 
         sampleCenterLeft(layout);
 
@@ -66,6 +62,15 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         holder.review_description.setText(reviews.get(position).getDescrizione());
         holder.review_date.setText(reviews.get(position).getData());
         holder.username.setText(reviews.get(position).getUser() + " ha scritto:");
+
+        holder.report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(context, v);
+                popupMenu.getMenuInflater().inflate(R.menu.menu_report, popupMenu.getMenu());
+                popupMenu.show();
+            }
+        });
     }
 
     @Override
@@ -74,9 +79,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     }
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder{
-
-        TextView username,review_description,review_date;
-        ImageView img_user,comment_review;
+        TextView username, review_description, review_date;
+        ImageView img_user, comment_review, report;
         RelativeLayout container;
 
 
@@ -85,6 +89,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             container = itemView.findViewById(R.id.container);
             review_description = itemView.findViewById(R.id.detail_review);
             review_date = itemView.findViewById(R.id.date_review);
+            report = itemView.findViewById(R.id.alert_review);
             username = itemView.findViewById(R.id.username_review);
             comment_review = itemView.findViewById(R.id.comment_review);
         }
