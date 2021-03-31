@@ -67,8 +67,7 @@ public class ResultsActivity extends AppCompatActivity {
         else if (intent.getStringExtra("type").equals("friend")) {
             users = new ArrayList<>();
             searchUser(intent.getStringExtra("friendsearched"));
-            searchUserAdapter = new SearchUserAdapter(ResultsActivity.this, users);
-            rv.setAdapter(searchUserAdapter);
+
         }
         else {
             String friend = intent.getStringExtra("Friend");
@@ -135,6 +134,14 @@ public class ResultsActivity extends AppCompatActivity {
 
                             users.add(utente);
                         }
+                        searchUserAdapter = new SearchUserAdapter(ResultsActivity.this, users);
+                        rv.setAdapter(searchUserAdapter);
+                    }
+                    else{
+                        ArrayList<String> error = new ArrayList<String>();
+                        error.add("Ops! La ricerca non ha prodotto risultati");
+                        errorAdapter = new ErrorAdapter(ResultsActivity.this, error);
+                        rv.setAdapter(errorAdapter);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

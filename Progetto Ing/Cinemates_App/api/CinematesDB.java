@@ -1,7 +1,9 @@
 package com.example.cinemates.api;
 
+
+
 public class CinematesDB {
-    private static final String BASE_URL = "https://cinematesphp.000webhostapp.com/cinematesREST/";
+    private static final String BASE_URL = "https://15.161.38.136/cinematesREST/";
     public static final String REGISTER_URL = BASE_URL + "utente/register.php";
     public static final String RECOVERY_PASSWORD = BASE_URL + "utente/recoveryPassword.php";
     public static final String LOGIN_URL = BASE_URL + "utente/login.php";

@@ -37,8 +37,7 @@ public class SearchFragment extends Fragment {
     private Button searchButton;
     private RecyclerView rv;
     private SearchSuggestionsAdapter adapter;
-    private ArrayList<Film> list;
-    private RequestQueue requestQueue;
+
 
     public SearchFragment() {
         // Required empty public constructor
@@ -52,10 +51,6 @@ public class SearchFragment extends Fragment {
         rv = view.findViewById(R.id.recyclerView);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
-
-        list = new ArrayList<>();
-
-        requestQueue = Volley.newRequestQueue(this.getContext());
 
         RequestJson requestJson = new RequestJson(this.getContext());
         requestJson.parseJSONSearchSuggestion(rv,adapter);
@@ -73,7 +68,7 @@ public class SearchFragment extends Fragment {
                     query.setHintTextColor(getResources().getColor(R.color.light_grey));
                     Intent intent = new Intent(getActivity(), ResultsActivity.class);
                     intent.putExtra("type", "film");
-                    intent.putExtra("textSearched", query.getText().toString());
+                    intent.putExtra("textsearched", query.getText().toString());
                     startActivity(intent);
                 }
             }
