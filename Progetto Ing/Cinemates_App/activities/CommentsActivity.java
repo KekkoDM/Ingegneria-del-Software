@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cinemates.classes.Film;
+import com.example.cinemates.classes.ReportDialog;
 import com.example.cinemates.classes.Review;
 import com.example.cinemates.R;
 import com.example.cinemates.fragments.DescriptionFragment;
@@ -40,13 +41,10 @@ public class CommentsActivity extends AppCompatActivity {
     private ReviewAdapter adapter;
     private Review review;
     private ImageButton backBtn;
-    private Dialog dialog;
+    private ReportDialog dialog;
     private RadioGroup alertGroup;
     private RadioButton radioButton;
     private Button sendAlert;
-
-    public Review getReview() { return review; }
-    public void setReview(Review review) { this.review = review; }
 
 
     @Override
@@ -90,8 +88,8 @@ public class CommentsActivity extends AppCompatActivity {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.reportItem:
-                                dialog = new Dialog(CommentsActivity.this);
-                                return showPopup();
+                                dialog = new ReportDialog(CommentsActivity.this);
+                                return dialog.showPopUp();
                             default:
                                 return false;
                         }
@@ -112,46 +110,6 @@ public class CommentsActivity extends AppCompatActivity {
         sampleCenterLeft();
     }
 
-    private boolean showPopup() {
-        ImageView close;
-        dialog.setContentView(R.layout.popup_report);
-        alertGroup = dialog.findViewById(R.id.radioGroup2);
-        sendAlert = dialog.findViewById(R.id.sendAlert);
-        close = dialog.findViewById(R.id.closealert);
-        sendAlert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int radioId = alertGroup.getCheckedRadioButtonId();
-                radioButton = dialog.findViewById(radioId);
-            }
-        });
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        sendAlert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String motivation = new String((String) radioButton.getText());
-
-                dialog.dismiss();
-            }
-        });
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-
-
-        return true;
-    }
-
-    public void checkButton(View v){
-        int radioId = alertGroup.getCheckedRadioButtonId();
-        radioButton = dialog.findViewById(radioId);
-        Toast.makeText(this,"Motivo della segnalazione : "+ radioButton.getText(), Toast.LENGTH_SHORT).show();
-
-    }
 
     private void sampleCenterLeft() {
         ReactionPopup popup = new ReactionPopup(

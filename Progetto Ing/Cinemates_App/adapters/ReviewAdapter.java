@@ -1,3 +1,4 @@
+
 package com.example.cinemates.adapters;
 
 import android.app.Dialog;
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.R;
 import com.example.cinemates.activities.CommentsActivity;
+import com.example.cinemates.classes.ReportDialog;
 import com.example.cinemates.classes.Review;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
@@ -37,7 +39,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     RelativeLayout container;
 
     private ImageButton backBtn;
-    private Dialog dialog;
+    private ReportDialog dialog;
     private RadioGroup alertGroup;
     private RadioButton radioButton;
     private Button sendAlert;
@@ -88,8 +90,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.reportItem:
-                                dialog = new Dialog(context);
-                                return showPopup();
+                                dialog = new ReportDialog(context);
+                                return dialog.showPopUp();
                             default:
                                 return false;
                         }
@@ -120,38 +122,6 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             username = itemView.findViewById(R.id.username_review);
             comment_review = itemView.findViewById(R.id.comment_review);
         }
-    }
-    
-    private boolean showPopup() {
-        ImageView close;
-        dialog.setContentView(R.layout.popup_report);
-        alertGroup = dialog.findViewById(R.id.radioGroup2);
-        sendAlert = dialog.findViewById(R.id.sendAlert);
-        close = dialog.findViewById(R.id.closealert);
-
-        sendAlert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkButton(v);
-                dialog.dismiss();
-            }
-        });
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-        return true;
-    }
-
-    public void checkButton(View v){
-        int radioId = alertGroup.getCheckedRadioButtonId();
-        radioButton = dialog.findViewById(radioId);
-        Toast.makeText(context,"Motivo della segnalazione : "+ radioButton.getText(), Toast.LENGTH_SHORT).show();
     }
 
 
