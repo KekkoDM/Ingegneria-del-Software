@@ -10,7 +10,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
-import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
@@ -23,9 +22,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 public class RequestHandler {
-    //this method will send a post request to the specified url
-    //in the hashmap we have the data to be sent to the server in keyvalue pairs
-
     // trusting all certificate
     public void doTrustToCertificates() throws Exception {
 
@@ -57,13 +53,13 @@ public class RequestHandler {
         HttpsURLConnection.setDefaultHostnameVerifier(hv);
     }
 
-
+    //this method will send a post request to the specified url
+    //in the hashmap we have the data to be sent to the server in keyvalue pairs
     public String sendPostRequest(String requestURL, HashMap<String, String> postDataParams) {
         URL url;
         StringBuilder sb = new StringBuilder();
 
         try {
-
             doTrustToCertificates();
             url = new URL(requestURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();

@@ -1,9 +1,8 @@
 package com.example.cinemates.api;
 
-
-
 public class CinematesDB {
-    private static final String BASE_URL = "https://15.161.38.136/cinematesREST/";
+    //private static final String BASE_URL = "https://15.161.38.136/";
+    private static final String BASE_URL = "https://cinematesphp.000webhostapp.com/cinematesREST/";
     public static final String REGISTER_URL = BASE_URL + "utente/register.php";
     public static final String RECOVERY_PASSWORD = BASE_URL + "utente/recoveryPassword.php";
     public static final String LOGIN_URL = BASE_URL + "utente/login.php";
@@ -22,4 +21,7 @@ public class CinematesDB {
     public static final String CHECK_EXIST_IN_LIST = BASE_URL + "film/checkExistInList.php";
     public static final String REMOVE_FROM_LIST = BASE_URL + "film/removeFromList.php";
     public static final String SHARED_CONTENT = BASE_URL + "utente/seeSharedContents.php";
+    public static final String SEND_REPORT = BASE_URL + "segnalazione/sendReport.php";
+    public static final String REMOVE_FRIEND = BASE_URL + "utente/removeFriend.php";
+    public static final String SEND_REACTION = BASE_URL + "utente/sendReaction.php";
 }

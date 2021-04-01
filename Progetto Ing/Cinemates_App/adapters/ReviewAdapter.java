@@ -2,10 +2,13 @@
 package com.example.cinemates.adapters;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -23,17 +27,29 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.activities.CommentsActivity;
+import com.example.cinemates.activities.ResultsActivity;
+import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.classes.ReportDialog;
 import com.example.cinemates.classes.Review;
+import com.example.cinemates.classes.Utente;
+import com.example.cinemates.handlers.RequestHandler;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
 
+import kotlin.jvm.functions.Function1;
+
 public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder> {
-    private final String[] strings = {"like", "love", "ahah", "triste", "argh!"};
+    private final String[] strings = {"Mi piace", "Love", "Ahah", "Triste", "Grrr"};
     Context context;
     List<Review> reviews;
     RelativeLayout container;
@@ -43,6 +59,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     private RadioGroup alertGroup;
     private RadioButton radioButton;
     private Button sendAlert;
+    private Review review;
 
     public ReviewAdapter(List<Review> list, Context c){
         this.context = c;
@@ -52,12 +69,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     @NonNull
     @Override
     public ReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View layout;
-        layout = LayoutInflater.from(context).inflate(R.layout.item_review,parent,false);
-
-        sampleCenterLeft(layout);
-
+        View layout = LayoutInflater.from(context).inflate(R.layout.item_review,parent,false);
         return new ReviewViewHolder(layout);
     }
 
@@ -66,19 +78,20 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
         //holder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
         //holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
+        review = reviews.get(position);
 
         holder.comment_review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, CommentsActivity.class);
-                intent.putExtra("recensione", reviews.get(position));
+                intent.putExtra("recensione", review);
                 context.startActivity(intent);
             }
         });
 
         holder.review_description.setText(reviews.get(position).getDescrizione());
-        holder.review_date.setText(reviews.get(position).getData());
-        holder.username.setText(reviews.get(position).getUser() + " ha scritto:");
+        holder.review_date.setText(review.getData());
+        holder.username.setText(review.getUser() + " ha scritto:");
 
         holder.report.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +113,6 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                 popupMenu.show();
             }
         });
-
     }
 
     @Override
@@ -108,8 +120,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         return reviews.size();
     }
 
-    public class ReviewViewHolder extends RecyclerView.ViewHolder{
-        private TextView username, review_description, review_date;
+    public class ReviewViewHolder extends RecyclerView.ViewHolder {
+        private TextView username, review_description, review_date, mainLikeBtn;
         private ImageView img_user, comment_review, report;
         private RelativeLayout container;
 
@@ -121,10 +133,11 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             report = itemView.findViewById(R.id.alert_review);
             username = itemView.findViewById(R.id.username_review);
             comment_review = itemView.findViewById(R.id.comment_review);
+            sampleCenterLeft(itemView);
         }
     }
 
-
+    // show reactions popup
     private void sampleCenterLeft(View v) {
         ReactionPopup popup = new ReactionPopup(
                 context,
@@ -139,6 +152,58 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                         .withReactionTexts(position -> strings[position])
                         .build());
 
-        v.findViewById(R.id.likeBtn).setOnTouchListener(popup);
+        popup.setReactionSelectedListener((position) -> {
+            sendReaction(position);
+            return position >= -1;
+        });
+
+        v.findViewById(R.id.likeBtnMain).setOnTouchListener(popup);
+    }
+
+    private void sendReaction(Integer position) {
+        class ReactionSender extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("review", review.getId());
+                params.put("reaction", strings[position]);
+
+                System.out.println("REAZIONE: " +strings[position]);
+                //returning the response
+                return requestHandler.sendPostRequest(CinematesDB.SEND_REACTION, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+
+                    /*if no error in response
+                    if (!obj.getBoolean("error")) {
+
+                    }*/
+                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        ReactionSender reactionSender = new ReactionSender();
+        reactionSender.execute();
     }
 }
