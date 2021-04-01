@@ -7,13 +7,13 @@ $review = $_POST['review'];
 $reaction = $_POST['reaction'];
 
 // checking if the user has already reacted
-$stmt = $conn->prepare("SELECT * FROM valutazione WHERE username = ? AND recensione = ?");
+$stmt = $conn->prepare("SELECT * FROM valutazione WHERE utente = ? AND recensione = ?");
 $stmt->bind_param("ss", $username, $review);
 $stmt->execute();
 $stmt->store_result();
 
 if($stmt->num_rows > 0) {
-  $stmt = $conn->prepare("UPDATE valutazione SET valutazione = ? WHERE username = ? AND recensione = ?");
+  $stmt = $conn->prepare("UPDATE valutazione SET valutazione = ? WHERE utente = ? AND recensione = ?");
   $stmt->bind_param("sss", $reaction, $username, $review);
 
   if ($stmt->execute()) {
