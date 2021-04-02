@@ -32,6 +32,7 @@ import com.example.cinemates.R;
 import com.example.cinemates.activities.CommentsActivity;
 import com.example.cinemates.activities.ResultsActivity;
 import com.example.cinemates.api.CinematesDB;
+import com.example.cinemates.classes.Reaction;
 import com.example.cinemates.classes.ReportDialog;
 import com.example.cinemates.classes.Review;
 import com.example.cinemates.classes.Utente;
@@ -80,6 +81,15 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         //holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
         review = reviews.get(position);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, CommentsActivity.class);
+                intent.putExtra("recensione", review);
+                context.startActivity(intent);
+            }
+        });
+
         holder.comment_review.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +102,17 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         holder.review_description.setText(review.getDescrizione());
         holder.review_date.setText(review.getData());
         holder.username.setText(review.getUser() + " ha scritto:");
+        Reaction reaction = new Reaction(context);
+
+
+        if (MainActivity.utente.isAutenticato())
+            holder.likeBtn.setOnTouchListener(reaction.getReaction(review));
+
+        else{
+            holder.likeBtn.setVisibility(View.INVISIBLE);
+            holder.contLike.setVisibility(View.INVISIBLE);
+            holder.comment_review.setVisibility(View.INVISIBLE);
+        }
 
         holder.report.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +125,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                         switch (item.getItemId()) {
                             case R.id.reportItem:
                                 dialog = new ReportDialog(context);
-                                return dialog.showPopUp();
+                                return dialog.showPopUp(review,"Recensione");
                             default:
                                 return false;
                         }
@@ -113,8 +134,6 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                 popupMenu.show();
             }
         });
-
-        holder.likeBtn.setOnTouchListener(getReaction(review));
     }
 
     @Override
@@ -123,7 +142,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     }
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
-        private TextView username, review_description, review_date;
+        private TextView username, review_description, review_date, contLike;
         private ImageView img_user, comment_review, report,likeBtn;
         private RelativeLayout container;
 
@@ -135,77 +154,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             username = itemView.findViewById(R.id.username_review);
             comment_review = itemView.findViewById(R.id.comment_review);
             likeBtn = itemView.findViewById(R.id.likeBtn);
+            contLike = itemView.findViewById(R.id.cont_like);
         }
     }
 
-    // show reactions popup
-    private ReactionPopup getReaction(Review review) {
-        ReactionPopup popup = new ReactionPopup(
-                context,
-                new ReactionsConfigBuilder(context)
-                        .withReactions(new int[]{
-                                R.drawable.ic_like,
-                                R.drawable.ic_love,
-                                R.drawable.ic_laugh,
-                                R.drawable.ic_sad,
-                                R.drawable.ic_angry,
-                        })
-                        .withReactionTexts(position -> strings[position])
-                        .build());
-
-        popup.setReactionSelectedListener((position) -> {
-            if (position > -1) {
-                sendReaction(position, review);
-            };
-            return position >= -1;
-        });
-
-        return popup;
-    }
-
-    private void sendReaction(Integer position, Review review) {
-        class ReactionSender extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", MainActivity.utente.getUsername());
-                params.put("review", review.getId());
-                params.put("reaction", strings[position]);
-
-                //returning the response
-                return requestHandler.sendPostRequest(CinematesDB.SEND_REACTION, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-
-                    /*if no error in response
-                    if (!obj.getBoolean("error")) {
-
-                    }*/
-                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        ReactionSender reactionSender = new ReactionSender();
-        reactionSender.execute();
-    }
 }

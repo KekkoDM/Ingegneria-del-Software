@@ -1,6 +1,8 @@
 package com.example.cinemates.activities;
+import com.example.cinemates.MainActivity;
 import com.example.cinemates.adapters.ReviewAdapter;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +14,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -21,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cinemates.classes.Film;
+import com.example.cinemates.classes.Reaction;
 import com.example.cinemates.classes.ReportDialog;
 import com.example.cinemates.classes.Review;
 import com.example.cinemates.R;
@@ -29,7 +33,7 @@ import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
 public class CommentsActivity extends AppCompatActivity {
-    private final String[] strings = {"like", "love", "ahah", "triste", "argh!"};
+
     private RecyclerView rvComments;
     private TextView detailReview;
     private TextView usernameReview;
@@ -38,13 +42,14 @@ public class CommentsActivity extends AppCompatActivity {
     private TextView likeBtn;
     private ImageView commentReview;
     private ImageView alertComment;
+    private EditText textComment;
     private ReviewAdapter adapter;
     private Review review;
     private ImageButton backBtn;
     private ReportDialog dialog;
-    private RadioGroup alertGroup;
-    private RadioButton radioButton;
-    private Button sendAlert;
+    private Button sendComment;
+    private TextView errorComment;
+
 
 
     @Override
@@ -77,6 +82,21 @@ public class CommentsActivity extends AppCompatActivity {
 
         commentReview = findViewById(R.id.comment_review_comment);
 
+        textComment = findViewById(R.id.textComment);
+        sendComment = findViewById(R.id.send_comment);
+        errorComment = findViewById(R.id.error_comment_label);
+
+        Reaction reaction = new Reaction(this);
+        if(MainActivity.utente.isAutenticato())
+            likeBtn.setOnTouchListener(reaction.getReaction(review));
+        else{
+            likeBtn.setVisibility(View.INVISIBLE);
+            contLike.setVisibility(View.INVISIBLE);
+            sendComment.setVisibility(View.INVISIBLE);
+            textComment.setVisibility(View.INVISIBLE);
+            errorComment.setVisibility(View.VISIBLE);
+        }
+
         alertComment = findViewById(R.id.alert_review_comment);
         alertComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,24 +127,6 @@ public class CommentsActivity extends AppCompatActivity {
         l.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvComments.setLayoutManager(l);
 
-        sampleCenterLeft();
     }
 
-
-    private void sampleCenterLeft() {
-        ReactionPopup popup = new ReactionPopup(
-                this,
-                new ReactionsConfigBuilder(this)
-                        .withReactions(new int[]{
-                                R.drawable.ic_like,
-                                R.drawable.ic_love,
-                                R.drawable.ic_laugh,
-                                R.drawable.ic_sad,
-                                R.drawable.ic_angry,
-                        })
-                        .withReactionTexts(position -> strings[position])
-                        .build());
-
-        findViewById(R.id.likeBtnReview).setOnTouchListener(popup);
-    }
 }
