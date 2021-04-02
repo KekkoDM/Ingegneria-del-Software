@@ -89,7 +89,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             }
         });
 
-        holder.review_description.setText(reviews.get(position).getDescrizione());
+        holder.review_description.setText(review.getDescrizione());
         holder.review_date.setText(review.getData());
         holder.username.setText(review.getUser() + " ha scritto:");
 
@@ -113,6 +113,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                 popupMenu.show();
             }
         });
+
+        holder.mainLikeBtn.setOnTouchListener(getReaction(review));
     }
 
     @Override
@@ -133,12 +135,12 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             report = itemView.findViewById(R.id.alert_review);
             username = itemView.findViewById(R.id.username_review);
             comment_review = itemView.findViewById(R.id.comment_review);
-            sampleCenterLeft(itemView);
+            mainLikeBtn = itemView.findViewById(R.id.likeBtnMain);
         }
     }
 
     // show reactions popup
-    private void sampleCenterLeft(View v) {
+    private ReactionPopup getReaction(Review review) {
         ReactionPopup popup = new ReactionPopup(
                 context,
                 new ReactionsConfigBuilder(context)
@@ -153,14 +155,16 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                         .build());
 
         popup.setReactionSelectedListener((position) -> {
-            sendReaction(position);
+            if (position > -1) {
+                sendReaction(position, review);
+            };
             return position >= -1;
         });
 
-        v.findViewById(R.id.likeBtnMain).setOnTouchListener(popup);
+        return popup;
     }
 
-    private void sendReaction(Integer position) {
+    private void sendReaction(Integer position, Review review) {
         class ReactionSender extends AsyncTask<Void, Void, String> {
 
             @Override
@@ -179,7 +183,6 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                 params.put("review", review.getId());
                 params.put("reaction", strings[position]);
 
-                System.out.println("REAZIONE: " +strings[position]);
                 //returning the response
                 return requestHandler.sendPostRequest(CinematesDB.SEND_REACTION, params);
             }
