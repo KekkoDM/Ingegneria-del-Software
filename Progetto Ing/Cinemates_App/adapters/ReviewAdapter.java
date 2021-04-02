@@ -114,7 +114,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             }
         });
 
-        holder.mainLikeBtn.setOnTouchListener(getReaction(review));
+        holder.likeBtn.setOnTouchListener(getReaction(review));
     }
 
     @Override
@@ -123,19 +123,18 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     }
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
-        private TextView username, review_description, review_date, mainLikeBtn;
-        private ImageView img_user, comment_review, report;
+        private TextView username, review_description, review_date;
+        private ImageView img_user, comment_review, report,likeBtn;
         private RelativeLayout container;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
-            container = itemView.findViewById(R.id.container);
             review_description = itemView.findViewById(R.id.detail_review);
             review_date = itemView.findViewById(R.id.date_review);
             report = itemView.findViewById(R.id.alert_review);
             username = itemView.findViewById(R.id.username_review);
             comment_review = itemView.findViewById(R.id.comment_review);
-            mainLikeBtn = itemView.findViewById(R.id.likeBtnMain);
+            likeBtn = itemView.findViewById(R.id.likeBtn);
         }
     }
 
