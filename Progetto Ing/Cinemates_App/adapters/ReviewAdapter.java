@@ -102,8 +102,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         holder.review_description.setText(review.getDescrizione());
         holder.review_date.setText(review.getData());
         holder.username.setText(review.getUser() + " ha scritto:");
-        Reaction reaction = new Reaction(context);
 
+        Reaction reaction = new Reaction(context);
 
         if (MainActivity.utente.isAutenticato())
             holder.likeBtn.setOnTouchListener(reaction.getReaction(review));
@@ -112,6 +112,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             holder.likeBtn.setVisibility(View.INVISIBLE);
             holder.contLike.setVisibility(View.INVISIBLE);
             holder.comment_review.setVisibility(View.INVISIBLE);
+            holder.report.setVisibility(View.INVISIBLE);
         }
 
         holder.report.setOnClickListener(new View.OnClickListener() {

@@ -1,26 +1,24 @@
-package com.example.cinemates_app.classes;
+package com.example.cinemates.classes;
 
 public class Comment {
-    public String getDescrizione() {
-        return Descrizione;
+    private int id;
+    private String descrizione, username;
+
+    public Comment(int id, String descrizione, String username) {
+        this.id = id;
+        this.descrizione = descrizione;
+        this.username = username;
     }
 
-    public void setDescrizione(String descrizione) {
-        Descrizione = descrizione;
+    public int getId() {
+        return id;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
     }
 
     public String getUsername() {
-        return Username;
-    }
-
-    public void setUsername(String username) {
-        Username = username;
-    }
-
-    String Descrizione,Username;
-
-    public Comment(String descrizione, String username) {
-        Descrizione = descrizione;
-        Username = username;
+        return username;
     }
 }

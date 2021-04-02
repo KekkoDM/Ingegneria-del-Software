@@ -41,7 +41,7 @@ public class CommentsActivity extends AppCompatActivity {
     private TextView contLike;
     private TextView likeBtn;
     private ImageView commentReview;
-    private ImageView alertComment;
+    private ImageView alertReview;
     private EditText textComment;
     private ReviewAdapter adapter;
     private Review review;
@@ -85,8 +85,10 @@ public class CommentsActivity extends AppCompatActivity {
         textComment = findViewById(R.id.textComment);
         sendComment = findViewById(R.id.send_comment);
         errorComment = findViewById(R.id.error_comment_label);
+        alertReview = findViewById(R.id.alert_review_comment);
 
         Reaction reaction = new Reaction(this);
+
         if(MainActivity.utente.isAutenticato())
             likeBtn.setOnTouchListener(reaction.getReaction(review));
         else{
@@ -95,10 +97,10 @@ public class CommentsActivity extends AppCompatActivity {
             sendComment.setVisibility(View.INVISIBLE);
             textComment.setVisibility(View.INVISIBLE);
             errorComment.setVisibility(View.VISIBLE);
+            alertReview.setVisibility(View.INVISIBLE);
         }
 
-        alertComment = findViewById(R.id.alert_review_comment);
-        alertComment.setOnClickListener(new View.OnClickListener() {
+        alertReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(CommentsActivity.this, v);
@@ -109,7 +111,7 @@ public class CommentsActivity extends AppCompatActivity {
                         switch (item.getItemId()) {
                             case R.id.reportItem:
                                 dialog = new ReportDialog(CommentsActivity.this);
-                                return dialog.showPopUp();
+                                return dialog.showPopUp(review,"Recensione");
                             default:
                                 return false;
                         }
