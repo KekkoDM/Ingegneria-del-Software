@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -157,6 +159,7 @@ public class CommentsActivity extends AppCompatActivity {
                     rvComments = new RecyclerView(CommentsActivity.this);
                     textComment.setHintTextColor(getResources().getColor(R.color.light_grey));
                     sendComment(textComment.getText().toString());
+                    textComment.onEditorAction(EditorInfo.IME_ACTION_DONE);
                     textComment.setText(null);
                 }
             }
