@@ -79,7 +79,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
         //holder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
         //holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
-        review = reviews.get(position);
+        Review review = reviews.get(position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

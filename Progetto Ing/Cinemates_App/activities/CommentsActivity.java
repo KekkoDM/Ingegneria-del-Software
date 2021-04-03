@@ -65,6 +65,7 @@ public class CommentsActivity extends AppCompatActivity {
     private Button sendComment;
     private TextView errorComment;
     private ArrayList<Comment> comments;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +77,12 @@ public class CommentsActivity extends AppCompatActivity {
 
         rvComments = findViewById(R.id.list_comment);
         rvComments.setHasFixedSize(true);
-
-        LinearLayoutManager l = new LinearLayoutManager(this);
-        l.setOrientation(LinearLayoutManager.VERTICAL);
-        rvComments.setLayoutManager(l);
+        linearLayoutManager = new LinearLayoutManager(CommentsActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rvComments.setLayoutManager(linearLayoutManager);
 
         comments = new ArrayList<>();
+        commentAdapter = new CommentAdapter(comments, CommentsActivity.this);
         getComments(review);
 
         backBtn = findViewById(R.id.backBtnComments);
@@ -201,9 +202,13 @@ public class CommentsActivity extends AppCompatActivity {
                                 MainActivity.utente.getUsername()
                         );
 
-                        CommentAdapter.comments.add(cmt);
-                        rvComments.getAdapter().notifyDataSetChanged();
-
+                        if (CommentAdapter.comments.isEmpty()) {
+                            comments.add(cmt);
+                            swapAdapter(new CommentAdapter(comments, CommentsActivity.this), new LinearLayoutManager(CommentsActivity.this));
+                        }
+                        else {
+                            commentAdapter.addItem(cmt);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -213,6 +218,12 @@ public class CommentsActivity extends AppCompatActivity {
 
         CommentSender commentSender = new CommentSender();
         commentSender.execute();
+    }
+
+    private void swapAdapter(CommentAdapter commentAdapter, LinearLayoutManager linearLayoutManager) {
+        rvComments = findViewById(R.id.list_comment);
+        rvComments.setLayoutManager(linearLayoutManager);
+        rvComments.setAdapter(commentAdapter);
     }
 
     private void getComments(Review review) {
@@ -256,7 +267,6 @@ public class CommentsActivity extends AppCompatActivity {
                             );
                             comments.add(comment);
                         }
-
                         commentAdapter = new CommentAdapter(comments, CommentsActivity.this);
                         rvComments.setAdapter(commentAdapter);
                     } else {

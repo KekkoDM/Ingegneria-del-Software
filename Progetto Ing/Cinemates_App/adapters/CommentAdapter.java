@@ -19,11 +19,12 @@ import com.example.cinemates.activities.CommentsActivity;
 import com.example.cinemates.classes.Comment;
 import com.example.cinemates.classes.ReportDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewHolder> {
     private Context context;
-    public static List<Comment> comments;
+    public static List<Comment> comments = new ArrayList<>();
     private ReportDialog dialog;
 
     public CommentAdapter(List<Comment> comments, Context context){
@@ -77,6 +78,17 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
     @Override
     public int getItemCount() {
         return comments.size();
+    }
+
+    public void swap(List<Comment> cmts) {
+        comments.clear();
+        comments.addAll(cmts);
+        notifyDataSetChanged();
+    }
+
+    public void addItem(Comment comment){
+        comments.add(comment);
+        notifyDataSetChanged();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
