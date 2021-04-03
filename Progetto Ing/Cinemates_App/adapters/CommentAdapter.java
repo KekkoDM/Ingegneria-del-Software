@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
+import com.example.cinemates.activities.CommentsActivity;
 import com.example.cinemates.classes.Comment;
 import com.example.cinemates.classes.ReportDialog;
 
@@ -22,7 +23,7 @@ import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewHolder> {
     private Context context;
-    private List<Comment> comments;
+    public static List<Comment> comments;
     private ReportDialog dialog;
 
     public CommentAdapter(List<Comment> comments, Context context){
@@ -41,7 +42,13 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Comment comment = comments.get(position);
 
+        holder.setComment(comment);
+
         if (!MainActivity.utente.isAutenticato()) {
+            holder.report.setVisibility(View.INVISIBLE);
+        }
+
+        if (MainActivity.utente.isAutenticato() && comment.getUsername().equals(MainActivity.utente.getUsername())) {
             holder.report.setVisibility(View.INVISIBLE);
         }
 

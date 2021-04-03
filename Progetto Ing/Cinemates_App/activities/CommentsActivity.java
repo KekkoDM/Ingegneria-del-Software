@@ -1,5 +1,8 @@
 package com.example.cinemates.activities;
 import com.example.cinemates.MainActivity;
+import com.example.cinemates.adapters.CommentAdapter;
+import com.example.cinemates.adapters.ErrorAdapter;
+import com.example.cinemates.adapters.GeneralNotificationAdapter;
 import com.example.cinemates.adapters.ReviewAdapter;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -10,6 +13,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,18 +27,29 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cinemates.api.CinematesDB;
+import com.example.cinemates.classes.Comment;
 import com.example.cinemates.classes.Film;
+import com.example.cinemates.classes.Notifica;
 import com.example.cinemates.classes.Reaction;
 import com.example.cinemates.classes.ReportDialog;
 import com.example.cinemates.classes.Review;
 import com.example.cinemates.R;
 import com.example.cinemates.fragments.DescriptionFragment;
+import com.example.cinemates.fragments.GeneralNotificationsFragment;
+import com.example.cinemates.handlers.RequestHandler;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
-public class CommentsActivity extends AppCompatActivity {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-    private RecyclerView rvComments;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class CommentsActivity extends AppCompatActivity {
+    public static RecyclerView rvComments;
     private TextView detailReview;
     private TextView usernameReview;
     private TextView dateReview;
@@ -43,14 +58,13 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView commentReview;
     private ImageView alertReview;
     private EditText textComment;
-    private ReviewAdapter adapter;
+    private CommentAdapter commentAdapter;
     private Review review;
     private ImageButton backBtn;
     private ReportDialog dialog;
     private Button sendComment;
     private TextView errorComment;
-
-
+    private ArrayList<Comment> comments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +73,16 @@ public class CommentsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         review = (Review) intent.getSerializableExtra("recensione");
+
+        rvComments = findViewById(R.id.list_comment);
+        rvComments.setHasFixedSize(true);
+
+        LinearLayoutManager l = new LinearLayoutManager(this);
+        l.setOrientation(LinearLayoutManager.VERTICAL);
+        rvComments.setLayoutManager(l);
+
+        comments = new ArrayList<>();
+        getComments(review);
 
         backBtn = findViewById(R.id.backBtnComments);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -121,14 +145,133 @@ public class CommentsActivity extends AppCompatActivity {
             }
         });
 
-        rvComments = findViewById(R.id.list_comment);
-
-        rvComments.setHasFixedSize(true);
-
-        LinearLayoutManager l = new LinearLayoutManager(this);
-        l.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rvComments.setLayoutManager(l);
-
+        sendComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (textComment.getText().length() == 0) {
+                    textComment.setHintTextColor(getResources().getColor(R.color.google_color));
+                    Toast.makeText(CommentsActivity.this, "Il campo commento è vuoto", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    rvComments = new RecyclerView(CommentsActivity.this);
+                    textComment.setHintTextColor(getResources().getColor(R.color.light_grey));
+                    sendComment(textComment.getText().toString());
+                    textComment.setText(null);
+                }
+            }
+        });
     }
 
+    private void sendComment(String comment) {
+        class CommentSender extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("comment", comment);
+                params.put("review", review.getId());
+
+                //returing the response
+                return requestHandler.sendPostRequest(CinematesDB.SEND_COMMENT, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        Comment cmt = new Comment(
+                                -1,
+                                comment,
+                                MainActivity.utente.getUsername()
+                        );
+
+                        CommentAdapter.comments.add(cmt);
+                        rvComments.getAdapter().notifyDataSetChanged();
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        CommentSender commentSender = new CommentSender();
+        commentSender.execute();
+    }
+
+    private void getComments(Review review) {
+        class CommentsLoader extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("review", review.getId());
+
+                //returing the response
+                return requestHandler.sendPostRequest(CinematesDB.GET_COMMENTS, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        JSONArray commentsJson = obj.getJSONArray("commenti");
+                        for (int i = 0; i < commentsJson.length(); i++) {
+                            JSONObject cmt = commentsJson.getJSONObject(i);
+                            Comment comment = new Comment(
+                                    cmt.getInt("id"),
+                                    cmt.getString("commento"),
+                                    cmt.getString("username")
+                            );
+                            comments.add(comment);
+                        }
+
+                        commentAdapter = new CommentAdapter(comments, CommentsActivity.this);
+                        rvComments.setAdapter(commentAdapter);
+                    } else {
+                        ArrayList<String> error = new ArrayList<String>();
+                        error.add(obj.getString("message"));
+                        ErrorAdapter errorAdapter = new ErrorAdapter(CommentsActivity.this, error);
+                        rvComments.setAdapter(errorAdapter);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        CommentsLoader commentsLoader = new CommentsLoader();
+        commentsLoader.execute();
+    }
 }

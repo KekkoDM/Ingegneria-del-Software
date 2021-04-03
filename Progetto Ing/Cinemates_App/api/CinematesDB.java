@@ -24,4 +24,6 @@ public class CinematesDB {
     public static final String SEND_REPORT = BASE_URL + "segnalazione/sendReport.php";
     public static final String REMOVE_FRIEND = BASE_URL + "utente/removeFriend.php";
     public static final String SEND_REACTION = BASE_URL + "utente/sendReaction.php";
+    public static final String GET_COMMENTS = BASE_URL + "utente/getComments.php";
+    public static final String SEND_COMMENT = BASE_URL + "utente/sendComment.php";
 }
