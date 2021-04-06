@@ -1,6 +1,7 @@
 package com.example.cinemates.fragments;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -75,33 +76,41 @@ public class FavoritesFragment extends Fragment {
         recyclerViewFavorites.setLayoutManager(llm);
 
         buttonCasualFavorites = view.findViewById(R.id.btn_casual);
+        buttonCasualFavorites.setVisibility(View.INVISIBLE);
+
         buttonCasualFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(String.valueOf(recyclerViewFavorites.getAdapter()).substring(31,35).equals("Film")){
+                /*if(String.valueOf(recyclerViewFavorites.getAdapter()).substring(31,35).equals("Film")){
+                    casualFilm(recyclerViewFavorites);
+                }*/
+                if(recyclerViewFavorites.getAdapter() != null){
                     casualFilm(recyclerViewFavorites);
                 }
 
             }
-
-
         });
 
         buttonCasualToSee = view.findViewById(R.id.btn_casual2);
+        buttonCasualToSee.setVisibility(View.INVISIBLE);
+
         buttonCasualToSee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(String.valueOf(recyclerViewToSee.getAdapter()).substring(31,35).equals("Film"))
+                if(recyclerViewToSee.getAdapter() != null){
                     casualFilm(recyclerViewToSee);
+                }
             }
         });
+
+
 
 
         listItem = new ArrayList<>();
         requestJson = new RequestJson(getContext());
 
-        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL);
-        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL);
+        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL,buttonCasualFavorites);
+        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL,buttonCasualToSee);
 
         return view;
     }
@@ -126,12 +135,28 @@ public class FavoritesFragment extends Fragment {
         getContext().startActivity(intent);
     }
 
-    private void loadList(RecyclerView recyclerView, String url) {
+    private void setButtonCasual(Button casual, int i){
+
+        if (i >1){
+            casual.setVisibility(View.VISIBLE);
+            System.out.println("IF BUTTON: ");
+        }
+
+
+
+    }
+
+    private void loadList(RecyclerView recyclerView, String url,Button casual) {
         class ListLoader extends AsyncTask<Void, Void, String> {
+
+            ProgressDialog pdLoading = new ProgressDialog(getContext());
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                pdLoading.setMessage("\tRecupero liste...");
+                pdLoading.setCancelable(true);
+                pdLoading.show();
             }
 
             @Override
@@ -150,6 +175,8 @@ public class FavoritesFragment extends Fragment {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+                pdLoading.dismiss();
+                int i = 0;
 
                 try {
                     //converting response to json object
@@ -158,7 +185,7 @@ public class FavoritesFragment extends Fragment {
                     //if no error in response
                     if (!obj.getBoolean("error")) {
                         JSONArray list = obj.getJSONArray("list");
-                        for (int i = 0; i < list.length(); i++) {
+                        for (i = 0; i < list.length(); i++) {
                             JSONObject film = list.getJSONObject(i);
                             Film item = new Film(
                                     film.getString("id"),
@@ -179,6 +206,9 @@ public class FavoritesFragment extends Fragment {
                         errorAdapter = new ErrorAdapter(getContext(),error);
                         recyclerView.setAdapter(errorAdapter);
                     }
+
+                    setButtonCasual(casual,i);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
