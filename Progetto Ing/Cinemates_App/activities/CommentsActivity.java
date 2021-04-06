@@ -56,8 +56,7 @@ public class CommentsActivity extends AppCompatActivity {
     private TextView usernameReview;
     private TextView dateReview;
     private TextView contLike;
-    private TextView likeBtn;
-    private ImageView commentReview;
+    private ImageView likeBtn;
     private ImageView alertReview;
     private EditText textComment;
     private CommentAdapter commentAdapter;
@@ -76,6 +75,8 @@ public class CommentsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         review = (Review) intent.getSerializableExtra("recensione");
+
+        Reaction reaction = new Reaction(this);
 
         rvComments = findViewById(R.id.list_comment);
         rvComments.setHasFixedSize(true);
@@ -107,17 +108,16 @@ public class CommentsActivity extends AppCompatActivity {
         likeBtn = findViewById(R.id.likeBtnReview);
         contLike = findViewById(R.id.cont_like_comment);
 
-        commentReview = findViewById(R.id.comment_review_comment);
+        reaction.getReaction(review, likeBtn, contLike);
 
         textComment = findViewById(R.id.textComment);
         sendComment = findViewById(R.id.send_comment);
         errorComment = findViewById(R.id.error_comment_label);
         alertReview = findViewById(R.id.alert_review_comment);
 
-        Reaction reaction = new Reaction(this);
-
-        if(MainActivity.utente.isAutenticato())
-            likeBtn.setOnTouchListener(reaction.getReaction(review));
+        if(MainActivity.utente.isAutenticato()) {
+            likeBtn.setOnTouchListener(reaction.showReaction(review, likeBtn, contLike));
+        }
         else{
             likeBtn.setVisibility(View.INVISIBLE);
             contLike.setVisibility(View.INVISIBLE);

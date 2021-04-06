@@ -50,7 +50,6 @@ import java.util.List;
 import kotlin.jvm.functions.Function1;
 
 public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder> {
-    private final String[] strings = {"Mi piace", "Love", "Ahah", "Triste", "Grrr"};
     Context context;
     List<Review> reviews;
     RelativeLayout container;
@@ -99,22 +98,6 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             }
         });
 
-        holder.review_description.setText(review.getDescrizione());
-        holder.review_date.setText(review.getData());
-        holder.username.setText(review.getUser() + " ha scritto:");
-
-        Reaction reaction = new Reaction(context);
-
-        if (MainActivity.utente.isAutenticato())
-            holder.likeBtn.setOnTouchListener(reaction.getReaction(review));
-
-        else{
-            holder.likeBtn.setVisibility(View.INVISIBLE);
-            holder.contLike.setVisibility(View.INVISIBLE);
-            holder.comment_review.setVisibility(View.INVISIBLE);
-            holder.report.setVisibility(View.INVISIBLE);
-        }
-
         holder.report.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,6 +118,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                 popupMenu.show();
             }
         });
+
+        holder.setReview(review);
     }
 
     @Override
@@ -144,7 +129,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
         private TextView username, review_description, review_date, contLike;
-        private ImageView img_user, comment_review, report,likeBtn;
+        private ImageView img_user, comment_review, report, likeBtn;
         private RelativeLayout container;
 
         public ReviewViewHolder(@NonNull View itemView) {
@@ -157,6 +142,25 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             likeBtn = itemView.findViewById(R.id.likeBtn);
             contLike = itemView.findViewById(R.id.cont_like);
         }
-    }
 
+        private void setReview(Review review) {
+            Reaction reaction = new Reaction(context);
+
+            review_description.setText(review.getDescrizione());
+            review_date.setText(review.getData());
+            username.setText(review.getUser() + " ha scritto:");
+
+            if (MainActivity.utente.isAutenticato()) {
+                likeBtn.setOnTouchListener(reaction.showReaction(review, likeBtn, contLike));
+                reaction.getReaction(review, likeBtn, contLike);
+            }
+            else {
+                likeBtn.setVisibility(View.INVISIBLE);
+                contLike.setVisibility(View.INVISIBLE);
+                comment_review.setVisibility(View.INVISIBLE);
+                report.setVisibility(View.INVISIBLE);
+            }
+
+        }
+    }
 }

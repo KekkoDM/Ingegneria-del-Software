@@ -37,13 +37,14 @@
         android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         android:fadingEdgeLength="20dp"
         android:requiresFadingEdge="vertical"
         app:layout_constraintBottom_toTopOf="@+id/comment_"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleComments">
+        app:layout_constraintTop_toBottomOf="@id/titleComments"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -73,12 +74,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
                         android:lineSpacingExtra="8dp"
                         android:text="TextView"
                         android:textColor="@color/purple_hype"
                         android:textSize="18dp"
-                        app:layout_constraintBottom_toTopOf="@+id/comment_review_comment"
                         app:layout_constraintEnd_toStartOf="@+id/alert_review_comment"
                         app:layout_constraintStart_toEndOf="@+id/image_user"
                         app:layout_constraintTop_toBottomOf="@+id/username_review_comment" />
@@ -99,20 +98,6 @@
                         app:layout_constraintEnd_toStartOf="@+id/alert_review_comment"
                         app:layout_constraintStart_toEndOf="@+id/image_user"
                         app:layout_constraintTop_toTopOf="parent" />
-
-                    <ImageView
-                        android:id="@+id/comment_review_comment"
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/circle_style"
-                        android:backgroundTint="@color/light_grey"
-                        android:padding="5dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:srcCompat="@drawable/ic_baseline_chat_bubble_24"
-                        app:tint="@color/white" />
 
                     <ImageView
                         android:id="@+id/alert_review_comment"
@@ -139,8 +124,8 @@
                         android:textSize="15dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/likeBtnReview"
-                        app:layout_constraintHorizontal_bias="0.316"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@+id/image_user" />
 
                     <ImageView
                         android:id="@+id/image_user"
@@ -152,31 +137,30 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/ic_user_image" />
 
+                    <ImageView
+                        android:id="@+id/likeBtnReview"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/cont_like_comment"
+                        app:layout_constraintTop_toBottomOf="@+id/detail_review_comment"
+                        app:layout_constraintVertical_bias="1.0"
+                        app:srcCompat="@drawable/ic_no_reaction" />
+
                     <TextView
                         android:id="@+id/cont_like_comment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="8dp"
                         android:text="234"
                         android:textAlignment="center"
-                        android:textColor="@color/blue_hype"
-                        android:textSize="12sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/comment_review_comment" />
-
-                    <TextView
-                        android:id="@+id/likeBtnReview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="Mi piace"
-                        android:textColor="@color/blue_hype"
+                        android:textColor="@color/light_grey"
                         android:textSize="15dp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/cont_like_comment" />
+                        app:layout_constraintBottom_toBottomOf="@+id/likeBtnReview"
+                        app:layout_constraintEnd_toStartOf="@+id/alert_review_comment"
+                        app:layout_constraintTop_toTopOf="@+id/likeBtnReview" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
@@ -194,39 +178,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardReview_comment" />
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/list_comment_container"
-                android:layout_width="match_parent"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_comment"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="8dp"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/labelComment">
+                app:layout_constraintTop_toBottomOf="@+id/labelComment" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/list_comment"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:scrollbarStyle="insideInset"
-                        android:scrollbars="horizontal"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

@@ -6,6 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="15dp"
     app:cardElevation="8dp">
@@ -58,34 +60,32 @@
             android:textColor="@color/purple_hype"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/alert_comment"
+            app:layout_constraintEnd_toStartOf="@+id/alert_review"
             app:layout_constraintStart_toEndOf="@+id/image_user"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/comment_review"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/circle_style"
-            android:backgroundTint="@color/light_grey"
-            android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_baseline_chat_bubble_24"
-            app:tint="@color/white" />
+            app:layout_constraintEnd_toStartOf="@+id/alert_review"
+            app:srcCompat="@drawable/comment_button" />
 
         <TextView
             android:id="@+id/date_review"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="TextView"
             android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/likeBtn"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/image_user" />
 
         <ImageView
             android:id="@+id/image_user"
@@ -104,7 +104,7 @@
             android:layout_marginEnd="16dp"
             android:text="234"
             android:textAlignment="center"
-            android:textColor="@color/blue_hype"
+            android:textColor="@color/light_grey"
             android:textSize="15dp"
             app:layout_constraintBottom_toBottomOf="@+id/likeBtn"
             app:layout_constraintEnd_toStartOf="@+id/comment_review"
@@ -112,17 +112,15 @@
 
         <ImageView
             android:id="@+id/likeBtn"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="30dp"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/cont_like"
             app:layout_constraintTop_toBottomOf="@+id/detail_review"
-            app:srcCompat="@drawable/like"
-            app:tint="@color/blue_hype" />
-
-
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/ic_no_reaction" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
