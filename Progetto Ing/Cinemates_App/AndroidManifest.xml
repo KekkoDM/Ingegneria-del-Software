@@ -19,7 +19,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.ResultsActivity" />
         <activity android:name=".activities.RegisterActivity"
-            android:windowSoftInputMode="adjustPan" />/>
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.SplashActivity">
