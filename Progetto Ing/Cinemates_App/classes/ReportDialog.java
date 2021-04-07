@@ -6,11 +6,15 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +32,9 @@ import java.util.HashMap;
 public class ReportDialog extends Dialog {
     private RadioGroup alertGroup;
     private RadioButton radioButton;
+    private EditText note;
+    private TextView charCounter;
+    private ImageView close;
     private Button sendAlert;
     private Context context;
 
@@ -37,17 +44,33 @@ public class ReportDialog extends Dialog {
     }
 
     public boolean showPopUp(Object item, String type){
-        ImageView close;
         this.setContentView(R.layout.popup_report);
+
         alertGroup = findViewById(R.id.radioGroup2);
+        note = findViewById(R.id.noteReport);
         sendAlert = findViewById(R.id.sendAlert);
+        charCounter = findViewById(R.id.charCount);
         close = findViewById(R.id.closealert);
+
+        note.addTextChangedListener(new TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //This sets a textview to the current length
+                charCounter.setText(String.valueOf(s.length()) + "/30");
+            }
+
+            public void afterTextChanged(Editable s) {
+
+            }
+            });
 
         sendAlert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkButton(v);
-                sendReport(item, type);
+                sendReport(item, type, note.getText().toString());
                 dismiss();
             }
         });
@@ -65,7 +88,7 @@ public class ReportDialog extends Dialog {
         return true;
     }
 
-    private void sendReport(Object item, String type) {
+    private void sendReport(Object item, String type, String note) {
         ProgressDialog pdLoading = new ProgressDialog(getContext());
 
         class ReportSender extends AsyncTask<Void, Void, String> {
@@ -94,6 +117,7 @@ public class ReportDialog extends Dialog {
                     params.put("item", String.valueOf(((Comment) item).getId()));
                 }
                 params.put("reason", radioButton.getText().toString());
+                params.put("note", note);
 
                 //returning the response
                 return requestHandler.sendPostRequest(CinematesDB.SEND_REPORT, params);
