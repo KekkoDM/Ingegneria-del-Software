@@ -176,9 +176,7 @@ public class LoginFragment extends Fragment {
                 MainActivity.utente.setNome(account.getDisplayName());
                 MainActivity.utente.setUsername(account.getGivenName());
 
-                Intent intent = new Intent(getContext(),RegisterActivity.class);
-                startActivity(intent);
-
+                checkEmail();
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
@@ -205,7 +203,72 @@ public class LoginFragment extends Fragment {
                 });
     }
 
-        public void loginUser(View v){
+    private void checkEmail() {
+        class EmailChecker extends AsyncTask<Void, Void, String> {
+            ProgressDialog pdLoading = new ProgressDialog(getContext());
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                pdLoading.setMessage("\tAccesso con Google in corso...");
+                pdLoading.setCancelable(true);
+                pdLoading.show();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("email", MainActivity.utente.getEmail());
+
+                //returning the response
+                return requestHandler.sendPostRequest(CinematesDB.CHECK_EMAIL, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                pdLoading.dismiss();
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        //getting the user from the response
+                        JSONObject userJson = obj.getJSONObject("utente");
+                        Utente utente = new Utente(
+                                userJson.getString("username"),
+                                userJson.getString("nome"),
+                                userJson.getString("cognome"),
+                                userJson.getString("email"),
+                                userJson.getString("password")
+                        );
+
+                        //starting the profile page
+                        MainActivity.utente = utente;
+                        MainActivity.utente.setAutenticato(true);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.fragment_container, new AccountFragment()).commit();
+                    } else {
+                        Intent intent = new Intent(getContext(), RegisterActivity.class);
+                        startActivity(intent);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        EmailChecker checker = new EmailChecker();
+        checker.execute();
+    }
+
+    public void loginUser(View v) {
         final String username = usernameField.getText().toString();
         final String password = passwordField.getText().toString();
 
@@ -249,8 +312,6 @@ public class LoginFragment extends Fragment {
 
                         //if no error in response
                         if (!obj.getBoolean("error")) {
-                            Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-
                             //getting the user from the response
                             JSONObject userJson = obj.getJSONObject("utente");
                             Utente utente = new Utente(

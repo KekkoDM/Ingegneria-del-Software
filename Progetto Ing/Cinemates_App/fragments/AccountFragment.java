@@ -53,7 +53,7 @@ public class AccountFragment extends Fragment {
         });
 
         accountName = view.findViewById(R.id.nameProfile);
-        accountName.setText("Bentornato, " + MainActivity.utente.getNome() + " " + MainActivity.utente.getCognome());
+        accountName.setText("Bentornato, " + MainActivity.utente.getNome() + "!");
 
         accountUsername = view.findViewById(R.id.usernameProfile);
         accountUsername.setText("@" + MainActivity.utente.getUsername());
@@ -98,7 +98,6 @@ public class AccountFragment extends Fragment {
         title.setText("Sei sicuro?");
         subtitle.setText("Se scegli di proseguire, verrai disconnesso da Cinemates");
         btnPop.setText("Disconnetti");
-
 
         btnPop.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -86,13 +86,7 @@ public class Reaction {
 
                     // if no error in response
                     if (!obj.getBoolean("error")) {
-                        if (obj.getString("message").equals("Reazione eliminata correttamente")) {
-                            button.setImageResource(R.drawable.ic_no_reaction);
-                            count.setTextColor(context.getResources().getColor(R.color.light_grey));
-                        }
-                        else {
-                            setReaction(strings[position], button, count);
-                        }
+                        getReaction(review, button, count);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -136,7 +130,7 @@ public class Reaction {
 
                     // if no error in response
                     if (!obj.getBoolean("error")) {
-                        setReaction(obj.getString("reazione"), button, count);
+                        setReaction(obj.getString("reazione"), obj.getInt("contatore"), button, count);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -148,7 +142,9 @@ public class Reaction {
         reactionGetter.execute();
     }
 
-    private void setReaction(String reaction, ImageView button, TextView count) {
+    private void setReaction(String reaction, int counter, ImageView button, TextView count) {
+        count.setText(String.valueOf(counter));
+
         switch (reaction) {
             case "Mi piace":
                 button.setImageResource(R.drawable.ic_like);
@@ -174,6 +170,9 @@ public class Reaction {
                 button.setImageResource(R.drawable.ic_angry);
                 count.setTextColor(context.getResources().getColor(R.color.angry_color));
                 break;
+            default:
+                button.setImageResource(R.drawable.ic_no_reaction);
+                count.setTextColor(context.getResources().getColor(R.color.light_grey));
         }
     }
 }

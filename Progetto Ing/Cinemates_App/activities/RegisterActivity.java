@@ -42,8 +42,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-
-
         nameNewUser = findViewById(R.id.name);
         surnameNewUser = findViewById(R.id.surname);
         usernameNewUser = findViewById(R.id.username);

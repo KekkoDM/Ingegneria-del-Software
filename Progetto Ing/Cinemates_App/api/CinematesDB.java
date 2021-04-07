@@ -6,6 +6,7 @@ public class CinematesDB {
     public static final String REGISTER_URL = BASE_URL + "utente/register.php";
     public static final String RECOVERY_PASSWORD = BASE_URL + "utente/recoveryPassword.php";
     public static final String LOGIN_URL = BASE_URL + "utente/login.php";
+    public static final String CHECK_EMAIL = BASE_URL + "utente/checkEmail.php";
     public static final String UPDATE_URL = BASE_URL + "utente/updatePassword.php";
     public static final String DELETE_URL = BASE_URL + "utente/delete.php";
     public static final String FRIENDS_URL = BASE_URL + "utente/getFriendsList.php";
