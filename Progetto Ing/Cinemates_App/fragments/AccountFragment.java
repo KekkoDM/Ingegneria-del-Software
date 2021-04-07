@@ -21,6 +21,9 @@ import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.activities.FriendsActivity;
 import com.example.cinemates.activities.SettingsActivity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class AccountFragment extends Fragment {
     private CardView settings;
@@ -96,10 +99,12 @@ public class AccountFragment extends Fragment {
         subtitle.setText("Se scegli di proseguire, verrai disconnesso da Cinemates");
         btnPop.setText("Disconnetti");
 
+
         btnPop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.utente.setAutenticato(false);
+                FirebaseAuth.getInstance().signOut();
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.fragment_container,
                         new LoginFragment()).commit();

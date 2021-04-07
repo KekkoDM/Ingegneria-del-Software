@@ -42,11 +42,20 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+
+
         nameNewUser = findViewById(R.id.name);
         surnameNewUser = findViewById(R.id.surname);
         usernameNewUser = findViewById(R.id.username);
         emailNewUser = findViewById(R.id.email);
         passwordNewUser = findViewById(R.id.password);
+
+        Intent intent = getIntent();
+        if (intent != null){
+            nameNewUser.setText(MainActivity.utente.getNome());
+            emailNewUser.setText(MainActivity.utente.getEmail());
+            usernameNewUser.setText(MainActivity.utente.getUsername());
+        }
 
         submitBtn = findViewById(R.id.registerBtn);
         submitBtn.setOnClickListener(new View.OnClickListener() {
