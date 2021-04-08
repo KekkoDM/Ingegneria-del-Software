@@ -134,7 +134,10 @@ public class Reaction {
                     JSONObject obj = new JSONObject(s);
 
                     // if no error in response
-                    if (!obj.getBoolean("error")) {
+                    if (obj.getBoolean("error")) {
+                        setReaction("null", obj.getInt("contatore"), button, count);
+                    }
+                    else {
                         setReaction(obj.getString("reazione"), obj.getInt("contatore"), button, count);
                     }
                 } catch (JSONException e) {
