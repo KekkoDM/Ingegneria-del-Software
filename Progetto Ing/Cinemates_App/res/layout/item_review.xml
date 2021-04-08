@@ -39,7 +39,6 @@
             android:ellipsize="end"
             android:lineSpacingExtra="8dp"
             android:maxLines="2"
-            android:text="TextView"
             android:textColor="@color/purple_hype"
             android:textSize="18dp"
             app:layout_constraintBottom_toTopOf="@+id/comment_review"

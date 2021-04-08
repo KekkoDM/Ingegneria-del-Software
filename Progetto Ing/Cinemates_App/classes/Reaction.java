@@ -86,7 +86,12 @@ public class Reaction {
 
                     // if no error in response
                     if (!obj.getBoolean("error")) {
-                        getReaction(review, button, count);
+                        if (obj.getString("message").equals("Reazione eliminata correttamente")) {
+                            setReaction("null", Integer.parseInt(count.getText().toString()) - 1, button, count);
+                        }
+                        else {
+                            getReaction(review, button, count);
+                        }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

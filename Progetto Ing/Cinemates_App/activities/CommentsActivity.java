@@ -108,14 +108,13 @@ public class CommentsActivity extends AppCompatActivity {
         likeBtn = findViewById(R.id.likeBtnReview);
         contLike = findViewById(R.id.cont_like_comment);
 
-        reaction.getReaction(review, likeBtn, contLike);
-
         textComment = findViewById(R.id.textComment);
         sendComment = findViewById(R.id.send_comment);
         errorComment = findViewById(R.id.error_comment_label);
         alertReview = findViewById(R.id.alert_review_comment);
 
         if(MainActivity.utente.isAutenticato()) {
+            reaction.getReaction(review, likeBtn, contLike);
             likeBtn.setOnTouchListener(reaction.showReaction(review, likeBtn, contLike));
         }
         else{

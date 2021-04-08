@@ -59,7 +59,6 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     private RadioGroup alertGroup;
     private RadioButton radioButton;
     private Button sendAlert;
-    private Review review;
 
     public ReviewAdapter(List<Review> list, Context c){
         this.context = c;
@@ -79,6 +78,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         //holder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
         //holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
         Review review = reviews.get(position);
+
+        review.checkReviewVisibility(review, holder);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,8 +119,6 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                 popupMenu.show();
             }
         });
-
-        holder.setReview(review);
     }
 
     @Override
@@ -130,7 +129,6 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
         private TextView username, review_description, review_date, contLike;
         private ImageView img_user, comment_review, report, likeBtn;
-        private RelativeLayout container;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -143,16 +141,16 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             contLike = itemView.findViewById(R.id.cont_like);
         }
 
-        private void setReview(Review review) {
+        public void setReview(Review review) {
             Reaction reaction = new Reaction(context);
 
+            username.setText(review.getUser() + " ha scritto:");
             review_description.setText(review.getDescrizione());
             review_date.setText(review.getData());
-            username.setText(review.getUser() + " ha scritto:");
 
             if (MainActivity.utente.isAutenticato()) {
-                likeBtn.setOnTouchListener(reaction.showReaction(review, likeBtn, contLike));
                 reaction.getReaction(review, likeBtn, contLike);
+                likeBtn.setOnTouchListener(reaction.showReaction(review, likeBtn, contLike));
             }
             else {
                 likeBtn.setVisibility(View.INVISIBLE);
@@ -160,7 +158,16 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                 comment_review.setVisibility(View.INVISIBLE);
                 report.setVisibility(View.INVISIBLE);
             }
+        }
 
+        public void setCensoredReview(Review review) {
+            username.setText(review.getUser() + " ha scritto:");
+            review_description.setText("Questo contenuto è stato oscurato perchè contiene Spoiler");
+            review_date.setText(review.getData());
+            likeBtn.setVisibility(View.INVISIBLE);
+            contLike.setVisibility(View.INVISIBLE);
+            report.setVisibility(View.INVISIBLE);
+            comment_review.setImageResource(R.drawable.ic_show_password);
         }
     }
 }

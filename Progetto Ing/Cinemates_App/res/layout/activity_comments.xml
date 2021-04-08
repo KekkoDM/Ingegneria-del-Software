@@ -154,7 +154,7 @@
                         android:id="@+id/cont_like_comment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="234"
+                        android:text="0"
                         android:textAlignment="center"
                         android:textColor="@color/light_grey"
                         android:textSize="15dp"
