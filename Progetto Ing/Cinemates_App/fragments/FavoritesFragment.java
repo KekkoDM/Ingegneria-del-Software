@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cinemates.R;
@@ -34,6 +35,7 @@ import com.example.cinemates.handlers.RequestHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,8 +47,8 @@ public class FavoritesFragment extends Fragment {
     private FilmAdapter filmAdapter;
     ErrorAdapter errorAdapter;
     private RequestJson requestJson;
-    private Button buttonCasualFavorites;
-    private Button buttonCasualToSee;
+    private TextView buttonCasualFavorites;
+    private TextView buttonCasualToSee;
     private ArrayList<Film> listItem;
     int id = -1;
 
@@ -135,7 +137,7 @@ public class FavoritesFragment extends Fragment {
         getContext().startActivity(intent);
     }
 
-    private void setButtonCasual(Button casual, int i){
+    private void setButtonCasual(TextView casual, int i){
 
         if (i >1){
             casual.setVisibility(View.VISIBLE);
@@ -146,7 +148,7 @@ public class FavoritesFragment extends Fragment {
 
     }
 
-    private void loadList(RecyclerView recyclerView, String url,Button casual) {
+    private void loadList(RecyclerView recyclerView, String url, TextView casual) {
         class ListLoader extends AsyncTask<Void, Void, String> {
 
             ProgressDialog pdLoading = new ProgressDialog(getContext());
