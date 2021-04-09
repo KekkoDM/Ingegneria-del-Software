@@ -12,31 +12,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.cinemates.R;
 import com.example.cinemates.activities.ResultsActivity;
 import com.example.cinemates.adapters.SearchSuggestionsAdapter;
-import com.example.cinemates.classes.Film;
 import com.example.cinemates.classes.RequestJson;
-
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class SearchFragment extends Fragment {
     private EditText query;
     private Button searchButton;
     private RecyclerView rv;
-    private SearchSuggestionsAdapter adapter;
+
 
 
     public SearchFragment() {
@@ -53,7 +38,7 @@ public class SearchFragment extends Fragment {
         rv.setLayoutManager(new GridLayoutManager(this.getContext(), 2));
 
         RequestJson requestJson = new RequestJson(this.getContext());
-        requestJson.parseJSONSearchSuggestion(rv,adapter);
+        requestJson.parseJSONSearchSuggestion(rv);
 
         query = view.findViewById(R.id.textSearched);
         searchButton = view.findViewById(R.id.searchBtn);

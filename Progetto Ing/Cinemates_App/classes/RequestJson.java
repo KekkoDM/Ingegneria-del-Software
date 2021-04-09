@@ -45,13 +45,22 @@ public class RequestJson<JSONParser>{
     public ArrayList getListFilm() {
         return listFilm;
     }
-
     private ArrayList listFilm;
     private ArrayList reviews;
+    private RecyclerView.Adapter adapter;
 
     private RequestQueue requestQueue;
-    private String tmdb="https://api.themoviedb.org/3/trending/";
-    private String apikey="/week?api_key=d6f6fde62b39251f66a180f2c13ac19f&language=it-IT&page=1";
+
+    private static final String TMDB = "https://api.themoviedb.org/3/";
+    private static final String APIKEY = "?api_key=6ff4c2846a2910d753ff91a81eee4f6c";
+
+    private static final String IT_IT = "&language=it-IT";
+    private static final String EN_US = "&language=en-US";
+    private static final String TRENDING_ALL = TMDB + "trending/all/week" + APIKEY + IT_IT;
+    private static final String TRENDING =  TMDB + "trending/";
+    private static final String SEARCH =  TMDB + "search/multi" + APIKEY + IT_IT;
+
+
     private Context context;
 
     public RequestJson(Context c){
@@ -61,12 +70,12 @@ public class RequestJson<JSONParser>{
     }
 
     //SLIDER
-    public void parseJSONSlide(ViewPager2 viewPager2, SliderAdapter adapter) {
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, tmdb+"all"+apikey, null,
+    public void parseJSONSlide(ViewPager2 viewPager2) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, TRENDING_ALL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getFilmSlider(viewPager2, adapter,response);
+                        getFilmSlider(viewPager2, response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -77,7 +86,7 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
-    protected void getFilmSlider(ViewPager2 viewPager, SliderAdapter adapter, JSONObject response){
+    protected void getFilmSlider(ViewPager2 viewPager, JSONObject response){
         try {
             listFilm = new ArrayList<Film>();
             JSONArray jsonArray = response.getJSONArray("results");
@@ -93,12 +102,12 @@ public class RequestJson<JSONParser>{
 
 
     //SEARCH SUGGESTION
-    public void parseJSONSearchSuggestion(RecyclerView recyclerView, SearchSuggestionsAdapter adapter) {
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, tmdb+"all"+apikey, null,
+    public void parseJSONSearchSuggestion(RecyclerView recyclerView) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, TRENDING_ALL, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getFilmSearchSuggestion(recyclerView,adapter,response);
+                        getFilmSearchSuggestion(recyclerView,response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -109,14 +118,14 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
-    protected void getFilmSearchSuggestion(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
+    protected void getFilmSearchSuggestion(RecyclerView recyclerView, JSONObject response){
         try {
             listFilm = new ArrayList<Film>();
             JSONArray jsonArray = response.getJSONArray("results");
 
             setFMV(jsonArray);
 
-            adapter = new SearchSuggestionsAdapter(context, listFilm);
+             adapter = new SearchSuggestionsAdapter(context, listFilm);
             recyclerView.setAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -125,12 +134,15 @@ public class RequestJson<JSONParser>{
     }
 
     //RECYCLERVIEW FILM
-    public void parseJSONFilm(RecyclerView recyclerView, RecyclerView.Adapter filmAdapter,String type) {
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, tmdb+type+apikey, null,
+    public void parseJSONFilm(RecyclerView recyclerView,String type) {
+
+        String url = TRENDING + type + "/week" + APIKEY + IT_IT;
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getFilmHome(recyclerView, filmAdapter,response);
+                        getFilmHome(recyclerView, response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -141,7 +153,7 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
-    protected void getFilmHome(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
+    protected void getFilmHome(RecyclerView recyclerView, JSONObject response){
         try {
             listFilm = new ArrayList<Film>();
             JSONArray jsonArray = response.getJSONArray("results");
@@ -157,14 +169,15 @@ public class RequestJson<JSONParser>{
 
 
     //RICERCA
-    public void parseJSONSearch(RecyclerView recyclerView,ResultsAdapter resultsAdapter, String query){
-        String url = "https://api.themoviedb.org/3/search/multi?api_key=6ff4c2846a2910d753ff91a81eee4f6c&language=it-IT&query="+query+"&include_adult=false";
+    public void parseJSONSearch(RecyclerView recyclerView, String query){
+
+        String url = SEARCH + "&query=" + query + "&include_adult=false";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getFilmResults(recyclerView,resultsAdapter,response);
+                        getFilmResults(recyclerView,response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -175,7 +188,7 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
-    protected void getFilmResults(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response){
+    protected void getFilmResults(RecyclerView recyclerView, JSONObject response){
         try {
             listFilm = new ArrayList<Film>();
             JSONArray jsonArray = response.getJSONArray("results");
@@ -198,21 +211,20 @@ public class RequestJson<JSONParser>{
 
 
     //RECENSIONI
-    public void parseJSONReviews(RecyclerView recyclerView, RecyclerView.Adapter adapter,String id,String type) {
+    public void parseJSONReviews(RecyclerView recyclerView,String id,String type) {
 
-        String base_url = "https://api.themoviedb.org/3/";
+        String url = "";
         if(type.equals("Film"))
-            base_url=base_url+"movie/";
+            url = TMDB + "movie/";
         else
-            base_url=base_url+"tv/";
-        base_url=base_url+id;
-        String api = "/reviews?api_key=6ff4c2846a2910d753ff91a81eee4f6c&language=en-US&page=1";
+            url = TMDB + "tv/";
+        url = url + id + "/reviews" + APIKEY + EN_US ;
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, base_url+api, null,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getReviews(recyclerView, adapter,response);
+                        getReviews(recyclerView,response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -223,7 +235,7 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
-    protected void getReviews(RecyclerView recyclerView, RecyclerView.Adapter adapter,JSONObject response){
+    protected void getReviews(RecyclerView recyclerView,JSONObject response){
         try {
             reviews = new ArrayList<>();
             JSONArray jsonArray = response.getJSONArray("results");
@@ -245,21 +257,20 @@ public class RequestJson<JSONParser>{
 
 
     //FAVORITI E DA VEDERE
-    public void parseJSONSavedList(RecyclerView recyclerView,RecyclerView.Adapter adapter,Film film){
+    public void parseJSONSavedList(RecyclerView recyclerView,Film film){
 
-        String url = "https://api.themoviedb.org/3/";
         String type ="";
         if (film.getType().equals("Film"))
             type="movie/";
         else
             type="tv/";
-        url = url+type+film.getId()+"?api_key=6ff4c2846a2910d753ff91a81eee4f6c&language=it-IT";
+        String url = TMDB + type + film.getId() + APIKEY + IT_IT;
         listFilm = new ArrayList<Film>();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        getMediaOnId(recyclerView,adapter,response,film.getType());
+                        getMediaOnId(recyclerView,response,film.getType());
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -270,7 +281,7 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
-    protected void getMediaOnId(RecyclerView recyclerView, RecyclerView.Adapter adapter, JSONObject response,String type){
+    protected void getMediaOnId(RecyclerView recyclerView, JSONObject response,String type){
 
         try {
             if(type.equals("Film"))
@@ -334,7 +345,6 @@ public class RequestJson<JSONParser>{
             reviews.add(new Review(id,username,description,data));
         }
     }
-
 
     protected void setListSeries(JSONObject hit,int i) throws JSONException {
 

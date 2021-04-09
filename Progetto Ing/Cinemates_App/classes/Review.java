@@ -110,6 +110,7 @@ public class Review implements Serializable {
                         holder.setCensoredReview(review);
                     }
                     else {
+                        System.out.println("REACTION REVIEW");
                         holder.setReview(review);
                     }
                 } catch (JSONException e) {

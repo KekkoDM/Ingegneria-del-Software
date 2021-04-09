@@ -1,37 +1,31 @@
 package com.example.cinemates.fragments;
 
-import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.FilmAdapter;
 import com.example.cinemates.adapters.SliderAdapter;
 import com.example.cinemates.classes.Film;
 import com.example.cinemates.classes.RequestJson;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment {
     private ViewPager2 viewPager2;
-    private SliderAdapter adapter;
     private RecyclerView recyclerViewFilm;
     private RecyclerView recyclerViewLatest;
-    private FilmAdapter filmAdapter;
 
-    public static ArrayList<Film> listFilm;
+
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -60,10 +54,10 @@ public class HomeFragment extends Fragment {
         recyclerViewFilm.setLayoutManager(ll);
         recyclerViewLatest.setLayoutManager(llm);
 
-        requestJson.parseJSONSlide(viewPager2, adapter);
+        requestJson.parseJSONSlide(viewPager2);
 
-        requestJson.parseJSONFilm(recyclerViewFilm, filmAdapter,"movie");
-        requestJson.parseJSONFilm(recyclerViewLatest, filmAdapter,"tv");
+        requestJson.parseJSONFilm(recyclerViewFilm, "movie");
+        requestJson.parseJSONFilm(recyclerViewLatest,"tv");
 
         Handler handler = new Handler();
 

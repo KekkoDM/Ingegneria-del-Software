@@ -79,7 +79,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
         //holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
         Review review = reviews.get(position);
 
-        review.checkReviewVisibility(review, holder);
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +119,8 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                 popupMenu.show();
             }
         });
+
+        review.checkReviewVisibility(review, holder);
     }
 
     @Override
@@ -149,6 +151,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             review_date.setText(review.getData());
 
             if (MainActivity.utente.isAutenticato()) {
+                System.out.println("REACTION ADAPTER");
                 reaction.getReaction(review, likeBtn, contLike);
                 likeBtn.setOnTouchListener(reaction.showReaction(review, likeBtn, contLike));
             }

@@ -25,6 +25,7 @@ import com.example.cinemates.classes.RequestJson;
 import com.example.cinemates.classes.Utente;
 import com.example.cinemates.handlers.RequestHandler;
 import com.example.cinemates.api.CinematesDB;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,16 +36,16 @@ import java.util.HashMap;
 
 public class ResultsActivity extends AppCompatActivity {
     private ImageButton backBtn;
-    private ArrayList<Film> results;
+
     private ArrayList<Utente> users;
     public static RecyclerView rv;
     public static ImageView noResultIcon;
     public static TextView noResultLabel;
     private RequestJson requestJson;
-    private ResultsAdapter resultsAdapter;
+
     private ErrorAdapter errorAdapter;
     private SearchUserAdapter searchUserAdapter;
-    private RequestQueue requestQueue;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,13 @@ public class ResultsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent.getStringExtra("type").equals("film")) {
-            requestJson.parseJSONSearch(rv, resultsAdapter, intent.getStringExtra("textsearched"));
+            
+            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, intent.getStringExtra("textsearched"));
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
+
+            requestJson.parseJSONSearch(rv, intent.getStringExtra("textsearched"));
         }
         else if (intent.getStringExtra("type").equals("friend")) {
             users = new ArrayList<>();
@@ -204,7 +211,7 @@ public class ResultsActivity extends AppCompatActivity {
                                     null,
                                     item.getString("type")
                             );
-                            requestJson.parseJSONSavedList(rv, resultsAdapter, film);
+                            requestJson.parseJSONSavedList(rv, film);
                         }
                     } else {
                         ArrayList<String> error = new ArrayList<String>();

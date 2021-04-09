@@ -133,9 +133,10 @@ public class Reaction {
                     //converting response to json object
                     JSONObject obj = new JSONObject(s);
 
+                    System.out.println("REACTION GET");
                     // if no error in response
                     if (obj.getBoolean("error")) {
-                        setReaction("null", obj.getInt("contatore"), button, count);
+                        count.setText(String.valueOf(obj.getInt("contatore")));
                     }
                     else {
                         setReaction(obj.getString("reazione"), obj.getInt("contatore"), button, count);

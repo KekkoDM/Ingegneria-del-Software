@@ -31,8 +31,6 @@ public class ReviewFragment extends Fragment {
 
     private Dialog alert;
     private RecyclerView reviewRecyclerView;
-    private ReviewAdapter reviewAdapter;
-    private List<Review> reviews;
     private Film film;
 
 
@@ -49,7 +47,6 @@ public class ReviewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review, container, false);
 
-        reviews = new ArrayList<>();
         alert = new Dialog(getContext());
         film = ((MovieDescriptorActivity)getActivity()).getFilm();
 
@@ -60,7 +57,7 @@ public class ReviewFragment extends Fragment {
         reviewRecyclerView.setLayoutManager(l);
 
         RequestJson requestJson = new RequestJson(getContext());
-        requestJson.parseJSONReviews(reviewRecyclerView,reviewAdapter,film.getId(),film.getType());
+        requestJson.parseJSONReviews(reviewRecyclerView,film.getId(),film.getType());
 
         return view;
     }

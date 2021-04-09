@@ -1,17 +1,16 @@
 package com.example.cinemates.fragments;
 
-import android.app.Dialog;
+
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.android.volley.RequestQueue;
+
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.activities.MovieDescriptorActivity;
-import com.example.cinemates.activities.ResultsActivity;
+
 import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
 
@@ -22,15 +21,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
+
 
 import com.example.cinemates.R;
-import com.example.cinemates.adapters.GeneralNotificationAdapter;
+
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.classes.Film;
-import com.example.cinemates.classes.Notifica;
+
 import com.example.cinemates.classes.RequestJson;
 import com.example.cinemates.handlers.RequestHandler;
 
@@ -79,7 +76,7 @@ public class FavoritesFragment extends Fragment {
         recyclerViewFavorites.setLayoutManager(llm);
 
         buttonCasualFavorites = view.findViewById(R.id.CardFavorites);
-        buttonCasualFavorites.setVisibility(View.INVISIBLE);
+        buttonCasualFavorites.setVisibility(View.GONE);
 
         buttonCasualFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +88,7 @@ public class FavoritesFragment extends Fragment {
         });
 
         buttonCasualToSee = view.findViewById(R.id.CardToSee);
-        buttonCasualToSee.setVisibility(View.INVISIBLE);
+        buttonCasualToSee.setVisibility(View.GONE);
 
         buttonCasualToSee.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,11 +99,8 @@ public class FavoritesFragment extends Fragment {
             }
         });
 
-        listItem = new ArrayList<>();
-        requestJson = new RequestJson(getContext());
-
-        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL,buttonCasualFavorites);
-        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL,buttonCasualToSee);
+        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL, buttonCasualFavorites);
+        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL, buttonCasualToSee);
 
         return view;
     }
@@ -116,6 +110,7 @@ public class FavoritesFragment extends Fragment {
         int nextId = 0;
 
         filmAdapter = (FilmAdapter) rv.getAdapter();
+
         if (filmAdapter.getItemCount()>1){
             do {
                 nextId = random.nextInt(rv.getAdapter().getItemCount());
@@ -135,11 +130,7 @@ public class FavoritesFragment extends Fragment {
 
         if (i >1){
             casual.setVisibility(View.VISIBLE);
-            System.out.println("IF BUTTON: ");
         }
-
-
-
     }
 
     private void loadList(RecyclerView recyclerView, String url,CardView casual) {
@@ -173,7 +164,6 @@ public class FavoritesFragment extends Fragment {
                 super.onPostExecute(s);
                 pdLoading.dismiss();
                 int i = 0;
-
                 try {
                     //converting response to json object
                     JSONObject obj = new JSONObject(s);
@@ -181,6 +171,8 @@ public class FavoritesFragment extends Fragment {
                     //if no error in response
                     if (!obj.getBoolean("error")) {
                         JSONArray list = obj.getJSONArray("list");
+                        listItem = new ArrayList<>();
+                        requestJson = new RequestJson(getContext());
                         for (i = 0; i < list.length(); i++) {
                             JSONObject film = list.getJSONObject(i);
                             Film item = new Film(
@@ -194,7 +186,7 @@ public class FavoritesFragment extends Fragment {
                                     film.getString("type")
                             );
                             listItem.add(item);
-                            requestJson.parseJSONSavedList(recyclerView, filmAdapter, item);
+                            requestJson.parseJSONSavedList(recyclerView, item);
                         }
                     } else {
                         ArrayList<String> error = new ArrayList<String>();
