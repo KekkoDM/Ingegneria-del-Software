@@ -14,6 +14,8 @@ import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.activities.ResultsActivity;
 import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
+
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,8 +48,8 @@ public class FavoritesFragment extends Fragment {
     private FilmAdapter filmAdapter;
     private ErrorAdapter errorAdapter;
     private RequestJson requestJson;
-    private ImageButton buttonCasualFavorites;
-    private ImageButton buttonCasualToSee;
+    private CardView buttonCasualFavorites;
+    private CardView buttonCasualToSee;
     private ArrayList<Film> listItem;
     int id = -1;
 
@@ -76,7 +78,7 @@ public class FavoritesFragment extends Fragment {
         recyclerViewToSee.setLayoutManager(ll);
         recyclerViewFavorites.setLayoutManager(llm);
 
-        buttonCasualFavorites = view.findViewById(R.id.btn_casual);
+        buttonCasualFavorites = view.findViewById(R.id.CardFavorites);
         buttonCasualFavorites.setVisibility(View.INVISIBLE);
 
         buttonCasualFavorites.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +90,7 @@ public class FavoritesFragment extends Fragment {
             }
         });
 
-        buttonCasualToSee = view.findViewById(R.id.btn_casual2);
+        buttonCasualToSee = view.findViewById(R.id.CardToSee);
         buttonCasualToSee.setVisibility(View.INVISIBLE);
 
         buttonCasualToSee.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +131,7 @@ public class FavoritesFragment extends Fragment {
         getContext().startActivity(intent);
     }
 
-    private void setButtonCasual(ImageButton casual, int i){
+    private void setButtonCasual(CardView casual, int i){
 
         if (i >1){
             casual.setVisibility(View.VISIBLE);
@@ -140,7 +142,7 @@ public class FavoritesFragment extends Fragment {
 
     }
 
-    private void loadList(RecyclerView recyclerView, String url,ImageButton casual) {
+    private void loadList(RecyclerView recyclerView, String url,CardView casual) {
         class ListLoader extends AsyncTask<Void, Void, String> {
 
             ProgressDialog pdLoading = new ProgressDialog(getContext());
