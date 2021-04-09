@@ -21,7 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.cinemates.R;
@@ -35,7 +35,6 @@ import com.example.cinemates.handlers.RequestHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,10 +44,10 @@ public class FavoritesFragment extends Fragment {
     private RecyclerView recyclerViewToSee;
     private RecyclerView recyclerViewFavorites;
     private FilmAdapter filmAdapter;
-    ErrorAdapter errorAdapter;
+    private ErrorAdapter errorAdapter;
     private RequestJson requestJson;
-    private TextView buttonCasualFavorites;
-    private TextView buttonCasualToSee;
+    private ImageButton buttonCasualFavorites;
+    private ImageButton buttonCasualToSee;
     private ArrayList<Film> listItem;
     int id = -1;
 
@@ -83,13 +82,9 @@ public class FavoritesFragment extends Fragment {
         buttonCasualFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if(String.valueOf(recyclerViewFavorites.getAdapter()).substring(31,35).equals("Film")){
-                    casualFilm(recyclerViewFavorites);
-                }*/
                 if(recyclerViewFavorites.getAdapter() != null){
                     casualFilm(recyclerViewFavorites);
                 }
-
             }
         });
 
@@ -104,9 +99,6 @@ public class FavoritesFragment extends Fragment {
                 }
             }
         });
-
-
-
 
         listItem = new ArrayList<>();
         requestJson = new RequestJson(getContext());
@@ -137,7 +129,7 @@ public class FavoritesFragment extends Fragment {
         getContext().startActivity(intent);
     }
 
-    private void setButtonCasual(TextView casual, int i){
+    private void setButtonCasual(ImageButton casual, int i){
 
         if (i >1){
             casual.setVisibility(View.VISIBLE);
@@ -148,7 +140,7 @@ public class FavoritesFragment extends Fragment {
 
     }
 
-    private void loadList(RecyclerView recyclerView, String url, TextView casual) {
+    private void loadList(RecyclerView recyclerView, String url,ImageButton casual) {
         class ListLoader extends AsyncTask<Void, Void, String> {
 
             ProgressDialog pdLoading = new ProgressDialog(getContext());
