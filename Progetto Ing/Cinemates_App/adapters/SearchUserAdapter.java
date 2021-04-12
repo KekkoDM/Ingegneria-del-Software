@@ -3,6 +3,7 @@ package com.example.cinemates.adapters;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.example.cinemates.R;
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.classes.Utente;
 import com.example.cinemates.handlers.RequestHandler;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ import java.util.HashMap;
 public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.MyViewHolder>{
     private Context context;
     private ArrayList<Utente> results;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public SearchUserAdapter(Context context, ArrayList<Utente> results) {
         this.context = context;
@@ -44,6 +47,8 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Utente result = results.get(position);
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
         if (alreadyFriends(result)) {
             holder.followBtn.setText("Già aggiunto");
             holder.followBtn.setBackgroundColor(Color.LTGRAY);
@@ -57,6 +62,12 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
             @Override
             public void onClick(View v) {
                 sendFollowRequest(result, holder);
+
+                //[START custom_event]
+                Bundle params = new Bundle();
+                params.putString("receiver", result.getUsername());
+                params.putString("sender", MainActivity.utente.getUsername());
+                mFirebaseAnalytics.logEvent("Request_Friendship", params);
             }
         });
     }
