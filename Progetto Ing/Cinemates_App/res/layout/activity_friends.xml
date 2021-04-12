@@ -61,7 +61,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
-        android:text="Cinemates è più divertente insieme agli amici! Cerca una persona e aggiungila ai tuoi amici per scoprire quali contenuti avete in comune"
+        android:text="Cinemates è più divertente con gli amici! Tocca sul nome di un tuo amico per scoprire quali contenuti avete in comune"
         android:textAlignment="center"
         android:textColor="@color/purple_hype"
         android:textSize="18dp"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/light_background"
     android:orientation="vertical"
     tools:context="com.example.cinemates.fragments.NotificationFragment">
 
@@ -31,6 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7"
         app:tabIndicatorColor="@color/purple_hype"
         app:tabMode="fixed"
+        app:tabBackground="@color/light_background"
         app:tabSelectedTextColor="@color/purple_hype"
         app:tabTextColor="@color/light_grey">
 

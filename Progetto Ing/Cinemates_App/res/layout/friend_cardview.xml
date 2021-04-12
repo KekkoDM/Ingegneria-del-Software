@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/friendItem"
     android:layout_width="match_parent"
-    android:layout_height="100dp
-"
+    android:layout_height="100dp"
     android:layout_margin="4dp"
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
     android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="15dp"
     app:cardElevation="5dp">
@@ -20,8 +20,8 @@
 
         <ImageView
             android:id="@+id/imageView7"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
             android:textColor="@color/purple_hype"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/showFriendFilmBtn"
+            app:layout_constraintEnd_toStartOf="@+id/removeFriendBtn"
             app:layout_constraintStart_toEndOf="@+id/imageView7"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,6 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="24dp"
             android:ellipsize="end"
@@ -59,24 +60,22 @@
             android:textColor="@color/light_grey"
             android:textSize="18dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/showSharedBtn"
-            app:layout_constraintStart_toEndOf="@+id/imageView7" />
+            app:layout_constraintEnd_toStartOf="@+id/removeFriendBtn"
+            app:layout_constraintStart_toEndOf="@+id/imageView7"
+            app:layout_constraintTop_toBottomOf="@+id/usernameFriend" />
 
         <Button
-            android:id="@+id/showSharedBtn"
+            android:id="@+id/removeFriendBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="@color/blue_hype"
-            android:text="Cont. in comune"
+            android:backgroundTint="@color/google_color"
+            android:text="Rimuovi"
             android:textColor="@color/white"
             android:textSize="15dp"
             app:cornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.cardview.widget.CardView>

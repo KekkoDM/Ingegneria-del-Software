@@ -66,5 +66,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Tab_DescriptorFilm"></androidx.viewpager.widget.ViewPager>
+        app:layout_constraintTop_toBottomOf="@+id/Tab_DescriptorFilm" />
 </androidx.constraintlayout.widget.ConstraintLayout>

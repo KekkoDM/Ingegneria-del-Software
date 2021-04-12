@@ -182,7 +182,6 @@
                 android:id="@+id/list_comment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
