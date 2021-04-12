@@ -15,4 +15,6 @@
     <color name="love_color">#EC5569</color>
     <color name="laugh_sad_wow_color">#FFD54F</color>
     <color name="angry_color">#E24B4B</color>
+    <color name="green">#1DB954</color>
+    <color name="light_purple">#736B93</color>
 </resources>

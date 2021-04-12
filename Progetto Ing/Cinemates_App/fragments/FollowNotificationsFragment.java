@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
+import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FollowNotificationAdapter;
 import com.example.cinemates.classes.Notifica;
 import com.example.cinemates.classes.Utente;
@@ -32,8 +33,7 @@ public class FollowNotificationsFragment extends Fragment {
     public static RecyclerView rvFollow;
     private ArrayList<Notifica> followNotifications;
     public static FollowNotificationAdapter followAdapter;
-    private ImageView icon;
-    private TextView label;
+    private ErrorAdapter errorAdapter;
 
     public FollowNotificationsFragment() {
         // Required empty public constructor
@@ -50,8 +50,6 @@ public class FollowNotificationsFragment extends Fragment {
         rvFollow.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         followNotifications = new ArrayList<>();
-        icon = v.findViewById(R.id.iconNoFollowNotification);
-        label = v.findViewById(R.id.noFollowLabel);
 
         loadFollowNotification(MainActivity.utente);
 
@@ -99,7 +97,7 @@ public class FollowNotificationsFragment extends Fragment {
                                     notification.getString("tipo"),
                                     notification.getString("mittente"),
                                     notification.getString("destinatario"),
-                                    notification.getString("amministratore")
+                                    null
                             );
                             followNotifications.add(notifica);
                         }
@@ -107,11 +105,10 @@ public class FollowNotificationsFragment extends Fragment {
                         followAdapter = new FollowNotificationAdapter(FollowNotificationsFragment.this.getContext(), followNotifications);
                         rvFollow.setAdapter(followAdapter);
                     } else {
-                        icon.setImageResource(R.drawable.ic_no_notification);
-                        label.setText("Non ci sono nuove richieste di collegamento");
-                        rvFollow.setVisibility(View.INVISIBLE);
-                        icon.setVisibility(View.VISIBLE);
-                        label.setVisibility(View.VISIBLE);
+                        ArrayList<String> error = new ArrayList<String>();
+                        error.add("Non ci sono nuove richieste di collegamento");
+                        errorAdapter = new ErrorAdapter(getContext(),error);
+                        rvFollow.setAdapter(errorAdapter);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

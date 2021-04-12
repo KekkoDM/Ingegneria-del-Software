@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
+import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.GeneralNotificationAdapter;
 import com.example.cinemates.classes.Notifica;
 import com.example.cinemates.classes.Utente;
@@ -32,11 +33,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GeneralNotificationsFragment extends Fragment {
-    private RecyclerView rvGeneral;
+    public static RecyclerView rvGeneral;
     private ArrayList<Notifica> generalNotifications;
-    private GeneralNotificationAdapter generalAdapter;
-    private ImageView icon;
-    private TextView label;
+    public static GeneralNotificationAdapter generalAdapter;
+    private ErrorAdapter errorAdapter;
     private Dialog loading;
 
     public GeneralNotificationsFragment() {
@@ -54,8 +54,6 @@ public class GeneralNotificationsFragment extends Fragment {
         rvGeneral.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
         generalNotifications = new ArrayList<>();
-        icon = v.findViewById(R.id.iconNoGeneralNotification);
-        label = v.findViewById(R.id.noGeneralLabel);
 
         loadGeneralNotifications(MainActivity.utente);
 
@@ -116,11 +114,10 @@ public class GeneralNotificationsFragment extends Fragment {
                         generalAdapter = new GeneralNotificationAdapter(GeneralNotificationsFragment.this.getContext(), generalNotifications);
                         rvGeneral.setAdapter(generalAdapter);
                     } else {
-                        icon.setImageResource(R.drawable.ic_no_notification);
-                        label.setText("Non ci sono nuove notifiche");
-                        rvGeneral.setVisibility(View.INVISIBLE);
-                        icon.setVisibility(View.VISIBLE);
-                        label.setVisibility(View.VISIBLE);
+                        ArrayList<String> error = new ArrayList<String>();
+                        error.add("Non ci sono nuove notifiche da mostrare");
+                        errorAdapter = new ErrorAdapter(getContext(),error);
+                        rvGeneral.setAdapter(errorAdapter);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

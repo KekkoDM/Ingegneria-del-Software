@@ -59,7 +59,6 @@ public class RequestJson<JSONParser>{
     private static final String TRENDING_ALL = TMDB + "trending/all/week" + APIKEY + IT_IT;
     private static final String TRENDING =  TMDB + "trending/";
     private static final String SEARCH =  TMDB + "search/multi" + APIKEY + IT_IT;
-    private static final String ADULT = "&include_adult=true";
 
 
     private Context context;
@@ -67,6 +66,7 @@ public class RequestJson<JSONParser>{
     public RequestJson(Context c){
         context=c;
         requestQueue = Volley.newRequestQueue(c);
+
     }
 
     //SLIDER
@@ -171,7 +171,7 @@ public class RequestJson<JSONParser>{
     //RICERCA
     public void parseJSONSearch(RecyclerView recyclerView, String query){
 
-        String url = SEARCH + "&query=" + query + ADULT;
+        String url = SEARCH + "&query=" + query + "&include_adult=false";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -193,7 +193,7 @@ public class RequestJson<JSONParser>{
             listFilm = new ArrayList<Film>();
             JSONArray jsonArray = response.getJSONArray("results");
             ArrayList<String> error = new ArrayList<String>();
-            error.add("Ops! La ricerca non ha prodotto risultati");
+            error.add("La ricerca non ha prodotto risultati");
 
             setFMV(jsonArray);
 

@@ -99,8 +99,8 @@ public class FavoritesFragment extends Fragment {
             }
         });
 
-        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL, buttonCasualFavorites);
-        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL, buttonCasualToSee);
+        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL, buttonCasualFavorites, "Preferiti");
+        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL, buttonCasualToSee, "Da vedere");
 
         return view;
     }
@@ -119,18 +119,17 @@ public class FavoritesFragment extends Fragment {
 
         //DA CAMBIARE CON POPUP
         Intent intent = new Intent(getContext(), MovieDescriptorActivity.class);
-        intent.putExtra("Film",filmAdapter.getItem(id));
+        intent.putExtra("Film", filmAdapter.getItem(id));
         getContext().startActivity(intent);
     }
 
     private void setButtonCasual(CardView casual, int i){
-
         if (i >1){
             casual.setVisibility(View.VISIBLE);
         }
     }
 
-    private void loadList(RecyclerView recyclerView, String url,CardView casual) {
+    private void loadList(RecyclerView recyclerView, String url, CardView casual, String listName) {
         class ListLoader extends AsyncTask<Void, Void, String> {
 
             ProgressDialog pdLoading = new ProgressDialog(getContext());
@@ -187,12 +186,19 @@ public class FavoritesFragment extends Fragment {
                         }
                     } else {
                         ArrayList<String> error = new ArrayList<String>();
-                        error.add("La tua lista non ha ancora nessun elemento!");
+
+                        if (listName.equals("Preferiti")) {
+                            error.add("La tua lista dei Preferiti è vuota");
+                        }
+                        else {
+                            error.add("La tua lista dei Contenuti da vedere è vuota");
+                        }
+
                         errorAdapter = new ErrorAdapter(getContext(),error);
                         recyclerView.setAdapter(errorAdapter);
                     }
 
-                    setButtonCasual(casual,i);
+                    setButtonCasual(casual, i);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
