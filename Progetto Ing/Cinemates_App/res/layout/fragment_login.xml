@@ -132,7 +132,7 @@
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toEndOf="@+id/forgotPw"
                         app:layout_constraintTop_toBottomOf="@+id/password"
-                        app:tint="@color/dark_grey" />
+                        app:tint="@color/light_grey" />
 
                     <Button
                         android:id="@+id/loginButton"
@@ -163,29 +163,12 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/loginButton" />
 
-
-                    <Button
-                        android:id="@+id/facebookBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginStart="32dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="32dp"
-                        android:backgroundTint="@color/facebook_color"
-                        android:drawableLeft="@drawable/ic_icon_facebook"
-                        android:drawableTint="@color/white"
-                        android:text="Accedi con Facebook"
-                        android:textColor="@color/white"
-                        app:cornerRadius="15dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
                     <Button
                         android:id="@+id/googleBtn"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="32dp"
                         android:layout_marginBottom="16dp"
                         android:backgroundTint="@color/google_color"
@@ -197,7 +180,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/facebookBtn" />
+                        app:layout_constraintTop_toBottomOf="@id/textView3" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 

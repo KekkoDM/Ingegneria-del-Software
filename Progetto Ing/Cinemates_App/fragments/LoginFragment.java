@@ -80,8 +80,6 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-
-
         usernameField = view.findViewById(R.id.username);
         passwordField = view.findViewById(R.id.password);
         forgotPW = view.findViewById(R.id.forgotPw);
@@ -91,8 +89,6 @@ public class LoginFragment extends Fragment {
         googleBtn = view.findViewById(R.id.googleBtn);
         isShowed = false;
         mAuth = FirebaseAuth.getInstance();
-
-
 
         googleBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_background"
+    android:background="@color/purple_hype"
     tools:context="com.example.cinemates.fragments.FavoritesFragment">
 
     <TextView
@@ -14,22 +14,48 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Le mie liste"
-        android:textColor="@color/purple_hype"
+        android:textColor="@color/white"
         android:textSize="24dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageView12"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_favorites_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_list" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="64dp"
+        android:text="Visualizza le tue liste e fatti consigliare da Cinemates cosa guardare"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView12" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        android:fadingEdgeLength="20dp"
+        android:background="@drawable/roundend_container"
+        android:backgroundTint="@color/light_background"
+        android:fadingEdgeLength="40dp"
         android:requiresFadingEdge="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_list">
+        app:layout_constraintTop_toBottomOf="@+id/textView15">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -39,7 +65,7 @@
                 android:id="@+id/textView_favorites"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:text="Lista dei preferiti"
                 android:textColor="@color/purple_hype"
@@ -64,9 +90,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="8dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/blue_hype"
+                app:cardCornerRadius="15dp"
                 app:cardElevation="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -80,9 +109,9 @@
                         android:id="@+id/btn_casual"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Guarda qualcosa"
-                        android:textColor="@color/blue_hype"
-                        android:textSize="16dp"
+                        android:text="Consigliami qualcosa"
+                        android:textColor="@color/white"
+                        android:textSize="18dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/image_casual1"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -98,7 +127,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
-                        android:src="@drawable/shuffle"
+                        android:src="@drawable/ic_random"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/btn_casual"
@@ -125,7 +154,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:text="Contenuti da vedere"
                 android:textColor="@color/purple_hype"
                 android:textSize="18dp"
@@ -138,10 +167,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="8dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/blue_hype"
+                app:cardCornerRadius="15dp"
                 app:cardElevation="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -158,10 +190,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
-                        android:text="Cosa ti sei perso ?"
+                        android:text="Cosa mi sono perso?"
                         android:textAlignment="center"
-                        android:textColor="@color/blue_hype"
-                        android:textSize="16dp"
+                        android:textColor="@color/white"
+                        android:textSize="18dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/image_casual2"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -177,14 +209,13 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
-                        android:src="@drawable/shuffle"
+                        android:src="@drawable/ic_random"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/btn_casual2"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
