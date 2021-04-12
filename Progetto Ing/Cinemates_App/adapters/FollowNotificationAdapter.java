@@ -2,6 +2,7 @@ package com.example.cinemates.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.example.cinemates.fragments.FollowNotificationsFragment;
 import com.example.cinemates.fragments.NotificationFragment;
 import com.example.cinemates.handlers.RequestHandler;
 import com.example.cinemates.api.CinematesDB;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +34,7 @@ import java.util.HashMap;
 public class FollowNotificationAdapter extends RecyclerView.Adapter<FollowNotificationAdapter.MyViewHolder>{
     private Context context;
     private ArrayList<Notifica> notifications = new ArrayList<>() ;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public FollowNotificationAdapter(Context context, ArrayList<Notifica> notifications) {
         this.context = context;
@@ -48,6 +51,7 @@ public class FollowNotificationAdapter extends RecyclerView.Adapter<FollowNotifi
     public void onBindViewHolder(@NonNull FollowNotificationAdapter.MyViewHolder holder, int position) {
         Notifica notification = notifications.get(position);
         holder.setNotification(notification);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
         //accept follow notification
         holder.confirmBtn.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +105,12 @@ public class FollowNotificationAdapter extends RecyclerView.Adapter<FollowNotifi
                         FollowNotificationsFragment.followAdapter.notifyItemRemoved(position);
                         FollowNotificationsFragment.followAdapter.notifyItemRangeChanged(position, notifications.size());
 
+                        // [START custom_event]
+                        Bundle params = new Bundle();
+                        params.putString("receiver",notification.getDestinatario());
+                        params.putString("sender", notification.getMittente());
+                        mFirebaseAnalytics.logEvent("Rejected_Follow_Notification", params);
+
                         Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
@@ -151,6 +161,12 @@ public class FollowNotificationAdapter extends RecyclerView.Adapter<FollowNotifi
                         FollowNotificationsFragment.rvFollow.removeViewAt(position);
                         FollowNotificationsFragment.followAdapter.notifyItemRemoved(position);
                         FollowNotificationsFragment.followAdapter.notifyItemRangeChanged(position, notifications.size());
+
+                        // [START custom_event]
+                        Bundle params = new Bundle();
+                        params.putString("receiver",notification.getDestinatario());
+                        params.putString("sender", notification.getMittente());
+                        mFirebaseAnalytics.logEvent("Accepted_Follow_Notification", params);
 
                         Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
                     } else {

@@ -11,9 +11,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.handlers.RequestHandler;
 import com.example.cinemates.api.CinematesDB;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,11 +26,13 @@ public class RecoveryPasswordActivity extends AppCompatActivity {
     private ImageButton backBtn;
     private EditText email;
     private Button recoveryBtn;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recovery_password);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         backBtn = findViewById(R.id.backButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +91,11 @@ public class RecoveryPasswordActivity extends AppCompatActivity {
 
                         if (!obj.getBoolean("error")) {
                             onBackPressed();
+
+                            Bundle params = new Bundle();
+                            params.putString("user", MainActivity.utente.getUsername());
+                            params.putString("email", MainActivity.utente.getEmail());
+                            mFirebaseAnalytics.logEvent("Recovery_Password", params);
                         }
 
                         Toast.makeText(RecoveryPasswordActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();

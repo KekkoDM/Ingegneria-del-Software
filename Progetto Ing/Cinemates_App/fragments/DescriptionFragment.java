@@ -29,6 +29,7 @@ import com.example.cinemates.classes.Film;
 import com.example.cinemates.classes.Notifica;
 import com.example.cinemates.handlers.RequestHandler;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -52,6 +53,7 @@ public class DescriptionFragment extends Fragment {
     private Boolean menuOpen = false;
     private Boolean exist = false;
     private OvershootInterpolator interpolator = new OvershootInterpolator();
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public Film getFilm() {
         return film;
@@ -80,6 +82,7 @@ public class DescriptionFragment extends Fragment {
         mReleaseDate = view.findViewById(R.id.detail_movie_realise_date);
         mValutation = view.findViewById(R.id.detail_movie_valutation);
         mBackdrop = view.findViewById(R.id.detail_movie_cover);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
 
         if (film.getCover().equals("null")) {
             mCover.setImageResource(R.drawable.no_cover_found);
@@ -209,6 +212,15 @@ public class DescriptionFragment extends Fragment {
                             bookmarkBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.light_grey));
                             bookmarkTextView.setText("Aggiungi a Da Vedere");
                         }
+
+
+                        // [START custom_event]
+                        Bundle params = new Bundle();
+                        params.putString("user",MainActivity.utente.getUsername());
+                        params.putString("list", list);
+                        params.putString("media_id", film.getId());
+                        params.putString("media_title", film.getTitle());
+                        mFirebaseAnalytics.logEvent("Removed_From_List", params);
                     }
 
                     Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
@@ -262,6 +274,7 @@ public class DescriptionFragment extends Fragment {
                             bookmarkTextView.setText("Rimuovi da lista Da Vedere");
                         }
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -275,8 +288,8 @@ public class DescriptionFragment extends Fragment {
     private void addToList(Film film, String list) {
         class ListAdder extends AsyncTask<Void, Void, String> {
 
-            @Override
-            protected void onPreExecute() {
+
+            protected void onPreExecute(String s) {
                 super.onPreExecute();
             }
 
@@ -312,6 +325,15 @@ public class DescriptionFragment extends Fragment {
                             bookmarkBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.bookmark_button));
                             bookmarkTextView.setText("Rimuovi da lista Da Vedere");
                         }
+
+                        // [START custom_event]
+                        Bundle params = new Bundle();
+                        params.putString("user",MainActivity.utente.getUsername());
+                        params.putString("list", list);
+                        params.putString("media_id", film.getId());
+                        params.putString("media_title", film.getTitle());
+                        mFirebaseAnalytics.logEvent("Added_To_List", params);
+
                     }
                     Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {

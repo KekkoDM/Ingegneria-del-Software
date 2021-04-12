@@ -42,6 +42,7 @@ import com.example.cinemates.fragments.GeneralNotificationsFragment;
 import com.example.cinemates.handlers.RequestHandler;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,6 +68,7 @@ public class CommentsActivity extends AppCompatActivity {
     private TextView errorComment;
     private ArrayList<Comment> comments;
     private LinearLayoutManager linearLayoutManager;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,8 @@ public class CommentsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         review = (Review) intent.getSerializableExtra("recensione");
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         Reaction reaction = new Reaction(this);
 
@@ -87,6 +91,14 @@ public class CommentsActivity extends AppCompatActivity {
         comments = new ArrayList<>();
         commentAdapter = new CommentAdapter(comments, CommentsActivity.this);
         getComments(review);
+
+
+        // [START custom_event]
+        Bundle params = new Bundle();
+        params.putString("id_review", review.getId());
+        params.putString("writer", review.getUser());
+        params.putString("reader", MainActivity.utente.getUsername());
+        mFirebaseAnalytics.logEvent("Description_Review", params);
 
         backBtn = findViewById(R.id.backBtnComments);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -158,6 +170,13 @@ public class CommentsActivity extends AppCompatActivity {
                     rvComments = new RecyclerView(CommentsActivity.this);
                     textComment.setHintTextColor(getResources().getColor(R.color.light_grey));
                     sendComment(textComment.getText().toString());
+
+                    // [START custom_event]
+                    Bundle params = new Bundle();
+                    params.putString("id_review", review.getId());
+                    params.putString("writer", MainActivity.utente.getUsername());
+                    mFirebaseAnalytics.logEvent("Comment_Writed", params);
+
                     textComment.onEditorAction(EditorInfo.IME_ACTION_DONE);
                     textComment.setText(null);
                 }

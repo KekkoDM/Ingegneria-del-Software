@@ -2,6 +2,7 @@ package com.example.cinemates.classes;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +14,7 @@ import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.handlers.RequestHandler;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,10 +23,13 @@ import java.util.HashMap;
 
 public class Reaction {
     private final String[] strings = {"Mi piace", "Love", "Ahah", "Triste", "Wow", "Grrr"};
-    Context context;
+    private Context context;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private int position;
 
     public Reaction(Context context) {
         this.context = context;
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
     // show reactions popup
@@ -47,6 +52,7 @@ public class Reaction {
             if (position > -1) {
                 sendReaction(position, review, button, count);
             };
+            this.position=position;
             return position >= -1;
         });
 
@@ -87,10 +93,25 @@ public class Reaction {
                     // if no error in response
                     if (!obj.getBoolean("error")) {
                         if (obj.getString("message").equals("Reazione eliminata correttamente")) {
+
                             setReaction("null", Integer.parseInt(count.getText().toString()) - 1, button, count);
+
+                            // [START custom_event]
+                            Bundle params = new Bundle();
+                            params.putString("id_review", review.getId());
+                            params.putString("reaction", strings[position]);
+                            params.putString("user", MainActivity.utente.getUsername());
+                            mFirebaseAnalytics.logEvent("Reaction_Removed", params);
                         }
                         else {
                             getReaction(review, button, count);
+
+                            // [START custom_event]
+                            Bundle params = new Bundle();
+                            params.putString("id_review", review.getId());
+                            params.putString("reaction", strings[position]);
+                            params.putString("user", MainActivity.utente.getUsername());
+                            mFirebaseAnalytics.logEvent("Reaction_Added", params);
                         }
                     }
                 } catch (JSONException e) {

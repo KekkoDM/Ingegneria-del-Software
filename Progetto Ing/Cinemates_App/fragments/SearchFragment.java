@@ -51,6 +51,7 @@ public class SearchFragment extends Fragment {
                 }
                 else {
                     query.setHintTextColor(getResources().getColor(R.color.light_grey));
+
                     Intent intent = new Intent(getActivity(), ResultsActivity.class);
                     intent.putExtra("type", "film");
                     intent.putExtra("textsearched", query.getText().toString());

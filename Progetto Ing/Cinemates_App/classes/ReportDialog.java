@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.handlers.RequestHandler;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +39,7 @@ public class ReportDialog extends Dialog {
     private ImageView close;
     private Button sendAlert;
     private Context context;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public ReportDialog(@NonNull Context context) {
         super(context);
@@ -51,6 +54,8 @@ public class ReportDialog extends Dialog {
         sendAlert = findViewById(R.id.sendAlert);
         charCounter = findViewById(R.id.charCount);
         close = findViewById(R.id.closealert);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
         note.addTextChangedListener(new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -71,6 +76,15 @@ public class ReportDialog extends Dialog {
             public void onClick(View v) {
                 checkButton(v);
                 sendReport(item, type, note.getText().toString());
+
+                // [START custom_event]
+                Bundle params = new Bundle();
+                params.putString("type", type);
+                params.putString("note", String.valueOf(note));
+                params.putString("signaler", MainActivity.utente.getUsername());
+                params.putString("reason", radioButton.getText().toString());
+                mFirebaseAnalytics.logEvent("Report", params);
+
                 dismiss();
             }
         });

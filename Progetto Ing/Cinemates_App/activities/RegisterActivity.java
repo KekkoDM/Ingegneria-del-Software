@@ -16,6 +16,8 @@ import com.example.cinemates.classes.Utente;
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.R;
 import com.example.cinemates.handlers.RequestHandler;
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.HashMap;
@@ -28,11 +30,13 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText usernameNewUser;
     private EditText emailNewUser;
     private EditText passwordNewUser;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         backBtn = findViewById(R.id.backButton);
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -126,11 +130,13 @@ public class RegisterActivity extends AppCompatActivity {
                             MainActivity.utente = utente;
                             MainActivity.utente.setAutenticato(true);
 
+                            Bundle params = new Bundle();
+                            params.putString("user", MainActivity.utente.getUsername());
+                            params.putString("email", MainActivity.utente.getEmail());
+                            mFirebaseAnalytics.logEvent("User_Created", params);
+
                             Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                             startActivity(intent);
-
-                            // MainActivity mainActivity = new MainActivity();
-                            // mainActivity.showPopup();
 
                             Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                         }

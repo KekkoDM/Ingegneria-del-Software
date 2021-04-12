@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.PageAdapter;
 import com.example.cinemates.classes.Film;
@@ -20,12 +21,14 @@ import com.example.cinemates.fragments.DescriptionFragment;
 import com.example.cinemates.fragments.HomeFragment;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 
 public class MovieDescriptorActivity extends AppCompatActivity {
     private TabLayout tabDescriptorFilm;
     private ViewPager viewPager;
     private ImageButton backButton;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public Film getFilm() {
         return film;
@@ -42,8 +45,18 @@ public class MovieDescriptorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film_descriptor);
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         Intent intent = getIntent();
         film = (Film) intent.getSerializableExtra("Film");
+
+        // [START custom_event]
+        Bundle params = new Bundle();
+        params.putString("media_id", film.getId());
+        params.putString("title", film.getTitle());
+        params.putString("type", film.getType());
+        params.putString("user", MainActivity.utente.getUsername());
+        mFirebaseAnalytics.logEvent("Description_Film", params);
 
         backButton = findViewById(R.id.backButtonDescr);
         backButton.setOnClickListener(new View.OnClickListener() {

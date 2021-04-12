@@ -56,6 +56,8 @@ public class ResultsActivity extends AppCompatActivity {
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         requestJson = new RequestJson(this);
 
         noResultIcon = findViewById(R.id.noResultIcon);
@@ -64,7 +66,7 @@ public class ResultsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent.getStringExtra("type").equals("film")) {
             
-            mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, intent.getStringExtra("textsearched"));
             mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
@@ -73,11 +75,23 @@ public class ResultsActivity extends AppCompatActivity {
         }
         else if (intent.getStringExtra("type").equals("friend")) {
             users = new ArrayList<>();
+
+
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, intent.getStringExtra("friendsearched"));
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
+
             searchUser(intent.getStringExtra("friendsearched"));
 
         }
         else {
             String friend = intent.getStringExtra("Friend");
+
+            Bundle params = new Bundle();
+            params.putString("id_film", friend);
+            params.putString("type", "Contenuti in comune");
+            mFirebaseAnalytics.logEvent("Shared_Content", params);
+
             showSharedContents(friend);
         }
 

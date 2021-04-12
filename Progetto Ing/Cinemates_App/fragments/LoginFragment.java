@@ -36,6 +36,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,6 +62,7 @@ public class LoginFragment extends Fragment {
     private final static int RC_SIGN_IN = 123;
     private Button googleBtn;
     private FirebaseAuth mAuth;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -89,6 +91,7 @@ public class LoginFragment extends Fragment {
         googleBtn = view.findViewById(R.id.googleBtn);
         isShowed = false;
         mAuth = FirebaseAuth.getInstance();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
 
         googleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,6 +251,12 @@ public class LoginFragment extends Fragment {
                         //starting the profile page
                         MainActivity.utente = utente;
                         MainActivity.utente.setAutenticato(true);
+
+                        // [START custom_event]
+                        Bundle params = new Bundle();
+                        params.putString("user", MainActivity.utente.getUsername());
+                        mFirebaseAnalytics.logEvent("Login_Google", params);
+
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.fragment_container, new AccountFragment()).commit();
                     } else {
@@ -321,6 +330,13 @@ public class LoginFragment extends Fragment {
                             //starting the profile page
                             MainActivity.utente = utente;
                             MainActivity.utente.setAutenticato(true);
+
+
+                            // [START custom_event]
+                            Bundle params = new Bundle();
+                            params.putString("user", MainActivity.utente.getUsername());
+                            mFirebaseAnalytics.logEvent("Login_Cinemates", params);
+
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.fragment_container, new AccountFragment()).commit();
                         } else {
