@@ -107,9 +107,15 @@ public class FavoritesFragment extends Fragment {
 
     private void casualFilm(RecyclerView rv){
         Random random = new Random();
+        int nextId = 0;
+
         filmAdapter = (FilmAdapter) rv.getAdapter();
 
-        id = random.nextInt(rv.getAdapter().getItemCount());
+        do {
+            nextId = random.nextInt(rv.getAdapter().getItemCount());
+        }while(id == nextId);
+
+        id = nextId;
 
         //DA CAMBIARE CON POPUP
         Intent intent = new Intent(getContext(), MovieDescriptorActivity.class);
