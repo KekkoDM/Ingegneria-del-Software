@@ -57,7 +57,7 @@ public class LoginFragment extends Fragment {
     private EditText usernameField;
     private EditText passwordField;
     private Button loginBtn;
-    private Boolean isShowed;
+    private Boolean isShowed = false;
     private GoogleSignInClient mGoogleSignInClient;
     private final static int RC_SIGN_IN = 123;
     private Button googleBtn;
@@ -89,7 +89,6 @@ public class LoginFragment extends Fragment {
         loginBtn = view.findViewById(R.id.loginButton);
         showPassword = view.findViewById(R.id.showPw);
         googleBtn = view.findViewById(R.id.googleBtn);
-        isShowed = false;
         mAuth = FirebaseAuth.getInstance();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
 
@@ -113,11 +112,13 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isShowed) {
-                    passwordField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());;
+                    showPassword.setImageResource(R.drawable.ic_show_password);
+                    passwordField.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     isShowed = false;
                 }
                 else {
-                    passwordField.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    showPassword.setImageResource(R.drawable.ic_hide_password);
+                    passwordField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                     isShowed = true;
                 }
             }
@@ -134,7 +135,15 @@ public class LoginFragment extends Fragment {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginUser(v);
+                String username = usernameField.getText().toString();
+                String password = passwordField.getText().toString();
+
+                if (username.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(getContext(), "Alcuni campi sono vuoti", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    MainActivity.utente.loginUser(username, password, getActivity());
+                }
             }
         });
 
@@ -271,85 +280,5 @@ public class LoginFragment extends Fragment {
 
         EmailChecker checker = new EmailChecker();
         checker.execute();
-    }
-
-    public void loginUser(View v) {
-        final String username = usernameField.getText().toString();
-        final String password = passwordField.getText().toString();
-
-        if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this.getContext(), "Alcuni campi sono vuoti", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            class UserLogin extends AsyncTask<Void, Void, String> {
-                ProgressDialog pdLoading = new ProgressDialog(getContext());
-
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    pdLoading.setMessage("\tAccesso in corso...");
-                    pdLoading.setCancelable(true);
-                    pdLoading.show();
-                }
-
-                @Override
-                protected String doInBackground(Void... voids) {
-                    //creating request handler object
-                    RequestHandler requestHandler = new RequestHandler();
-
-                    //creating request parameters
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("username", username);
-                    params.put("password", password);
-
-                    //returning the response
-                    return requestHandler.sendPostRequest(CinematesDB.LOGIN_URL, params);
-                }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    super.onPostExecute(s);
-                    pdLoading.dismiss();
-
-                    try {
-                        //converting response to json object
-                        JSONObject obj = new JSONObject(s);
-
-                        //if no error in response
-                        if (!obj.getBoolean("error")) {
-                            //getting the user from the response
-                            JSONObject userJson = obj.getJSONObject("utente");
-                            Utente utente = new Utente(
-                                    userJson.getString("username"),
-                                    userJson.getString("nome"),
-                                    userJson.getString("cognome"),
-                                    userJson.getString("email"),
-                                    userJson.getString("password")
-                            );
-
-                            //starting the profile page
-                            MainActivity.utente = utente;
-                            MainActivity.utente.setAutenticato(true);
-
-
-                            // [START custom_event]
-                            Bundle params = new Bundle();
-                            params.putString("user", MainActivity.utente.getUsername());
-                            mFirebaseAnalytics.logEvent("Login_Cinemates", params);
-
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.fragment_container, new AccountFragment()).commit();
-                        } else {
-                            Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            UserLogin login = new UserLogin();
-            login.execute();
-        }
     }
 }

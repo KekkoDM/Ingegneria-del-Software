@@ -34,10 +34,7 @@ import java.util.HashMap;
 
 public class GeneralNotificationsFragment extends Fragment {
     public static RecyclerView rvGeneral;
-    private ArrayList<Notifica> generalNotifications;
     public static GeneralNotificationAdapter generalAdapter;
-    private ErrorAdapter errorAdapter;
-    private Dialog loading;
 
     public GeneralNotificationsFragment() {
         // Required empty public constructor
@@ -53,79 +50,8 @@ public class GeneralNotificationsFragment extends Fragment {
         rvGeneral.setHasFixedSize(true);
         rvGeneral.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        generalNotifications = new ArrayList<>();
-
-        loadGeneralNotifications(MainActivity.utente);
+        Notifica.loadGeneralNotifications(MainActivity.utente, getContext());
 
         return v;
-    }
-
-    private void loadGeneralNotifications(Utente utente) {
-        class NotificationsLoader extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                loading = new Dialog(getActivity());
-                loading.setContentView(R.layout.loading);
-                loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                loading.show();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", utente.getUsername());
-
-                //returing the response
-                return requestHandler.sendPostRequest(CinematesDB.GENERAL_NOTIFICATION_URL, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                loading.dismiss();
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-
-                    //if no error in response
-                    if (!obj.getBoolean("error")) {
-                        JSONArray usersJson = obj.getJSONArray("notifica");
-                        for (int i = 0; i < usersJson.length(); i++) {
-                            JSONObject notification = usersJson.getJSONObject(i);
-                            Notifica notifica = new Notifica(
-                                    notification.getInt("id"),
-                                    notification.getString("titolo"),
-                                    notification.getString("descrizione"),
-                                    notification.getString("tipo"),
-                                    notification.getString("mittente"),
-                                    notification.getString("destinatario"),
-                                    notification.getString("amministratore")
-                            );
-                            generalNotifications.add(notifica);
-                        }
-
-                        generalAdapter = new GeneralNotificationAdapter(GeneralNotificationsFragment.this.getContext(), generalNotifications);
-                        rvGeneral.setAdapter(generalAdapter);
-                    } else {
-                        ArrayList<String> error = new ArrayList<String>();
-                        error.add("Non ci sono nuove notifiche da mostrare");
-                        errorAdapter = new ErrorAdapter(getContext(),error);
-                        rvGeneral.setAdapter(errorAdapter);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        NotificationsLoader notificationsLoader = new NotificationsLoader();
-        notificationsLoader.execute();
     }
 }

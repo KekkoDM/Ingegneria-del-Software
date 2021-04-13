@@ -47,7 +47,6 @@ public class ErrorAdapter extends RecyclerView.Adapter<ErrorAdapter.MyViewHolder
         public TextView errorTitle;
         public ImageView errorImage;
 
-
         public MyViewHolder(View itemView) {
             super(itemView);
             errorText = itemView.findViewById(R.id.errorText);
@@ -62,25 +61,31 @@ public class ErrorAdapter extends RecyclerView.Adapter<ErrorAdapter.MyViewHolder
                 case "Non ci sono ancora recensioni":
                     errorImage.setImageResource(R.drawable.ic_no_review);
                     break;
+
                 case "La tua lista dei Preferiti è vuota":
                     errorTitle.setVisibility(View.GONE);
                     errorImage.setImageResource(R.drawable.ic_no_favorites_items);
                     break;
+
                 case "La tua lista dei Contenuti da vedere è vuota":
                     errorTitle.setVisibility(View.GONE);
                     errorImage.setImageResource(R.drawable.ic_list_empty_error);
                     break;
+
                 case "Non hai nessun amico al momento":
                     errorImage.setImageResource(R.drawable.ic_no_friends);
                     break;
+
                 case "Non ci sono nuove notifiche da mostrare":
                     errorTitle.setVisibility(View.GONE);
                     errorImage.setImageResource(R.drawable.ic_no_notification);
                     break;
+
                 case "Non ci sono nuove richieste di collegamento":
                     errorTitle.setVisibility(View.GONE);
                     errorImage.setImageResource(R.drawable.ic_no_notification);
                     break;
+
                 default:
                     errorImage.setImageResource(R.drawable.ic_result_error);
             }

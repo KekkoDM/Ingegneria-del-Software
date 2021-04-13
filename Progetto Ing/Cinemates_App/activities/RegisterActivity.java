@@ -63,95 +63,19 @@ public class RegisterActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerUser(v);
+                String username = usernameNewUser.getText().toString();
+                String name = nameNewUser.getText().toString();
+                String surname = surnameNewUser.getText().toString();
+                String email = emailNewUser.getText().toString();
+                String password = passwordNewUser.getText().toString();
+
+                if (username.isEmpty() || name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(RegisterActivity.this, "Alcuni campi sono vuoti", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    MainActivity.utente.registerUser(name, surname, username, email, password, RegisterActivity.this);
+                }
             }
         });
-    }
-
-    public void registerUser(View view){
-        final String username = usernameNewUser.getText().toString();
-        final String name = nameNewUser.getText().toString();
-        final String surname = surnameNewUser.getText().toString();
-        final String email = emailNewUser.getText().toString();
-        final String password = passwordNewUser.getText().toString();
-
-        if (username.isEmpty() || name.isEmpty() || surname.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Alcuni campi sono vuoti", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            class RegisterUser extends AsyncTask<Void, Void, String> {
-                ProgressDialog pdLoading = new ProgressDialog(RegisterActivity.this);
-
-                @Override
-                protected String doInBackground(Void... voids) {
-                    //creating request handler object
-                    RequestHandler requestHandler = new RequestHandler();
-
-                    //creating request parameters
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("username", username);
-                    params.put("nome", name);
-                    params.put("cognome", surname);
-                    params.put("email", email);
-                    params.put("password", password);
-
-                    //returing the response
-                    return requestHandler.sendPostRequest(CinematesDB.REGISTER_URL, params);
-                }
-
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    //this method will be running on UI thread
-                    pdLoading.setMessage("\tRegistrazione in corso...");
-                    pdLoading.setCancelable(false);
-                    pdLoading.show();
-                }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    super.onPostExecute(s);
-                    pdLoading.dismiss();
-
-                    try {
-                        //converting response to json object
-                        JSONObject obj = new JSONObject(s);
-                        //if no error in response
-                        if (!obj.getBoolean("error")) {
-                            JSONObject userJson = obj.getJSONObject("utente");
-                            Utente utente = new Utente(
-                                    userJson.getString("username"),
-                                    userJson.getString("nome"),
-                                    userJson.getString("cognome"),
-                                    userJson.getString("email"),
-                                    userJson.getString("password")
-                            );
-
-                            MainActivity.utente = utente;
-                            MainActivity.utente.setAutenticato(true);
-
-                            Bundle params = new Bundle();
-                            params.putString("user", MainActivity.utente.getUsername());
-                            params.putString("email", MainActivity.utente.getEmail());
-                            mFirebaseAnalytics.logEvent("User_Created", params);
-
-                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                            startActivity(intent);
-
-                            Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(RegisterActivity.this, "Ops! Qualcosa è andato storto", Toast.LENGTH_LONG).show();
-                    }
-                }
-            }
-
-            RegisterUser register = new RegisterUser();
-            register.execute();
-        }
     }
 }

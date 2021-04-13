@@ -1,19 +1,29 @@
 package com.example.cinemates.adapters;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.R;
+import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.classes.Notifica;
+import com.example.cinemates.fragments.FollowNotificationsFragment;
+import com.example.cinemates.fragments.GeneralNotificationsFragment;
+import com.example.cinemates.handlers.RequestHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GeneralNotificationAdapter extends RecyclerView.Adapter<GeneralNotificationAdapter.MyViewHolder>{
     private Context context;
@@ -34,6 +44,27 @@ public class GeneralNotificationAdapter extends RecyclerView.Adapter<GeneralNoti
     public void onBindViewHolder(@NonNull GeneralNotificationAdapter.MyViewHolder holder, int position) {
         Notifica notification = notifications.get(position);
         holder.setNotification(notification);
+
+        holder.deleteNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notification.deleteNotification(notification, position, "Generale", context);
+            }
+        });
+    }
+
+    public void removeNotification(int position) {
+        notifications.remove(position);
+        GeneralNotificationsFragment.rvGeneral.removeViewAt(position);
+        GeneralNotificationsFragment.generalAdapter.notifyItemRemoved(position);
+        GeneralNotificationsFragment.generalAdapter.notifyItemRangeChanged(position, notifications.size());
+
+        if (notifications.size() == 0) {
+            ArrayList<String> error = new ArrayList<>();
+            error.add("Non ci sono nuove notifiche da mostrare");
+            ErrorAdapter errorAdapter = new ErrorAdapter(context, error);
+            GeneralNotificationsFragment.rvGeneral.setAdapter(errorAdapter);
+        }
     }
 
     @Override
@@ -44,11 +75,13 @@ public class GeneralNotificationAdapter extends RecyclerView.Adapter<GeneralNoti
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView notificationTitle;
         public TextView notificationDescription;
+        public ImageView deleteNotification;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             notificationTitle = itemView.findViewById(R.id.notificationTitle);
             notificationDescription = itemView.findViewById(R.id.notificationDescription);
+            deleteNotification = itemView.findViewById(R.id.deleteNotification);
         }
 
         public void setNotification(Notifica notifica) {

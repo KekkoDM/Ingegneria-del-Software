@@ -31,9 +31,7 @@ import java.util.HashMap;
 
 public class FollowNotificationsFragment extends Fragment {
     public static RecyclerView rvFollow;
-    private ArrayList<Notifica> followNotifications;
     public static FollowNotificationAdapter followAdapter;
-    private ErrorAdapter errorAdapter;
 
     public FollowNotificationsFragment() {
         // Required empty public constructor
@@ -49,74 +47,8 @@ public class FollowNotificationsFragment extends Fragment {
         rvFollow.setHasFixedSize(true);
         rvFollow.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        followNotifications = new ArrayList<>();
-
-        loadFollowNotification(MainActivity.utente);
+        Notifica.loadFollowNotification(MainActivity.utente, getContext());
 
         return v;
-    }
-
-    private void loadFollowNotification(Utente utente) {
-        class NotificationsLoader extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", utente.getUsername());
-
-                //returing the response
-                return requestHandler.sendPostRequest(CinematesDB.FOLLOW_NOTIFICATION_URL, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-
-                    //if no error in response
-                    if (!obj.getBoolean("error")) {
-                        JSONArray notificationJson = obj.getJSONArray("notifica");
-                        for (int i = 0; i < notificationJson.length(); i++) {
-                            JSONObject notification = notificationJson.getJSONObject(i);
-                            Notifica notifica = new Notifica(
-                                    notification.getInt("id"),
-                                    notification.getString("titolo"),
-                                    notification.getString("descrizione"),
-                                    notification.getString("tipo"),
-                                    notification.getString("mittente"),
-                                    notification.getString("destinatario"),
-                                    null
-                            );
-                            followNotifications.add(notifica);
-                        }
-
-                        followAdapter = new FollowNotificationAdapter(FollowNotificationsFragment.this.getContext(), followNotifications);
-                        rvFollow.setAdapter(followAdapter);
-                    } else {
-                        ArrayList<String> error = new ArrayList<String>();
-                        error.add("Non ci sono nuove richieste di collegamento");
-                        errorAdapter = new ErrorAdapter(getContext(),error);
-                        rvFollow.setAdapter(errorAdapter);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        NotificationsLoader notificationsLoader = new NotificationsLoader();
-        notificationsLoader.execute();
     }
 }

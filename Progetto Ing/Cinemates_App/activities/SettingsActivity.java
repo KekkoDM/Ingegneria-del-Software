@@ -55,7 +55,18 @@ public class SettingsActivity extends AppCompatActivity {
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updatePassword(MainActivity.utente, oldPw.getText().toString(), newPw.getText().toString());
+                String oldPassword = oldPw.getText().toString();
+                String newPassword = newPw.getText().toString();
+
+                if (oldPassword.isEmpty() || newPassword.isEmpty()) {
+                    Toast.makeText(SettingsActivity.this, "Alcuni campi sono vuoti", Toast.LENGTH_SHORT).show();
+                }
+                else if ((oldPassword.equals(MainActivity.utente.getPassword())) && (newPassword.length() >=6)) {
+                    MainActivity.utente.updatePassword(MainActivity.utente, newPassword, SettingsActivity.this);
+                }
+                else {
+                    Toast.makeText(SettingsActivity.this, "Verificare che la vecchia password sia corretta e che la nuova sia di almeno 6 caratteri", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -92,7 +103,7 @@ public class SettingsActivity extends AppCompatActivity {
         btnPop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteAccount(MainActivity.utente);
+                MainActivity.utente.deleteAccount(MainActivity.utente, SettingsActivity.this);
                 dialog.dismiss();
             }
         });
@@ -106,128 +117,5 @@ public class SettingsActivity extends AppCompatActivity {
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
-    }
-
-    private void deleteAccount(Utente utente) {
-        class AccountDeleter extends AsyncTask<Void, Void, String> {
-            ProgressDialog pdLoading = new ProgressDialog(SettingsActivity.this);
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                pdLoading.setMessage("\tEliminazione account in corso...");
-                pdLoading.setCancelable(false);
-                pdLoading.show();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", utente.getUsername());
-
-                //returing the response
-                return requestHandler.sendPostRequest(CinematesDB.DELETE_URL, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                pdLoading.dismiss();
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-
-                    //if no error in response
-                    if (!obj.getBoolean("error")) {
-                        Toast.makeText(SettingsActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
-
-                        // delete logged user
-                        MainActivity.utente.setAutenticato(false);
-
-                        // returning to login page
-                        Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        Toast.makeText(SettingsActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        AccountDeleter accountDeleter = new AccountDeleter();
-        accountDeleter.execute();
-    }
-
-    private void updatePassword(Utente utente, String oldPassword, String newPassword) {
-        if (oldPassword.isEmpty() || newPassword.isEmpty()) {
-            Toast.makeText(SettingsActivity.this, "Alcuni campi sono vuoti", Toast.LENGTH_SHORT).show();
-        }
-        else if ((oldPassword.equals(utente.getPassword())) && (newPassword.length() >=6)) {
-            class PaswordUpdater extends AsyncTask<Void, Void, String> {
-                ProgressDialog pdLoading = new ProgressDialog(SettingsActivity.this);
-
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    pdLoading.setMessage("\tAggiorno la password...");
-                    pdLoading.setCancelable(false);
-                    pdLoading.show();
-                }
-
-                @Override
-                protected String doInBackground(Void... voids) {
-                    //creating request handler object
-                    RequestHandler requestHandler = new RequestHandler();
-
-                    //creating request parameters
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("username", utente.getUsername());
-                    params.put("newpassword", newPassword);
-
-                    //returing the response
-                    return requestHandler.sendPostRequest(CinematesDB.UPDATE_URL, params);
-                }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    super.onPostExecute(s);
-                    pdLoading.dismiss();
-
-                    try {
-                        //converting response to json object
-                        JSONObject obj = new JSONObject(s);
-
-                        //if no error in response
-                        if (!obj.getBoolean("error")) {
-                            Toast.makeText(SettingsActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
-
-                            // update logged user password
-                            MainActivity.utente.setPassword(newPassword);
-
-                            // returning to account fragment
-                            onBackPressed();
-                        } else {
-                            Toast.makeText(SettingsActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            PaswordUpdater paswordUpdater = new PaswordUpdater();
-            paswordUpdater.execute();
-        }
-        else {
-            Toast.makeText(SettingsActivity.this, "Verificare che la vecchia password sia corretta e che la nuova sia di almeno 6 caratteri", Toast.LENGTH_LONG).show();
-        }
     }
 }

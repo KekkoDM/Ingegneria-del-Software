@@ -47,66 +47,13 @@ public class RecoveryPasswordActivity extends AppCompatActivity {
         recoveryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recoveryPassword(email.getText().toString());
+                if (email.getText().length() == 0) {
+                    Toast.makeText(RecoveryPasswordActivity.this, "Inserisci la tua e-mail", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    MainActivity.utente.recoveryPassword(email.getText().toString(), RecoveryPasswordActivity.this);
+                }
             }
         });
-    }
-
-    private void recoveryPassword(String email) {
-        if (email.isEmpty()) {
-            Toast.makeText(RecoveryPasswordActivity.this, "Inserisci la tua e-mail", Toast.LENGTH_SHORT).show();
-        } else {
-            class RecoveryPassword extends AsyncTask<Void, Void, String> {
-                ProgressDialog pdLoading = new ProgressDialog(RecoveryPasswordActivity.this);
-
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    pdLoading.setMessage("\tInvio e-mail di recupero...");
-                    pdLoading.setCancelable(false);
-                    pdLoading.show();
-                }
-
-                @Override
-                protected String doInBackground(Void... voids) {
-                    //creating request handler object
-                    RequestHandler requestHandler = new RequestHandler();
-
-                    //creating request parameters
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("email", email);
-
-                    //returing the response
-                    return requestHandler.sendPostRequest(CinematesDB.RECOVERY_PASSWORD, params);
-                }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    super.onPostExecute(s);
-                    pdLoading.dismiss();
-
-                    try {
-                        //converting response to json object
-                        JSONObject obj = new JSONObject(s);
-
-                        if (!obj.getBoolean("error")) {
-                            onBackPressed();
-
-                            Bundle params = new Bundle();
-                            params.putString("user", MainActivity.utente.getUsername());
-                            params.putString("email", MainActivity.utente.getEmail());
-                            mFirebaseAnalytics.logEvent("Recovery_Password", params);
-                        }
-
-                        Toast.makeText(RecoveryPasswordActivity.this, obj.getString("message"), Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            RecoveryPassword recoveryPassword = new RecoveryPassword();
-            recoveryPassword.execute();
-        }
     }
 }
