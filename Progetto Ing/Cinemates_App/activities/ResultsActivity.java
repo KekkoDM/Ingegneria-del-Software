@@ -17,6 +17,7 @@ import com.android.volley.RequestQueue;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.ErrorAdapter;
+import com.example.cinemates.adapters.FilmAdapter;
 import com.example.cinemates.adapters.FriendsAdapter;
 import com.example.cinemates.adapters.ResultsAdapter;
 import com.example.cinemates.adapters.SearchUserAdapter;
@@ -39,13 +40,12 @@ public class ResultsActivity extends AppCompatActivity {
 
     private ArrayList<Utente> users;
     public static RecyclerView rv;
-    public static ImageView noResultIcon;
-    public static TextView noResultLabel;
     private RequestJson requestJson;
-
+    private FilmAdapter adapter;
     private ErrorAdapter errorAdapter;
     private SearchUserAdapter searchUserAdapter;
     private FirebaseAnalytics mFirebaseAnalytics;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,40 +60,47 @@ public class ResultsActivity extends AppCompatActivity {
 
         requestJson = new RequestJson(this);
 
-        noResultIcon = findViewById(R.id.noResultIcon);
-        noResultLabel = findViewById(R.id.noResultLabel);
 
         Intent intent = getIntent();
-        if (intent.getStringExtra("type").equals("film")) {
-            
+        Bundle bundle = new Bundle();
+        switch (intent.getStringExtra("type")){
 
-            Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, intent.getStringExtra("textsearched"));
-            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
+            case "film":
+                bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, intent.getStringExtra("textsearched"));
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
 
-            requestJson.parseJSONSearch(rv, intent.getStringExtra("textsearched"));
+                requestJson.parseJSONSearch(rv, intent.getStringExtra("textsearched"));
+                break;
+
+            case "friend":
+                users = new ArrayList<>();
+
+                bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, intent.getStringExtra("friendsearched"));
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
+
+                searchUser(intent.getStringExtra("friendsearched"));
+                break;
+
+            case "sharedcontent":
+                String friend = intent.getStringExtra("Friend");
+
+                bundle.putString("id_film", friend);
+                bundle.putString("type", "Contenuti in comune");
+                mFirebaseAnalytics.logEvent("Shared_Content", bundle);
+
+                showSharedContents(friend);
+                break;
+
+            case "showall":
+                ArrayList<Film> list = (ArrayList<Film>) intent.getSerializableExtra("list");
+
+
+                ResultsAdapter resultsAdapter = new ResultsAdapter(list,this);
+                rv.setAdapter(resultsAdapter);
+                break;
+
         }
-        else if (intent.getStringExtra("type").equals("friend")) {
-            users = new ArrayList<>();
 
-
-            Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, intent.getStringExtra("friendsearched"));
-            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
-
-            searchUser(intent.getStringExtra("friendsearched"));
-
-        }
-        else {
-            String friend = intent.getStringExtra("Friend");
-
-            Bundle params = new Bundle();
-            params.putString("id_film", friend);
-            params.putString("type", "Contenuti in comune");
-            mFirebaseAnalytics.logEvent("Shared_Content", params);
-
-            showSharedContents(friend);
-        }
 
         backBtn = findViewById(R.id.backButton2);
         backBtn.setOnClickListener(new View.OnClickListener() {

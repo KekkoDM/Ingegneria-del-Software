@@ -115,7 +115,7 @@ public class FavoritesFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ResultsActivity.class);
                 intent.putExtra("type", "showall");
-                intent.putExtra("list", (Serializable) recyclerViewFavorites.getAdapter());
+                intent.putExtra("list", (Serializable) ((FilmAdapter)recyclerViewFavorites.getAdapter()).getListFilm());
                 startActivity(intent);
             }
         });
@@ -126,7 +126,7 @@ public class FavoritesFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ResultsActivity.class);
                 intent.putExtra("type", "showall");
-                intent.putExtra("list", (Serializable) recyclerViewToSee.getAdapter());
+                intent.putExtra("list", (Serializable) ((FilmAdapter)recyclerViewToSee.getAdapter()).getListFilm());
                 startActivity(intent);
             }
         });

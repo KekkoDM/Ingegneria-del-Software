@@ -2,6 +2,7 @@ package com.example.cinemates.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cinemates.R;
 import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.classes.Film;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,6 +23,9 @@ import java.util.ArrayList;
 public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> {
     private Context context;
     private ArrayList<Film> listFilm;
+
+    private FirebaseAnalytics mFirebaseAnalytics;
+
 
     public FilmAdapter(ArrayList<Film> listFilm, Context context) {
         this.context = context;
@@ -31,11 +36,16 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
         return listFilm.get(position);
     }
 
+    public ArrayList<Film> getListFilm() {
+        return listFilm;
+    }
+
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(context).inflate(R.layout.item_movie, parent, false);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
         return new FilmAdapter.MyViewHolder(v);
     }
 
@@ -47,6 +57,17 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
             public void onClick(View v) {
                 Intent intent = new Intent(context, MovieDescriptorActivity.class);
                 intent.putExtra("Film",listFilm.get(position));
+
+                // [START custom_event]
+                Bundle params = new Bundle();
+                params.putString("id_film", listFilm.get(position).getId());
+                params.putString("title", listFilm.get(position).getTitle());
+                params.putString("type", listFilm.get(position).getType());
+                mFirebaseAnalytics.logEvent("Description_Film", params);
+                // [END custom_event]
+
+                System.out.println("Bundle: "+params);
+
                 context.startActivity(intent);
             }
         });
