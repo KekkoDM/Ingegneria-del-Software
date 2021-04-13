@@ -11,6 +11,7 @@ import android.os.Bundle;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.activities.MovieDescriptorActivity;
 
+import com.example.cinemates.activities.ResultsActivity;
 import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
 
@@ -18,9 +19,12 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 import com.example.cinemates.R;
@@ -35,6 +39,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -47,6 +52,8 @@ public class FavoritesFragment extends Fragment {
     private RequestJson requestJson;
     private CardView buttonCasualFavorites;
     private CardView buttonCasualToSee;
+    private TextView showAllFavorites;
+    private TextView showAllToSee;
     private ArrayList<Film> listItem;
     int id = -1;
 
@@ -101,6 +108,28 @@ public class FavoritesFragment extends Fragment {
 
         loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL, buttonCasualFavorites, "Preferiti");
         loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL, buttonCasualToSee, "Da vedere");
+
+        showAllFavorites = view.findViewById(R.id.showAllFavorites);
+        showAllFavorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ResultsActivity.class);
+                intent.putExtra("type", "showall");
+                intent.putExtra("list", (Serializable) recyclerViewFavorites.getAdapter());
+                startActivity(intent);
+            }
+        });
+
+        showAllToSee = view.findViewById(R.id.showAllToSee);
+        showAllToSee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ResultsActivity.class);
+                intent.putExtra("type", "showall");
+                intent.putExtra("list", (Serializable) recyclerViewToSee.getAdapter());
+                startActivity(intent);
+            }
+        });
 
         return view;
     }
