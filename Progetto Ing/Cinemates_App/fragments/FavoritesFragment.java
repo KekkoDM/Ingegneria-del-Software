@@ -106,10 +106,10 @@ public class FavoritesFragment extends Fragment {
             }
         });
 
-        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL, buttonCasualFavorites, "Preferiti");
-        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL, buttonCasualToSee, "Da vedere");
+
 
         showAllFavorites = view.findViewById(R.id.showAllFavorites);
+        showAllFavorites.setVisibility(View.GONE);
         showAllFavorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,16 +122,20 @@ public class FavoritesFragment extends Fragment {
         });
 
         showAllToSee = view.findViewById(R.id.showAllToSee);
+        showAllToSee.setVisibility(View.GONE);
         showAllToSee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 filmAdapter = (FilmAdapter) recyclerViewToSee.getAdapter();
                 Intent intent = new Intent(getContext(), ResultsActivity.class);
                 intent.putExtra("type", "showall");
-                intent.putExtra("list", (Serializable) (Serializable) filmAdapter.getListFilm());
+                intent.putExtra("list", (Serializable) filmAdapter.getListFilm());
                 startActivity(intent);
             }
         });
+
+        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL, buttonCasualFavorites, "Preferiti",showAllFavorites);
+        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL, buttonCasualToSee, "Da vedere",showAllToSee);
 
         return view;
     }
@@ -160,7 +164,13 @@ public class FavoritesFragment extends Fragment {
         }
     }
 
-    private void loadList(RecyclerView recyclerView, String url, CardView casual, String listName) {
+    private void setShowAll(TextView show, int i){
+        if (i >1){
+            show.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void loadList(RecyclerView recyclerView, String url, CardView casual, String listName,TextView show) {
         class ListLoader extends AsyncTask<Void, Void, String> {
 
             ProgressDialog pdLoading = new ProgressDialog(getContext());
@@ -230,6 +240,7 @@ public class FavoritesFragment extends Fragment {
                     }
 
                     setButtonCasual(casual, i);
+                    setShowAll(show,i);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
