@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
+import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FriendsAdapter;
 import com.example.cinemates.classes.Utente;
 import com.example.cinemates.handlers.RequestHandler;
@@ -33,11 +34,10 @@ public class FriendsActivity extends AppCompatActivity {
     private ImageButton backBtn;
     private Button searchBtn;
     private EditText friendSearched;
-    private ImageView noFriendsIcon;
-    private TextView noFriendsLabel;
     private ArrayList<Utente> friends;
-    private RecyclerView rv;
-    private FriendsAdapter friendsAdapter;
+    private ErrorAdapter errorAdapter;
+    public static RecyclerView rv;
+    public static FriendsAdapter friendsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +77,6 @@ public class FriendsActivity extends AppCompatActivity {
                 }
             }
         });
-
-        noFriendsIcon = findViewById(R.id.noFriendIcon);
-        noFriendsLabel = findViewById(R.id.noFriendLabel);
     }
 
     public void loadFriendsList(Utente utente) {
@@ -130,9 +127,10 @@ public class FriendsActivity extends AppCompatActivity {
                         friendsAdapter = new FriendsAdapter(FriendsActivity.this, friends);
                         rv.setAdapter(friendsAdapter);
                     } else {
-                        noFriendsIcon.setVisibility(View.VISIBLE);
-                        noFriendsLabel.setVisibility(View.VISIBLE);
-                        rv.setVisibility(View.INVISIBLE);
+                        ArrayList<String> error = new ArrayList<String>();
+                        error.add("Non hai nessun amico al momento");
+                        errorAdapter = new ErrorAdapter(FriendsActivity.this,error);
+                        rv.setAdapter(errorAdapter);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
