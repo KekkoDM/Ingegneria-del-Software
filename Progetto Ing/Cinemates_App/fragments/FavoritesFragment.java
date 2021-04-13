@@ -134,8 +134,8 @@ public class FavoritesFragment extends Fragment {
             }
         });
 
-        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL, buttonCasualFavorites, "Preferiti",showAllFavorites);
-        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL, buttonCasualToSee, "Da vedere",showAllToSee);
+        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL, buttonCasualFavorites, "Preferiti");
+        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL, buttonCasualToSee, "Da vedere");
 
         return view;
     }
@@ -164,13 +164,16 @@ public class FavoritesFragment extends Fragment {
         }
     }
 
-    private void setShowAll(TextView show, int i){
+    private void setShowAll(String listName, int i){
         if (i >1){
-            show.setVisibility(View.VISIBLE);
+            if(listName.equals("Preferiti"))
+                showAllFavorites.setVisibility(View.VISIBLE);
+            else
+                showAllToSee.setVisibility(View.VISIBLE);
         }
     }
 
-    private void loadList(RecyclerView recyclerView, String url, CardView casual, String listName,TextView show) {
+    private void loadList(RecyclerView recyclerView, String url, CardView casual, String listName) {
         class ListLoader extends AsyncTask<Void, Void, String> {
 
             ProgressDialog pdLoading = new ProgressDialog(getContext());
@@ -240,7 +243,7 @@ public class FavoritesFragment extends Fragment {
                     }
 
                     setButtonCasual(casual, i);
-                    setShowAll(show,i);
+                    setShowAll(listName,i);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
