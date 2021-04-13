@@ -59,7 +59,7 @@ public class RequestJson<JSONParser>{
     private static final String TRENDING_ALL = TMDB + "trending/all/week" + APIKEY + IT_IT;
     private static final String TRENDING =  TMDB + "trending/";
     private static final String SEARCH =  TMDB + "search/multi" + APIKEY + IT_IT;
-
+    private static final String ADULT = "&include_adult=true";
 
     private Context context;
 
@@ -171,7 +171,7 @@ public class RequestJson<JSONParser>{
     //RICERCA
     public void parseJSONSearch(RecyclerView recyclerView, String query){
 
-        String url = SEARCH + "&query=" + query + "&include_adult=false";
+        String url = SEARCH + "&query=" + query + ADULT ;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
