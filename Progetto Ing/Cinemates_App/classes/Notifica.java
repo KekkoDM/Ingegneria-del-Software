@@ -45,6 +45,9 @@ public class Notifica {
         this.amministratore = amministratore;
     }
 
+    public Notifica() {
+    }
+
     public int getId() {
         return id;
     }
@@ -170,7 +173,7 @@ public class Notifica {
         loader.execute();
     }
 
-    public static void loadFollowNotification(Utente utente, Context context) {
+    public void loadFollowNotification(Utente utente, Context context) {
         class FollowLoader extends AsyncTask<Void, Void, String> {
 
             @Override
@@ -245,7 +248,7 @@ public class Notifica {
         }
     }
 
-    private static void setFollowNotifications(ArrayList<Notifica> notifications, Context context) {
+    private void setFollowNotifications(ArrayList<Notifica> notifications, Context context) {
         FollowNotificationsFragment.followAdapter = new FollowNotificationAdapter(context, notifications);
         FollowNotificationsFragment.rvFollow.setAdapter(FollowNotificationsFragment.followAdapter);
     }

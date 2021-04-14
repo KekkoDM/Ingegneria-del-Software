@@ -143,6 +143,11 @@ public class LoginFragment extends Fragment {
                 }
                 else {
                     MainActivity.utente.loginUser(username, password, getActivity());
+
+                    // [START custom_event]
+                    Bundle params = new Bundle();
+                    params.putString("user", MainActivity.utente.getUsername());
+                    mFirebaseAnalytics.logEvent("Login_Cinemates", params);
                 }
             }
         });

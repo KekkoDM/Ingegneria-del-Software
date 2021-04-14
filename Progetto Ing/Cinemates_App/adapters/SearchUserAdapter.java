@@ -61,7 +61,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
         holder.followBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendFollowRequest(result, holder);
+                MainActivity.utente.sendFollowRequest(result, holder, context);
 
                 //[START custom_event]
                 Bundle params = new Bundle();
@@ -81,54 +81,6 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
         }
 
         return found;
-    }
-
-    private void sendFollowRequest(Utente result, MyViewHolder holder) {
-        class SendFollowRequest extends AsyncTask<Void, Void, String> {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("sender", MainActivity.utente.getUsername());
-                params.put("receiver", result.getUsername());
-
-                //returning the response
-                return requestHandler.sendPostRequest(CinematesDB.SEND_FOLLOW_NOTIFICATION_URL, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-
-                    //if no error in response
-                    if (!obj.getBoolean("error")) {
-                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
-                        holder.followBtn.setText("Richiesta inviata");
-                        holder.followBtn.setBackgroundColor(Color.LTGRAY);
-                        holder.followBtn.setEnabled(false);
-                    } else {
-                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        SendFollowRequest sendFollowRequest = new SendFollowRequest();
-        sendFollowRequest.execute();
     }
 
     @Override

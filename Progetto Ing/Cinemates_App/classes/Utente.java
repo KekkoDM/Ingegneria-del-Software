@@ -3,26 +3,38 @@ package com.example.cinemates.classes;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
+import com.example.cinemates.activities.CommentsActivity;
+import com.example.cinemates.activities.RecoveryPasswordActivity;
+import com.example.cinemates.activities.ResultsActivity;
+import com.example.cinemates.activities.SettingsActivity;
+import com.example.cinemates.adapters.CommentAdapter;
+import com.example.cinemates.adapters.ErrorAdapter;
+import com.example.cinemates.adapters.SearchUserAdapter;
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.fragments.AccountFragment;
+import com.example.cinemates.fragments.DescriptionFragment;
 import com.example.cinemates.fragments.FollowNotificationsFragment;
 import com.example.cinemates.fragments.GeneralNotificationsFragment;
 import com.example.cinemates.handlers.RequestHandler;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Utente implements Serializable {
@@ -32,15 +44,6 @@ public class Utente implements Serializable {
     private String email;
     private String password;
     private boolean autenticato = false;
-
-    public Utente(String username, String nome, String cognome, String email, String password, boolean autenticato) {
-        this.username = username;
-        this.nome = nome;
-        this.cognome = cognome;
-        this.email = email;
-        this.password = password;
-        this.autenticato = autenticato;
-    }
 
     public Utente(String username, String nome, String cognome, String email, String password) {
         this.username = username;
@@ -70,10 +73,6 @@ public class Utente implements Serializable {
         return cognome;
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -100,7 +99,6 @@ public class Utente implements Serializable {
 
     public void loginUser(String username, String password, FragmentActivity context) {
         class UserLogin extends AsyncTask<Void, Void, String> {
-            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
             ProgressDialog pdLoading = new ProgressDialog(context);
 
             @Override
@@ -149,11 +147,6 @@ public class Utente implements Serializable {
                         //setting the logged user
                         MainActivity.utente = utente;
                         MainActivity.utente.setAutenticato(true);
-
-                        // [START custom_event]
-                        Bundle params = new Bundle();
-                        params.putString("user", MainActivity.utente.getUsername());
-                        mFirebaseAnalytics.logEvent("Login_Cinemates", params);
 
                         //starting the profile page
                         FragmentManager fragmentManager = ((FragmentActivity) context).getSupportFragmentManager();
@@ -234,12 +227,9 @@ public class Utente implements Serializable {
                         //starting the home page
                         Intent intent = new Intent(context, MainActivity.class);
                         context.startActivity(intent);
+                    }
 
-                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(context, "Ops! Qualcosa è andato storto", Toast.LENGTH_LONG).show();
@@ -287,13 +277,15 @@ public class Utente implements Serializable {
                     JSONObject obj = new JSONObject(s);
 
                     if (!obj.getBoolean("error")) {
+                        ((RecoveryPasswordActivity) context).onBackPressed();
+
                         Bundle params = new Bundle();
                         params.putString("user", MainActivity.utente.getUsername());
                         params.putString("email", MainActivity.utente.getEmail());
                         mFirebaseAnalytics.logEvent("Recovery_Password", params);
                     }
 
-                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -398,6 +390,8 @@ public class Utente implements Serializable {
 
                     //if no error in response
                     if (!obj.getBoolean("error")) {
+                        ((SettingsActivity) context).onBackPressed();
+
                         // update logged user password
                         MainActivity.utente.setPassword(newPassword);
                     }
@@ -524,5 +518,378 @@ public class Utente implements Serializable {
 
         DeleteNotification deleteNotification = new DeleteNotification();
         deleteNotification.execute();
+    }
+
+    public void sendFollowRequest(Utente user, SearchUserAdapter.MyViewHolder holder, Context context) {
+        class SendFollowRequest extends AsyncTask<Void, Void, String> {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("sender", MainActivity.utente.getUsername());
+                params.put("receiver", user.getUsername());
+
+                //returning the response
+                return requestHandler.sendPostRequest(CinematesDB.SEND_FOLLOW_NOTIFICATION_URL, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                        holder.followBtn.setText("Richiesta inviata");
+                        holder.followBtn.setBackgroundColor(Color.LTGRAY);
+                        holder.followBtn.setEnabled(false);
+                    } else {
+                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        SendFollowRequest sendFollowRequest = new SendFollowRequest();
+        sendFollowRequest.execute();
+    }
+
+    public void searchUser(String friendsearched, Context context) {
+        class SearchUser extends AsyncTask<Void, Void, String> {
+            ProgressDialog pdLoading = new ProgressDialog(context);
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                pdLoading.setMessage("\tRicerca in corso...");
+                pdLoading.setCancelable(false);
+                pdLoading.show();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("usersearched", friendsearched);
+
+                //returning the response
+                return requestHandler.sendPostRequest(CinematesDB.SEARCH_USER, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                pdLoading.dismiss();
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        //getting the list friends from the response
+                        JSONArray usersJson = obj.getJSONArray("utente");
+                        ArrayList<Utente> users = new ArrayList<>();
+                        for (int i = 0; i < usersJson.length(); i++) {
+                            JSONObject userJson = usersJson.getJSONObject(i);
+                            Utente utente = new Utente(
+                                    userJson.getString("username"),
+                                    userJson.getString("nome"),
+                                    userJson.getString("cognome"),
+                                    null,
+                                    null
+                            );
+
+                            users.add(utente);
+                        }
+
+                        ResultsActivity.searchUserAdapter = new SearchUserAdapter(context, users);
+                        ResultsActivity.rv.setAdapter(ResultsActivity.searchUserAdapter);
+                    }
+                    else {
+                        ArrayList<String> error = new ArrayList<String>();
+                        error.add("La ricerca non ha prodotto risultati");
+                        ErrorAdapter errorAdapter = new ErrorAdapter(context, error);
+                        ResultsActivity.rv.setAdapter(errorAdapter);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        SearchUser searchUser = new SearchUser();
+        searchUser.execute();
+    }
+
+    public void showSharedContents(String friend, Context context) {
+        class SharedContent extends AsyncTask<Void, Void, String> {
+            ProgressDialog pdLoading = new ProgressDialog(context);
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                pdLoading.setMessage("\tCaricamento in corso...");
+                pdLoading.setCancelable(true);
+                pdLoading.show();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("friend", friend);
+
+                //returning the response
+                return requestHandler.sendPostRequest(CinematesDB.SHARED_CONTENT, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                pdLoading.dismiss();
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        //getting the list friends from the response
+                        JSONArray sharedItems = obj.getJSONArray("comune");
+                        for (int i = 0; i < sharedItems.length(); i++) {
+                            JSONObject item = sharedItems.getJSONObject(i);
+                            Film film = new Film(
+                                    item.getString("item"),
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    item.getString("type")
+                            );
+
+                            RequestJson requestJson = new RequestJson(context);
+                            requestJson.parseJSONSavedList(ResultsActivity.rv, film);
+                        }
+                    } else {
+                        ArrayList<String> error = new ArrayList<String>();
+                        error.add("Non hai nessun elemento in comune con " +friend);
+                        ErrorAdapter errorAdapter = new ErrorAdapter(context, error);
+                        ResultsActivity.rv.setAdapter(errorAdapter);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        SharedContent sharedContent = new SharedContent();
+        sharedContent.execute();
+    }
+
+    public void addToList(Film film, String list, Context context) {
+        class ListAdder extends AsyncTask<Void, Void, String> {
+            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
+            protected void onPreExecute(String s) {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("list", list);
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("item", film.getId());
+                params.put("type", film.getType());
+
+                //returing the response
+                return requestHandler.sendPostRequest(CinematesDB.ADD_TO_LIST_URL, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+                    if (!obj.getBoolean("error")) {
+                        if (list.equals("Preferiti")) {
+                            DescriptionFragment.favoritesBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.favorites_button));
+                            DescriptionFragment.favoritesTextView.setText("Rimuovi da Preferiti");
+                        }
+                        else {
+                            DescriptionFragment.bookmarkBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.bookmark_button));
+                            DescriptionFragment.bookmarkTextView.setText("Rimuovi da lista Da Vedere");
+                        }
+
+                        // [START custom_event]
+                        Bundle params = new Bundle();
+                        params.putString("user",MainActivity.utente.getUsername());
+                        params.putString("list", list);
+                        params.putString("media_id", film.getId());
+                        params.putString("media_title", film.getTitle());
+                        mFirebaseAnalytics.logEvent("Added_To_List", params);
+
+                    }
+                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        ListAdder listAdder = new ListAdder();
+        listAdder.execute();
+    }
+
+    public void removeFromList(Film film, String list, Context context) {
+        class Remover extends AsyncTask<Void, Void, String> {
+            FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("item", film.getId());
+                params.put("list", list);
+
+                //returing the response
+                return requestHandler.sendPostRequest(CinematesDB.REMOVE_FROM_LIST, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+                    if (!obj.getBoolean("error")) {
+                        if (list.equals("Preferiti")) {
+                            DescriptionFragment.favoritesBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.light_grey));
+                            DescriptionFragment.favoritesTextView.setText("Aggiungi a Preferiti");
+                        }
+                        else {
+                            DescriptionFragment.bookmarkBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.light_grey));
+                            DescriptionFragment.bookmarkTextView.setText("Aggiungi a Da Vedere");
+                        }
+
+
+                        // [START custom_event]
+                        Bundle params = new Bundle();
+                        params.putString("user",MainActivity.utente.getUsername());
+                        params.putString("list", list);
+                        params.putString("media_id", film.getId());
+                        params.putString("media_title", film.getTitle());
+                        mFirebaseAnalytics.logEvent("Removed_From_List", params);
+                    }
+
+                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Remover remover = new Remover();
+        remover.execute();
+    }
+
+    public void sendComment(String comment, Review review, Context context) {
+        class CommentSender extends AsyncTask<Void, Void, String> {
+            CommentsActivity commentsActivity = (CommentsActivity) context;
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("comment", comment);
+                params.put("review", review.getId());
+
+                //returing the response
+                return requestHandler.sendPostRequest(CinematesDB.SEND_COMMENT, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        Comment cmt = new Comment(
+                                -1,
+                                comment,
+                                MainActivity.utente.getUsername(),
+                                0
+                        );
+
+                        if (commentsActivity.comments.isEmpty()) {
+                            commentsActivity.comments.add(cmt);
+                            commentsActivity.swapAdapter(new CommentAdapter(commentsActivity.comments, context), new LinearLayoutManager(context));
+                        }
+                        else {
+                            commentsActivity.commentAdapter.addItem(cmt);
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        CommentSender commentSender = new CommentSender();
+        commentSender.execute();
     }
 }

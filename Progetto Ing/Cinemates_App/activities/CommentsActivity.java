@@ -53,6 +53,8 @@ import java.util.HashMap;
 
 public class CommentsActivity extends AppCompatActivity {
     public static RecyclerView rvComments;
+    public static CommentAdapter commentAdapter;
+    public ArrayList<Comment> comments;
     private TextView detailReview;
     private TextView usernameReview;
     private TextView dateReview;
@@ -60,13 +62,12 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView likeBtn;
     private ImageView alertReview;
     private EditText textComment;
-    private CommentAdapter commentAdapter;
     private Review review;
+    private Comment comment;
     private ImageButton backBtn;
     private ReportDialog dialog;
     private Button sendComment;
     private TextView errorComment;
-    private ArrayList<Comment> comments;
     private LinearLayoutManager linearLayoutManager;
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -77,6 +78,8 @@ public class CommentsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         review = (Review) intent.getSerializableExtra("recensione");
+
+        comment = new Comment();
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -89,9 +92,7 @@ public class CommentsActivity extends AppCompatActivity {
         rvComments.setLayoutManager(linearLayoutManager);
 
         comments = new ArrayList<>();
-        commentAdapter = new CommentAdapter(comments, CommentsActivity.this);
-        getComments(review);
-
+        comment.getComments(review, CommentsActivity.this);
 
         // [START custom_event]
         Bundle params = new Bundle();
@@ -129,7 +130,7 @@ public class CommentsActivity extends AppCompatActivity {
             reaction.getReaction(review, likeBtn, contLike);
             likeBtn.setOnTouchListener(reaction.showReaction(review, likeBtn, contLike));
         }
-        else{
+        else {
             likeBtn.setVisibility(View.INVISIBLE);
             contLike.setVisibility(View.INVISIBLE);
             sendComment.setVisibility(View.INVISIBLE);
@@ -169,7 +170,7 @@ public class CommentsActivity extends AppCompatActivity {
                 else {
                     rvComments = new RecyclerView(CommentsActivity.this);
                     textComment.setHintTextColor(getResources().getColor(R.color.light_grey));
-                    sendComment(textComment.getText().toString());
+                    MainActivity.utente.sendComment(textComment.getText().toString(), review, CommentsActivity.this);
 
                     // [START custom_event]
                     Bundle params = new Bundle();
@@ -184,125 +185,10 @@ public class CommentsActivity extends AppCompatActivity {
         });
     }
 
-    private void sendComment(String comment) {
-        class CommentSender extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", MainActivity.utente.getUsername());
-                params.put("comment", comment);
-                params.put("review", review.getId());
-
-                //returing the response
-                return requestHandler.sendPostRequest(CinematesDB.SEND_COMMENT, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-
-                    //if no error in response
-                    if (!obj.getBoolean("error")) {
-                        Comment cmt = new Comment(
-                                -1,
-                                comment,
-                                MainActivity.utente.getUsername()
-                        );
-
-                        if (CommentAdapter.comments.isEmpty()) {
-                            comments.add(cmt);
-                            swapAdapter(new CommentAdapter(comments, CommentsActivity.this), new LinearLayoutManager(CommentsActivity.this));
-                        }
-                        else {
-                            commentAdapter.addItem(cmt);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        CommentSender commentSender = new CommentSender();
-        commentSender.execute();
-    }
-
-    private void swapAdapter(CommentAdapter commentAdapter, LinearLayoutManager linearLayoutManager) {
+    public void swapAdapter(CommentAdapter adapter, LinearLayoutManager linearLayoutManager) {
+        commentAdapter = adapter;
         rvComments = findViewById(R.id.list_comment);
         rvComments.setLayoutManager(linearLayoutManager);
         rvComments.setAdapter(commentAdapter);
-    }
-
-    private void getComments(Review review) {
-        class CommentsLoader extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("review", review.getId());
-
-                //returing the response
-                return requestHandler.sendPostRequest(CinematesDB.GET_COMMENTS, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-
-                    //if no error in response
-                    if (!obj.getBoolean("error")) {
-                        JSONArray commentsJson = obj.getJSONArray("commenti");
-                        for (int i = 0; i < commentsJson.length(); i++) {
-                            JSONObject cmt = commentsJson.getJSONObject(i);
-                            Comment comment = new Comment(
-                                    cmt.getInt("id"),
-                                    cmt.getString("commento"),
-                                    cmt.getString("username")
-                            );
-                            comments.add(comment);
-                        }
-                        commentAdapter = new CommentAdapter(comments, CommentsActivity.this);
-                        rvComments.setAdapter(commentAdapter);
-                    } else {
-                        ArrayList<String> error = new ArrayList<String>();
-                        error.add(obj.getString("message"));
-                        ErrorAdapter errorAdapter = new ErrorAdapter(CommentsActivity.this, error);
-                        rvComments.setAdapter(errorAdapter);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        CommentsLoader commentsLoader = new CommentsLoader();
-        commentsLoader.execute();
     }
 }

@@ -24,7 +24,7 @@ import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewHolder> {
     private Context context;
-    public static List<Comment> comments = new ArrayList<>();
+    private List<Comment> comments;
     private ReportDialog dialog;
 
     public CommentAdapter(List<Comment> comments, Context context){
@@ -73,17 +73,25 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
                 popupMenu.show();
             }
         });
+
+        holder.showComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.textComment.getText().toString().equals("Questo commento è stato oscurato perchè contiene Spoiler")) {
+                    holder.textComment.setText(comment.getDescrizione());
+                    holder.showComment.setImageResource(R.drawable.ic_hide_password);
+                }
+                else {
+                    holder.textComment.setText("Questo commento è stato oscurato perchè contiene Spoiler");
+                    holder.showComment.setImageResource(R.drawable.ic_show_password);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return comments.size();
-    }
-
-    public void swap(List<Comment> cmts) {
-        comments.clear();
-        comments.addAll(cmts);
-        notifyDataSetChanged();
     }
 
     public void addItem(Comment comment){
@@ -95,17 +103,26 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
         public TextView user;
         public TextView textComment;
         public ImageView report;
+        public ImageView showComment;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             user = itemView.findViewById(R.id.username_comment);
             textComment = itemView.findViewById(R.id.detail_comment);
             report = itemView.findViewById(R.id.alert_comment);
+            showComment = itemView.findViewById(R.id.showComment);
         }
 
         public void setComment(Comment comment) {
             user.setText(comment.getUsername() + " ha commentato:");
-            textComment.setText(comment.getDescrizione());
+
+            if (comment.getReportNumber() < 3) {
+                textComment.setText(comment.getDescrizione());
+            }
+            else {
+                textComment.setText("Questo commento è stato oscurato perchè contiene Spoiler");
+                showComment.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
