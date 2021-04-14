@@ -41,7 +41,6 @@ public class ResultsActivity extends AppCompatActivity {
     private ArrayList<Utente> users;
     public static RecyclerView rv;
     private RequestJson requestJson;
-    private FilmAdapter adapter;
     private ErrorAdapter errorAdapter;
     private SearchUserAdapter searchUserAdapter;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -93,10 +92,12 @@ public class ResultsActivity extends AppCompatActivity {
 
             case "showall":
                 ArrayList<Film> list = (ArrayList<Film>) intent.getSerializableExtra("list");
-
-
                 ResultsAdapter resultsAdapter = new ResultsAdapter(list,this);
                 rv.setAdapter(resultsAdapter);
+
+                bundle.putString("user", MainActivity.utente.getUsername());
+                bundle.putString("type", "Mostra tutta la lista");
+                mFirebaseAnalytics.logEvent("Show_All_List", bundle);
                 break;
 
         }
