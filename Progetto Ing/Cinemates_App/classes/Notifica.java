@@ -60,53 +60,22 @@ public class Notifica {
         return mittente;
     }
 
-    public void setMittente(String mittente) {
-        this.mittente = mittente;
-    }
-
     public String getDestinatario() {
         return destinatario;
-    }
-
-    public void setDestinatario(String destinatario) {
-        this.destinatario = destinatario;
-    }
-
-    public String getAmministratore() {
-        return amministratore;
-    }
-
-    public void setAmministratore(String amministratore) {
-        this.amministratore = amministratore;
     }
 
     public String getTitolo() {
         return titolo;
     }
 
-    public void setTitolo(String titolo) {
-        this.titolo = titolo;
-    }
-
     public String getDescrizione() {
         return descrizione;
     }
 
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public static void loadGeneralNotifications(Utente utente, Context context) {
+    public void loadGeneralNotifications(Utente utente, Context context) {
         class GeneralLoader extends AsyncTask<Void, Void, String> {
             Dialog loading = new Dialog(context);
+            GeneralNotificationsFragment generalNotificationsFragment = GeneralNotificationsFragment.getInstance();
 
             @Override
             protected void onPreExecute() {
@@ -156,12 +125,10 @@ public class Notifica {
                             generalNot.add(notifica);
                         }
 
-                        setGeneralNotifications(generalNot, context);
+                        generalNotificationsFragment.showGeneralNotifications(generalNot);
                     }
                     else {
-                        ArrayList<String> error = new ArrayList<>();
-                        error.add("Non ci sono nuove notifiche da mostrare");
-                        setErrorNotification(error, "Generale", context);
+                        generalNotificationsFragment.showErrorNotifications();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -173,8 +140,9 @@ public class Notifica {
         loader.execute();
     }
 
-    public void loadFollowNotification(Utente utente, Context context) {
+    public void loadFollowNotification(Utente utente) {
         class FollowLoader extends AsyncTask<Void, Void, String> {
+            FollowNotificationsFragment followNotificationsFragment = FollowNotificationsFragment.getInstance();
 
             @Override
             protected void onPreExecute() {
@@ -220,12 +188,10 @@ public class Notifica {
                             followNot.add(notifica);
                         }
 
-                        setFollowNotifications(followNot, context);
+                        followNotificationsFragment.showFollowNotifications(followNot);
                     }
                     else {
-                        ArrayList<String> error = new ArrayList<>();
-                        error.add("Non ci sono nuove richieste di collegamento");
-                        setErrorNotification(error, "Collegamento", context);
+                        followNotificationsFragment.showErrorNotifications();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -235,26 +201,5 @@ public class Notifica {
 
         FollowLoader loader = new FollowLoader();
         loader.execute();
-    }
-
-    private static void setErrorNotification(ArrayList<String> error, String type, Context context) {
-        if (type.equals("Generale")) {
-            ErrorAdapter errorAdapter = new ErrorAdapter(context, error);
-            GeneralNotificationsFragment.rvGeneral.setAdapter(errorAdapter);
-        }
-        else {
-            ErrorAdapter errorAdapter = new ErrorAdapter(context, error);
-            FollowNotificationsFragment.rvFollow.setAdapter(errorAdapter);
-        }
-    }
-
-    private void setFollowNotifications(ArrayList<Notifica> notifications, Context context) {
-        FollowNotificationsFragment.followAdapter = new FollowNotificationAdapter(context, notifications);
-        FollowNotificationsFragment.rvFollow.setAdapter(FollowNotificationsFragment.followAdapter);
-    }
-
-    private static void setGeneralNotifications(ArrayList<Notifica> notifications, Context context) {
-        GeneralNotificationsFragment.generalAdapter = new GeneralNotificationAdapter(context, notifications);
-        GeneralNotificationsFragment.rvGeneral.setAdapter(GeneralNotificationsFragment.generalAdapter);
     }
 }

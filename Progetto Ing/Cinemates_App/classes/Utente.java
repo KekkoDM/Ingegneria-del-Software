@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,11 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.activities.CommentsActivity;
+import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.activities.RecoveryPasswordActivity;
 import com.example.cinemates.activities.ResultsActivity;
 import com.example.cinemates.activities.SettingsActivity;
 import com.example.cinemates.adapters.CommentAdapter;
 import com.example.cinemates.adapters.ErrorAdapter;
+import com.example.cinemates.adapters.ReviewAdapter;
 import com.example.cinemates.adapters.SearchUserAdapter;
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.fragments.AccountFragment;
@@ -332,17 +337,15 @@ public class Utente implements Serializable {
 
                     //if no error in response
                     if (!obj.getBoolean("error")) {
-                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
-
                         //logout current user
                         MainActivity.utente.setAutenticato(false);
 
                         //returning to login page
                         Intent intent = new Intent(context, MainActivity.class);
                         context.startActivity(intent);
-                    } else {
-                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
                     }
+
+                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -410,6 +413,7 @@ public class Utente implements Serializable {
     public void acceptFollowNotification(Notifica notification, int position, Context context) {
         class AcceptFollowNotification extends AsyncTask<Void, Void, String> {
             FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            FollowNotificationsFragment followNotificationsFragment = FollowNotificationsFragment.getInstance();
 
             @Override
             protected void onPreExecute() {
@@ -441,7 +445,7 @@ public class Utente implements Serializable {
 
                     //if no error in response
                     if (!obj.getBoolean("error")) {
-                        FollowNotificationsFragment.followAdapter.removeNotification(position);
+                        followNotificationsFragment.removeNotification(position, obj.getString("message"));
 
                         // [START custom_event]
                         Bundle params = new Bundle();
@@ -449,8 +453,9 @@ public class Utente implements Serializable {
                         params.putString("sender", notification.getMittente());
                         mFirebaseAnalytics.logEvent("Accepted_Follow_Notification", params);
                     }
-
-                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    else {
+                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -464,6 +469,8 @@ public class Utente implements Serializable {
     public void deleteNotification(Notifica notification, int position, String type, Context context) {
         class DeleteNotification extends AsyncTask<Void, Void, String> {
             FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            FollowNotificationsFragment followNotificationsFragment = FollowNotificationsFragment.getInstance();
+            GeneralNotificationsFragment generalNotificationsFragment = GeneralNotificationsFragment.getInstance();
 
             @Override
             protected void onPreExecute() {
@@ -494,12 +501,10 @@ public class Utente implements Serializable {
                     //if no error in response
                     if (!obj.getBoolean("error")) {
                         if (type.equals("Generale")) {
-                            GeneralNotificationsFragment.generalAdapter.removeNotification(position);
-                            Toast.makeText(context, "Notifica cancellata correttamente", Toast.LENGTH_SHORT).show();
+                            generalNotificationsFragment.removeNotification(position);
                         }
                         else {
-                            FollowNotificationsFragment.followAdapter.removeNotification(position);
-                            Toast.makeText(context, "Richiesta rifiutata correttamente", Toast.LENGTH_SHORT).show();
+                            followNotificationsFragment.removeNotification(position, obj.getString("message"));
                         }
 
                         // [START custom_event]
@@ -522,6 +527,8 @@ public class Utente implements Serializable {
 
     public void sendFollowRequest(Utente user, SearchUserAdapter.MyViewHolder holder, Context context) {
         class SendFollowRequest extends AsyncTask<Void, Void, String> {
+            ResultsActivity resultsActivity = (ResultsActivity) context;
+
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -551,13 +558,10 @@ public class Utente implements Serializable {
 
                     //if no error in response
                     if (!obj.getBoolean("error")) {
-                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
-                        holder.followBtn.setText("Richiesta inviata");
-                        holder.followBtn.setBackgroundColor(Color.LTGRAY);
-                        holder.followBtn.setEnabled(false);
-                    } else {
-                        Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                        resultsActivity.updateButtonSendRequest(holder);
                     }
+
+                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -571,6 +575,7 @@ public class Utente implements Serializable {
     public void searchUser(String friendsearched, Context context) {
         class SearchUser extends AsyncTask<Void, Void, String> {
             ProgressDialog pdLoading = new ProgressDialog(context);
+            ResultsActivity resultsActivity = (ResultsActivity) context;
 
             @Override
             protected void onPreExecute() {
@@ -621,14 +626,10 @@ public class Utente implements Serializable {
                             users.add(utente);
                         }
 
-                        ResultsActivity.searchUserAdapter = new SearchUserAdapter(context, users);
-                        ResultsActivity.rv.setAdapter(ResultsActivity.searchUserAdapter);
+                        resultsActivity.showSearchUserResult(users);
                     }
                     else {
-                        ArrayList<String> error = new ArrayList<String>();
-                        error.add("La ricerca non ha prodotto risultati");
-                        ErrorAdapter errorAdapter = new ErrorAdapter(context, error);
-                        ResultsActivity.rv.setAdapter(errorAdapter);
+                        resultsActivity.showSearchUserError();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -643,6 +644,7 @@ public class Utente implements Serializable {
     public void showSharedContents(String friend, Context context) {
         class SharedContent extends AsyncTask<Void, Void, String> {
             ProgressDialog pdLoading = new ProgressDialog(context);
+            ResultsActivity resultsActivity = (ResultsActivity) context;
 
             @Override
             protected void onPreExecute() {
@@ -679,6 +681,8 @@ public class Utente implements Serializable {
                     if (!obj.getBoolean("error")) {
                         //getting the list friends from the response
                         JSONArray sharedItems = obj.getJSONArray("comune");
+                        RequestJson requestJson = new RequestJson(context);
+
                         for (int i = 0; i < sharedItems.length(); i++) {
                             JSONObject item = sharedItems.getJSONObject(i);
                             Film film = new Film(
@@ -692,14 +696,10 @@ public class Utente implements Serializable {
                                     item.getString("type")
                             );
 
-                            RequestJson requestJson = new RequestJson(context);
-                            requestJson.parseJSONSavedList(ResultsActivity.rv, film);
+                            requestJson.parseJSONSavedList(resultsActivity.getRecyclerView(), film);
                         }
                     } else {
-                        ArrayList<String> error = new ArrayList<String>();
-                        error.add("Non hai nessun elemento in comune con " +friend);
-                        ErrorAdapter errorAdapter = new ErrorAdapter(context, error);
-                        ResultsActivity.rv.setAdapter(errorAdapter);
+                        resultsActivity.showSharedContentError(friend);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -714,6 +714,7 @@ public class Utente implements Serializable {
     public void addToList(Film film, String list, Context context) {
         class ListAdder extends AsyncTask<Void, Void, String> {
             FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            DescriptionFragment descriptionFragment = DescriptionFragment.getInstance();
 
             protected void onPreExecute(String s) {
                 super.onPreExecute();
@@ -744,12 +745,10 @@ public class Utente implements Serializable {
                     JSONObject obj = new JSONObject(s);
                     if (!obj.getBoolean("error")) {
                         if (list.equals("Preferiti")) {
-                            DescriptionFragment.favoritesBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.favorites_button));
-                            DescriptionFragment.favoritesTextView.setText("Rimuovi da Preferiti");
+                            descriptionFragment.enableFavoritesButton();
                         }
                         else {
-                            DescriptionFragment.bookmarkBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.bookmark_button));
-                            DescriptionFragment.bookmarkTextView.setText("Rimuovi da lista Da Vedere");
+                            descriptionFragment.enableToSeeButton();
                         }
 
                         // [START custom_event]
@@ -759,8 +758,8 @@ public class Utente implements Serializable {
                         params.putString("media_id", film.getId());
                         params.putString("media_title", film.getTitle());
                         mFirebaseAnalytics.logEvent("Added_To_List", params);
-
                     }
+
                     Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -775,6 +774,7 @@ public class Utente implements Serializable {
     public void removeFromList(Film film, String list, Context context) {
         class Remover extends AsyncTask<Void, Void, String> {
             FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+            DescriptionFragment descriptionFragment = DescriptionFragment.getInstance();
 
             @Override
             protected void onPreExecute() {
@@ -805,18 +805,15 @@ public class Utente implements Serializable {
                     JSONObject obj = new JSONObject(s);
                     if (!obj.getBoolean("error")) {
                         if (list.equals("Preferiti")) {
-                            DescriptionFragment.favoritesBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.light_grey));
-                            DescriptionFragment.favoritesTextView.setText("Aggiungi a Preferiti");
+                            descriptionFragment.disaableFavoritesButton();
                         }
                         else {
-                            DescriptionFragment.bookmarkBtn.setBackgroundTintList(context.getResources().getColorStateList(R.color.light_grey));
-                            DescriptionFragment.bookmarkTextView.setText("Aggiungi a Da Vedere");
+                            descriptionFragment.disableToSeeButton();
                         }
-
 
                         // [START custom_event]
                         Bundle params = new Bundle();
-                        params.putString("user",MainActivity.utente.getUsername());
+                        params.putString("user", MainActivity.utente.getUsername());
                         params.putString("list", list);
                         params.putString("media_id", film.getId());
                         params.putString("media_title", film.getTitle());
@@ -875,13 +872,7 @@ public class Utente implements Serializable {
                                 0
                         );
 
-                        if (commentsActivity.comments.isEmpty()) {
-                            commentsActivity.comments.add(cmt);
-                            commentsActivity.swapAdapter(new CommentAdapter(commentsActivity.comments, context), new LinearLayoutManager(context));
-                        }
-                        else {
-                            commentsActivity.commentAdapter.addItem(cmt);
-                        }
+                        commentsActivity.postComment(cmt);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -891,5 +882,92 @@ public class Utente implements Serializable {
 
         CommentSender commentSender = new CommentSender();
         commentSender.execute();
+    }
+
+    public void sendReaction(String reaction, Review review) {
+        class ReactionSender extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("review", review.getId());
+                params.put("reaction", reaction);
+
+                //returning the response
+                return requestHandler.sendPostRequest(CinematesDB.SEND_REACTION, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+            }
+        }
+
+        ReactionSender reactionSender = new ReactionSender();
+        reactionSender.execute();
+    }
+
+    public void sendReport(Object item, String type, String note, String reason, Context context) {
+        ProgressDialog pdLoading = new ProgressDialog(context);
+
+        class ReportSender extends AsyncTask<Void, Void, String> {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                pdLoading.setMessage("\tInvio segnalazione...");
+                pdLoading.setCancelable(true);
+                pdLoading.show();
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                //creating request handler object
+                RequestHandler requestHandler = new RequestHandler();
+
+                //creating request parameters
+                HashMap<String, String> params = new HashMap<>();
+                params.put("username", MainActivity.utente.getUsername());
+                params.put("type", type);
+                if (type.equals("Recensione")) {
+                    params.put("item", ((Review) item).getId());
+                }
+                else {
+                    params.put("item", String.valueOf(((Comment) item).getId()));
+                }
+                params.put("reason", reason);
+                params.put("note", note);
+
+                //returning the response
+                return requestHandler.sendPostRequest(CinematesDB.SEND_REPORT, params);
+            }
+
+            @Override
+            protected void onPostExecute(String s) {
+                super.onPostExecute(s);
+                pdLoading.dismiss();
+
+                try {
+                    //converting response to json object
+                    JSONObject obj = new JSONObject(s);
+                    Toast.makeText(context, obj.getString("message"), Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        ReportSender reportSender = new ReportSender();
+        reportSender.execute();
     }
 }

@@ -37,8 +37,6 @@ public class Review implements Serializable {
 
     public String getUser() { return user; }
 
-    public void setUser(String user) { this.user = user; }
-
     public String getTitle() {
         return title;
     }
@@ -51,24 +49,8 @@ public class Review implements Serializable {
         return descrizione;
     }
 
-    public void setDescrizione(String descrizione) {
-        descrizione = descrizione;
-    }
-
     public String getData() {
         return data;
-    }
-
-    public void setData(String data) {
-        data = data;
-    }
-
-    public int getUserPhoto() {
-        return userPhoto;
-    }
-
-    public void setUserPhoto(int userPhoto) {
-        this.userPhoto = userPhoto;
     }
 
     public String getId() {
@@ -110,7 +92,6 @@ public class Review implements Serializable {
                         holder.setCensoredReview(review);
                     }
                     else {
-                        System.out.println("REACTION REVIEW");
                         holder.setReview(review);
                     }
                 } catch (JSONException e) {

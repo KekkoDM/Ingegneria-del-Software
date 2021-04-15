@@ -92,7 +92,7 @@ public class Comment {
                     //if no error in response
                     if (!obj.getBoolean("error")) {
                         JSONArray commentsJson = obj.getJSONArray("commenti");
-                        commentsActivity.comments = new ArrayList<>();
+                        ArrayList<Comment> comments = new ArrayList<>();
 
                         for (int i = 0; i < commentsJson.length(); i++) {
                             JSONObject cmt = commentsJson.getJSONObject(i);
@@ -102,16 +102,12 @@ public class Comment {
                                     cmt.getString("username"),
                                     cmt.getInt("report")
                             );
-                            commentsActivity.comments.add(comment);
+                            comments.add(comment);
                         }
 
-                        commentsActivity.commentAdapter = new CommentAdapter(commentsActivity.comments, context);
-                        commentsActivity.rvComments.setAdapter(commentsActivity.commentAdapter);
+                        commentsActivity.showComments(comments);
                     } else {
-                        ArrayList<String> error = new ArrayList<String>();
-                        error.add(obj.getString("message"));
-                        ErrorAdapter errorAdapter = new ErrorAdapter(context, error);
-                        commentsActivity.rvComments.setAdapter(errorAdapter);
+                        commentsActivity.showNoCommentsError(obj.getString("message"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

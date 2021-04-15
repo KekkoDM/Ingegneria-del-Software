@@ -2,7 +2,7 @@ package com.example.cinemates.classes;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,7 +14,6 @@ import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.handlers.RequestHandler;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,12 +23,9 @@ import java.util.HashMap;
 public class Reaction {
     private final String[] strings = {"Mi piace", "Love", "Ahah", "Triste", "Wow", "Grrr"};
     private Context context;
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private int position;
 
     public Reaction(Context context) {
         this.context = context;
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
     // show reactions popup
@@ -50,78 +46,13 @@ public class Reaction {
 
         popup.setReactionSelectedListener((position) -> {
             if (position > -1) {
-                sendReaction(position, review, button, count);
+                MainActivity.utente.sendReaction(strings[position], review);
+                getReaction(review, button, count);
             };
-            this.position=position;
             return position >= -1;
         });
 
         return popup;
-    }
-
-    private void sendReaction(Integer position, Review review, ImageView button, TextView count) {
-        class ReactionSender extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", MainActivity.utente.getUsername());
-                params.put("review", review.getId());
-                params.put("reaction", strings[position]);
-
-                //returning the response
-                return requestHandler.sendPostRequest(CinematesDB.SEND_REACTION, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-
-                    // if no error in response
-                    if (!obj.getBoolean("error")) {
-                        if (obj.getString("message").equals("Reazione eliminata correttamente")) {
-
-                            setReaction("null", Integer.parseInt(count.getText().toString()) - 1, button, count);
-
-                            // [START custom_event]
-                            Bundle params = new Bundle();
-                            params.putString("id_review", review.getId());
-                            params.putString("reaction", strings[position]);
-                            params.putString("user", MainActivity.utente.getUsername());
-                            mFirebaseAnalytics.logEvent("Reaction_Removed", params);
-                        }
-                        else {
-                            getReaction(review, button, count);
-
-                            // [START custom_event]
-                            Bundle params = new Bundle();
-                            params.putString("id_review", review.getId());
-                            params.putString("reaction", strings[position]);
-                            params.putString("user", MainActivity.utente.getUsername());
-                            mFirebaseAnalytics.logEvent("Reaction_Added", params);
-                        }
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        ReactionSender reactionSender = new ReactionSender();
-        reactionSender.execute();
     }
 
     public void getReaction(Review review, ImageView button, TextView count) {
@@ -154,14 +85,7 @@ public class Reaction {
                     //converting response to json object
                     JSONObject obj = new JSONObject(s);
 
-                    System.out.println("REACTION GET");
-                    // if no error in response
-                    if (obj.getBoolean("error")) {
-                        count.setText(String.valueOf(obj.getInt("contatore")));
-                    }
-                    else {
-                        setReaction(obj.getString("reazione"), obj.getInt("contatore"), button, count);
-                    }
+                    setReaction(obj.getString("reazione"), obj.getInt("contatore"), button, count);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -172,7 +96,7 @@ public class Reaction {
         reactionGetter.execute();
     }
 
-    private void setReaction(String reaction, int counter, ImageView button, TextView count) {
+    public void setReaction(String reaction, int counter, ImageView button, TextView count) {
         count.setText(String.valueOf(counter));
 
         switch (reaction) {
