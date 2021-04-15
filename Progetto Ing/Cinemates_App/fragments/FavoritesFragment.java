@@ -1,8 +1,8 @@
 package com.example.cinemates.fragments;
 
-
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 
 import android.graphics.Color;
@@ -14,6 +14,7 @@ import android.os.Bundle;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.activities.MovieDescriptorActivity;
 
+import com.example.cinemates.activities.ResultsActivity;
 import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
 
@@ -21,6 +22,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +39,14 @@ import com.example.cinemates.classes.Film;
 
 import com.example.cinemates.classes.RequestJson;
 import com.example.cinemates.handlers.RequestHandler;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -50,15 +55,14 @@ public class FavoritesFragment extends Fragment {
     private RecyclerView recyclerViewToSee;
     private RecyclerView recyclerViewFavorites;
     private FilmAdapter filmAdapter;
-    private ErrorAdapter errorAdapter;
-    private RequestJson requestJson;
     private CardView buttonCasualFavorites;
     private CardView buttonCasualToSee;
-    private ArrayList<Film> listItem;
-    int id = -1;
+    private TextView showAllFavorites;
+    private TextView showAllToSee;
+    private int id = -1;
     private TextView title;
     private Button regenerate;
-    private ImageView cover;
+    private ImageView cover, backdrop;
     private ImageView btnClose;
     private TextView rating;
     private TextView type;
@@ -73,157 +77,61 @@ public class FavoritesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
 
-        recyclerViewToSee = view.findViewById(R.id.list_film_tosee);
-        recyclerViewToSee.setHasFixedSize(true);
+        Film film = new Film();
 
-        recyclerViewFavorites = view.findViewById(R.id.list_film_favorites);
-        recyclerViewFavorites.setHasFixedSize(true);
-
-        LinearLayoutManager ll = new LinearLayoutManager(this.getContext());
-        ll.setOrientation(LinearLayoutManager.HORIZONTAL);
-
+        // Load Favorites list
         LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
-
-        recyclerViewToSee.setLayoutManager(ll);
+        recyclerViewFavorites = view.findViewById(R.id.list_film_favorites);
+        recyclerViewFavorites.setHasFixedSize(true);
         recyclerViewFavorites.setLayoutManager(llm);
 
         buttonCasualFavorites = view.findViewById(R.id.CardFavorites);
-        buttonCasualFavorites.setVisibility(View.GONE);
+        showAllFavorites = view.findViewById(R.id.showAllFavorites);
 
-        buttonCasualFavorites.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(recyclerViewFavorites.getAdapter() != null){
-                    showPopupFilm(v,recyclerViewFavorites);
-                }
-            }
-        });
+        film.loadList("Preferiti", getContext());
+
+
+        // Load ToSee list
+        LinearLayoutManager ll = new LinearLayoutManager(this.getContext());
+        ll.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerViewToSee = view.findViewById(R.id.list_film_tosee);
+        recyclerViewToSee.setHasFixedSize(true);
+        recyclerViewToSee.setLayoutManager(ll);
 
         buttonCasualToSee = view.findViewById(R.id.CardToSee);
-        buttonCasualToSee.setVisibility(View.GONE);
+        showAllToSee = view.findViewById(R.id.showAllToSee);
 
-        buttonCasualToSee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(recyclerViewToSee.getAdapter() != null){
-                    showPopupFilm(v,recyclerViewToSee);
-                }
-            }
-        });
-
-        loadList(recyclerViewFavorites, CinematesDB.LIST_FAVORITES_URL, buttonCasualFavorites, "Preferiti");
-        loadList(recyclerViewToSee, CinematesDB.LIST_TO_SEE_URL, buttonCasualToSee, "Da vedere");
+        film.loadList("Da vedere", getContext());
 
         return view;
     }
 
-    private void casualFilm(RecyclerView rv,int id){
+    private void casualFilm(RecyclerView rv, int id) {
         filmAdapter = (FilmAdapter) rv.getAdapter();
         Intent intent = new Intent(getContext(), MovieDescriptorActivity.class);
         intent.putExtra("Film", filmAdapter.getItem(id));
         getContext().startActivity(intent);
     }
 
-    private void setButtonCasual(CardView casual, int i){
-        if (i >1){
-            casual.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void loadList(RecyclerView recyclerView, String url, CardView casual, String listName) {
-        class ListLoader extends AsyncTask<Void, Void, String> {
-
-            ProgressDialog pdLoading = new ProgressDialog(getContext());
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                pdLoading.setMessage("\tRecupero liste...");
-                pdLoading.setCancelable(true);
-                pdLoading.show();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", MainActivity.utente.getUsername());
-
-                //returing the response
-                return requestHandler.sendPostRequest(url, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                pdLoading.dismiss();
-                int i = 0;
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-
-                    //if no error in response
-                    if (!obj.getBoolean("error")) {
-                        JSONArray list = obj.getJSONArray("list");
-                        listItem = new ArrayList<>();
-                        requestJson = new RequestJson(getContext());
-                        for (i = 0; i < list.length(); i++) {
-                            JSONObject film = list.getJSONObject(i);
-                            Film item = new Film(
-                                    film.getString("id"),
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    null,
-                                    film.getString("type")
-                            );
-                            listItem.add(item);
-                            requestJson.parseJSONSavedList(recyclerView, item);
-                        }
-                    } else {
-                        ArrayList<String> error = new ArrayList<String>();
-
-                        if (listName.equals("Preferiti")) {
-                            error.add("La tua lista dei Preferiti è vuota");
-                        }
-                        else {
-                            error.add("La tua lista dei Contenuti da vedere è vuota");
-                        }
-
-                        errorAdapter = new ErrorAdapter(getContext(),error);
-                        recyclerView.setAdapter(errorAdapter);
-                    }
-
-                    setButtonCasual(casual, i);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        ListLoader listLoader = new ListLoader();
-        listLoader.execute();
-    }
-
-    public void showPopupFilm(View v,RecyclerView rv){
-
+    public void showPopupFilm(View v, RecyclerView rv){
         Dialog popupFilm = new Dialog(getContext());
         Random random = new Random();
         int nextId = 0;
+
         filmAdapter = (FilmAdapter) rv.getAdapter();
+
         do {
             nextId = random.nextInt(rv.getAdapter().getItemCount());
         }while(id == nextId);
+
         id = nextId;
 
         popupFilm.setContentView(R.layout.popup_casual_film);
+
+        backdrop = popupFilm.findViewById(R.id.backdrop_casual_popup);
+        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/w500" + filmAdapter.getItem(id).getBackdrop()).into(backdrop);
+
         title = popupFilm.findViewById(R.id.title_film_casual);
         title.setText(filmAdapter.getItem(id).getTitle());
 
@@ -231,19 +139,22 @@ public class FavoritesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 popupFilm.dismiss();
-                casualFilm(recyclerViewFavorites,id);
+                casualFilm(recyclerViewFavorites, id);
             }
         });
+
         regenerate = popupFilm.findViewById(R.id.btn_regenerate);
         regenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popupFilm.dismiss();
-                showPopupFilm(v,recyclerViewFavorites);
+                showPopupFilm(v, recyclerViewFavorites);
             }
         });
+
         cover = popupFilm.findViewById(R.id.filmCasual_img);
         Picasso.with(getContext()).load("https://image.tmdb.org/t/p/w500" + filmAdapter.getItem(id).getCover()).into(cover);
+
         cover.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,11 +162,13 @@ public class FavoritesFragment extends Fragment {
                 casualFilm(recyclerViewFavorites,id);
             }
         });
+
         btnClose = popupFilm.findViewById(R.id.closePopBtn);
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupFilm.dismiss();            }
+                popupFilm.dismiss();
+            }
         });
 
         rating = popupFilm.findViewById(R.id.rating_film_casual);
@@ -266,5 +179,85 @@ public class FavoritesFragment extends Fragment {
 
         popupFilm.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupFilm.show();
+    }
+
+    public void setButtonVisibility(String listName, int i, Context context) {
+        switch (listName) {
+            case "Preferiti":
+                if (i > 1) {
+                    buttonCasualFavorites.setVisibility(View.VISIBLE);
+                    buttonCasualFavorites.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (recyclerViewFavorites.getAdapter() != null) {
+                                showPopupFilm(v, recyclerViewFavorites);
+                            }
+                        }
+                    });
+
+                    showAllFavorites.setVisibility(View.VISIBLE);
+                    showAllFavorites.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            filmAdapter = (FilmAdapter) recyclerViewFavorites.getAdapter();
+                            Intent intent = new Intent(context, ResultsActivity.class);
+                            intent.putExtra("type", "showall");
+                            intent.putExtra("list", (Serializable) filmAdapter.getListFilm());
+                            startActivity(intent);
+                        }
+                    });
+                }
+
+                break;
+
+            case "Da vedere":
+                if (i > 1) {
+                    buttonCasualToSee.setVisibility(View.VISIBLE);
+                    buttonCasualToSee.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (recyclerViewToSee.getAdapter() != null) {
+                                showPopupFilm(v, recyclerViewToSee);
+                            }
+                        }
+                    });
+
+                    showAllToSee.setVisibility(View.VISIBLE);
+                    showAllToSee.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            filmAdapter = (FilmAdapter) recyclerViewToSee.getAdapter();
+                            Intent intent = new Intent(context, ResultsActivity.class);
+                            intent.putExtra("type", "showall");
+                            intent.putExtra("list", (Serializable) filmAdapter.getListFilm());
+                            startActivity(intent);
+                        }
+                    });
+                }
+
+                break;
+        }
+    }
+
+    public void setEmptyFavoritesListError() {
+        ArrayList<String> error = new ArrayList<String>();
+        error.add("La tua lista dei Preferiti è vuota");
+        ErrorAdapter errorAdapter = new ErrorAdapter(getContext(), error);
+        recyclerViewFavorites.setAdapter(errorAdapter);
+    }
+
+    public void setEmptyToSeeListError() {
+        ArrayList<String> error = new ArrayList<String>();
+        error.add("La tua lista dei Contenuti da vedere è vuota");
+        ErrorAdapter errorAdapter = new ErrorAdapter(getContext(), error);
+        recyclerViewToSee.setAdapter(errorAdapter);
+    }
+
+    public RecyclerView getRecyclerViewToSee() {
+        return recyclerViewToSee;
+    }
+
+    public RecyclerView getRecyclerViewFavorites() {
+        return recyclerViewFavorites;
     }
 }

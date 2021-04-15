@@ -1,6 +1,7 @@
 package com.example.cinemates.fragments;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -51,17 +52,8 @@ public class DescriptionFragment extends Fragment {
     private FloatingActionButton addTo, favoritesBtn, bookmarkBtn;
     private TextView favoritesTextView, bookmarkTextView;
     private Boolean menuOpen = false;
-    private Boolean exist = false;
     private OvershootInterpolator interpolator = new OvershootInterpolator();
-    private FirebaseAnalytics mFirebaseAnalytics;
-
-    public Film getFilm() {
-        return film;
-    }
-
-    public void setFilm(Film film) {
-        this.film = film;
-    }
+    private static DescriptionFragment instance;
 
     public DescriptionFragment() {
         // blank
@@ -73,8 +65,10 @@ public class DescriptionFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_descriptor, container, false);
 
-        film = ((MovieDescriptorActivity)getActivity()).getFilm();
-        adapter = new DescriptionFilmAdapter(film,getContext());
+        instance = this;
+
+        film = ((MovieDescriptorActivity) getActivity()).getFilm();
+        adapter = new DescriptionFilmAdapter(film, getContext());
 
         mCover = view.findViewById(R.id.detail_movie_img);
         mTitle = view.findViewById(R.id.detail_movie_title);
@@ -82,7 +76,7 @@ public class DescriptionFragment extends Fragment {
         mReleaseDate = view.findViewById(R.id.detail_movie_realise_date);
         mValutation = view.findViewById(R.id.detail_movie_valutation);
         mBackdrop = view.findViewById(R.id.detail_movie_cover);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
+
 
         if (film.getCover().equals("null")) {
             mCover.setImageResource(R.drawable.no_cover_found);
@@ -129,8 +123,8 @@ public class DescriptionFragment extends Fragment {
 
         if (MainActivity.utente.isAutenticato()) {
             addTo.setVisibility(View.VISIBLE);
-            checkExistInList(film, "Preferiti");
-            checkExistInList(film, "Da vedere");
+            film.checkExistInList(film, "Preferiti");
+            film.checkExistInList(film, "Da vedere");
         }
         else {
             addTo.setVisibility(View.INVISIBLE);
@@ -152,10 +146,10 @@ public class DescriptionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (favoritesTextView.getText().equals("Aggiungi a Preferiti")) {
-                    addToList(film, "Preferiti");
+                    MainActivity.utente.addToList(film, "Preferiti", getContext());
                 }
                 else {
-                    removeFromList(film, "Preferiti");
+                    MainActivity.utente.removeFromList(film, "Preferiti", getContext());
                 }
             }
         });
@@ -164,186 +158,13 @@ public class DescriptionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (bookmarkTextView.getText().equals("Aggiungi a Da Vedere")) {
-                    addToList(film, "Da vedere");
+                    MainActivity.utente.addToList(film, "Da vedere", getContext());
                 }
                 else {
-                    removeFromList(film, "Da vedere");
+                    MainActivity.utente.removeFromList(film, "Da vedere", getContext());
                 }
             }
         });
-    }
-
-    private void removeFromList(Film film, String list) {
-        class Remover extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", MainActivity.utente.getUsername());
-                params.put("item", film.getId());
-                params.put("list", list);
-
-                //returing the response
-                return requestHandler.sendPostRequest(CinematesDB.REMOVE_FROM_LIST, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-                    if (!obj.getBoolean("error")) {
-                        if (list.equals("Preferiti")) {
-                            favoritesBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.light_grey));
-                            favoritesTextView.setText("Aggiungi a Preferiti");
-                        }
-                        else {
-                            bookmarkBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.light_grey));
-                            bookmarkTextView.setText("Aggiungi a Da Vedere");
-                        }
-
-
-                        // [START custom_event]
-                        Bundle params = new Bundle();
-                        params.putString("user",MainActivity.utente.getUsername());
-                        params.putString("list", list);
-                        params.putString("media_id", film.getId());
-                        params.putString("media_title", film.getTitle());
-                        mFirebaseAnalytics.logEvent("Removed_From_List", params);
-                    }
-
-                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        Remover remover = new Remover();
-        remover.execute();
-    }
-
-    private void checkExistInList(Film film, String list) {
-        class Checker extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", MainActivity.utente.getUsername());
-                params.put("item", film.getId());
-                params.put("list", list);
-
-                //returing the response
-                return requestHandler.sendPostRequest(CinematesDB.CHECK_EXIST_IN_LIST, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-                    if (obj.getBoolean("error")) {
-                        if (list.equals("Preferiti")) {
-                            favoritesBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.favorites_button));
-                            favoritesTextView.setText("Rimuovi da Preferiti");
-                        }
-                        else {
-                            bookmarkBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.bookmark_button));
-                            bookmarkTextView.setText("Rimuovi da lista Da Vedere");
-                        }
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        Checker checker = new Checker();
-        checker.execute();
-    }
-
-    private void addToList(Film film, String list) {
-        class ListAdder extends AsyncTask<Void, Void, String> {
-
-
-            protected void onPreExecute(String s) {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                //creating request handler object
-                RequestHandler requestHandler = new RequestHandler();
-
-                //creating request parameters
-                HashMap<String, String> params = new HashMap<>();
-                params.put("list", list);
-                params.put("username", MainActivity.utente.getUsername());
-                params.put("item", film.getId());
-                params.put("type", film.getType());
-
-                //returing the response
-                return requestHandler.sendPostRequest(CinematesDB.ADD_TO_LIST_URL, params);
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-
-                try {
-                    //converting response to json object
-                    JSONObject obj = new JSONObject(s);
-                    if (!obj.getBoolean("error")) {
-                        if (list.equals("Preferiti")) {
-                            favoritesBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.favorites_button));
-                            favoritesTextView.setText("Rimuovi da Preferiti");
-                        }
-                        else {
-                            bookmarkBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.bookmark_button));
-                            bookmarkTextView.setText("Rimuovi da lista Da Vedere");
-                        }
-
-                        // [START custom_event]
-                        Bundle params = new Bundle();
-                        params.putString("user",MainActivity.utente.getUsername());
-                        params.putString("list", list);
-                        params.putString("media_id", film.getId());
-                        params.putString("media_title", film.getTitle());
-                        mFirebaseAnalytics.logEvent("Added_To_List", params);
-
-                    }
-                    Toast.makeText(getContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        ListAdder listAdder = new ListAdder();
-        listAdder.execute();
     }
 
     private void openMenu() {
@@ -368,5 +189,37 @@ public class DescriptionFragment extends Fragment {
 
         bookmarkTextView.animate().translationY(100f).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
         bookmarkBtn.animate().translationY(100f).alpha(0f).setInterpolator(interpolator).setDuration(300).start();
+    }
+
+    public void enableFavoritesButton() {
+        favoritesBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.favorites_button));
+        favoritesTextView.setText("Rimuovi da Preferiti");
+    }
+
+    public void enableToSeeButton() {
+        bookmarkBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.bookmark_button));
+        bookmarkTextView.setText("Rimuovi da lista Da Vedere");
+    }
+
+    public void disaableFavoritesButton() {
+        favoritesBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.light_grey));
+        favoritesTextView.setText("Aggiungi a Preferiti");
+    }
+
+    public void disableToSeeButton() {
+        bookmarkBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.light_grey));
+        bookmarkTextView.setText("Aggiungi a Da Vedere");
+    }
+
+    public Film getFilm() {
+        return film;
+    }
+
+    public void setFilm(Film film) {
+        this.film = film;
+    }
+
+    public static DescriptionFragment getInstance() {
+        return instance;
     }
 }

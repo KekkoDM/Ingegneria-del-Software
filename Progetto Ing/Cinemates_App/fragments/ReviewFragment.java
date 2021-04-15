@@ -28,16 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewFragment extends Fragment {
-
     private Dialog alert;
     private RecyclerView reviewRecyclerView;
     private Film film;
-
-
     private Review review;
-
-    public Review getReview() { return review; }
-    public void setReview(Review review) { this.review = review; }
 
     public ReviewFragment() {
         // Required empty public constructor
@@ -57,21 +51,12 @@ public class ReviewFragment extends Fragment {
         reviewRecyclerView.setLayoutManager(l);
 
         RequestJson requestJson = new RequestJson(getContext());
-        requestJson.parseJSONReviews(reviewRecyclerView,film.getId(),film.getType());
+        requestJson.parseJSONReviews(reviewRecyclerView, film.getId(), film.getType());
 
         return view;
     }
 
-    public void showDialog(View v){
-        Button btnOk;
-        ImageButton btnClose = null;
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alert.dismiss();
-            }
-        });
-        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        alert.show();
-    }
+    public Review getReview() { return review; }
+
+    public void setReview(Review review) { this.review = review; }
 }
