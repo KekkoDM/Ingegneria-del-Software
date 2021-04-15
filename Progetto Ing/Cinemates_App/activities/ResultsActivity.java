@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ResultsActivity extends AppCompatActivity {
-    public static RecyclerView rv;
-    public static SearchUserAdapter searchUserAdapter;
+    private RecyclerView rv;
+    private SearchUserAdapter searchUserAdapter;
     private ImageButton backBtn;
 
     @Override
@@ -98,5 +98,32 @@ public class ResultsActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    public void showSearchUserResult(ArrayList<Utente> users) {
+        searchUserAdapter = new SearchUserAdapter(this, users);
+        rv.setAdapter(searchUserAdapter);
+    }
+
+    public void showSearchUserError() {
+        ArrayList<String> error = new ArrayList<String>();
+        error.add("La ricerca non ha prodotto risultati");
+        ErrorAdapter errorAdapter = new ErrorAdapter(this, error);
+        rv.setAdapter(errorAdapter);
+    }
+
+    public void showSharedContentError(String friend) {
+        ArrayList<String> error = new ArrayList<String>();
+        error.add("Non hai nessun elemento in comune con " + friend);
+        ErrorAdapter errorAdapter = new ErrorAdapter(this, error);
+        rv.setAdapter(errorAdapter);
+    }
+
+    public void updateButtonSendRequest(SearchUserAdapter.MyViewHolder holder) {
+        holder.updateSendRequestButton("Richiesta inviata");
+    }
+
+    public RecyclerView getRecyclerView() {
+        return rv;
     }
 }

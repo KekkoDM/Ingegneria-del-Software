@@ -2,19 +2,12 @@ package com.example.cinemates.activities;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.adapters.CommentAdapter;
 import com.example.cinemates.adapters.ErrorAdapter;
-import com.example.cinemates.adapters.GeneralNotificationAdapter;
-import com.example.cinemates.adapters.ReviewAdapter;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,36 +17,21 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.classes.Comment;
-import com.example.cinemates.classes.Film;
-import com.example.cinemates.classes.Notifica;
 import com.example.cinemates.classes.Reaction;
-import com.example.cinemates.classes.ReportDialog;
+import com.example.cinemates.dialog.ReportDialog;
 import com.example.cinemates.classes.Review;
 import com.example.cinemates.R;
-import com.example.cinemates.fragments.DescriptionFragment;
-import com.example.cinemates.fragments.GeneralNotificationsFragment;
-import com.example.cinemates.handlers.RequestHandler;
-import com.github.pgreze.reactions.ReactionPopup;
-import com.github.pgreze.reactions.ReactionsConfigBuilder;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CommentsActivity extends AppCompatActivity {
-    public static RecyclerView rvComments;
-    public static CommentAdapter commentAdapter;
+    private RecyclerView rvComments;
+    private CommentAdapter commentAdapter;
     public ArrayList<Comment> comments;
     private TextView detailReview;
     private TextView usernameReview;
@@ -82,8 +60,6 @@ public class CommentsActivity extends AppCompatActivity {
         comment = new Comment();
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-        Reaction reaction = new Reaction(this);
 
         rvComments = findViewById(R.id.list_comment);
         rvComments.setHasFixedSize(true);
@@ -127,6 +103,7 @@ public class CommentsActivity extends AppCompatActivity {
         alertReview = findViewById(R.id.alert_review_comment);
 
         if(MainActivity.utente.isAutenticato()) {
+            Reaction reaction = new Reaction(this);
             reaction.getReaction(review, likeBtn, contLike);
             likeBtn.setOnTouchListener(reaction.showReaction(review, likeBtn, contLike));
         }
@@ -185,10 +162,33 @@ public class CommentsActivity extends AppCompatActivity {
         });
     }
 
-    public void swapAdapter(CommentAdapter adapter, LinearLayoutManager linearLayoutManager) {
+    private void swapAdapter(CommentAdapter adapter, LinearLayoutManager linearLayoutManager) {
         commentAdapter = adapter;
         rvComments = findViewById(R.id.list_comment);
         rvComments.setLayoutManager(linearLayoutManager);
         rvComments.setAdapter(commentAdapter);
+    }
+
+    public void showComments(ArrayList<Comment> comments) {
+        this.comments = comments;
+        commentAdapter = new CommentAdapter(comments, this);
+        rvComments.setAdapter(commentAdapter);
+    }
+
+    public void showNoCommentsError(String errorMessage) {
+        ArrayList<String> error = new ArrayList<String>();
+        error.add(errorMessage);
+        ErrorAdapter errorAdapter = new ErrorAdapter(this, error);
+        rvComments.setAdapter(errorAdapter);
+    }
+
+    public void postComment(Comment comment) {
+        if (comments.isEmpty()) {
+            comments.add(comment);
+            swapAdapter(new CommentAdapter(comments, this), new LinearLayoutManager(this));
+        }
+        else {
+            commentAdapter.addItem(comment);
+        }
     }
 }
