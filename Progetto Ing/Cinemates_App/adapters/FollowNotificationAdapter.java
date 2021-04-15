@@ -34,7 +34,6 @@ import java.util.HashMap;
 public class FollowNotificationAdapter extends RecyclerView.Adapter<FollowNotificationAdapter.MyViewHolder>{
     private Context context;
     private ArrayList<Notifica> notifications = new ArrayList<>() ;
-    private FirebaseAnalytics mFirebaseAnalytics;
 
     public FollowNotificationAdapter(Context context, ArrayList<Notifica> notifications) {
         this.context = context;
@@ -56,7 +55,7 @@ public class FollowNotificationAdapter extends RecyclerView.Adapter<FollowNotifi
         holder.confirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notification.acceptFollowNotification(notification, position, context);
+                MainActivity.utente.acceptFollowNotification(notification, position, context);
             }
         });
 
@@ -64,25 +63,14 @@ public class FollowNotificationAdapter extends RecyclerView.Adapter<FollowNotifi
         holder.rejectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notification.deleteNotification(notification, position, "Collegamento", context);
+                MainActivity.utente.deleteNotification(notification, position, "Collegamento", context);
             }
         });
     }
 
     public void removeNotification(int position) {
         notifications.remove(position);
-        FollowNotificationsFragment.rvFollow.removeViewAt(position);
-        FollowNotificationsFragment.followAdapter.notifyItemRemoved(position);
-        FollowNotificationsFragment.followAdapter.notifyItemRangeChanged(position, notifications.size());
-
-        if (notifications.size() == 0) {
-            ArrayList<String> error = new ArrayList<>();
-            error.add("Non ci sono nuove richieste di collegamento");
-            ErrorAdapter errorAdapter = new ErrorAdapter(context, error);
-            FollowNotificationsFragment.rvFollow.setAdapter(errorAdapter);
-        }
     }
-
 
     @Override
     public int getItemCount() {

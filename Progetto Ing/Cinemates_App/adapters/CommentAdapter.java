@@ -15,11 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
-import com.example.cinemates.activities.CommentsActivity;
 import com.example.cinemates.classes.Comment;
-import com.example.cinemates.classes.ReportDialog;
+import com.example.cinemates.dialog.ReportDialog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewHolder> {

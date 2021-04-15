@@ -1,14 +1,8 @@
 
 package com.example.cinemates.adapters;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +11,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,30 +21,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.activities.CommentsActivity;
-import com.example.cinemates.activities.ResultsActivity;
-import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.classes.Reaction;
-import com.example.cinemates.classes.ReportDialog;
+import com.example.cinemates.dialog.ReportDialog;
 import com.example.cinemates.classes.Review;
-import com.example.cinemates.classes.Utente;
-import com.example.cinemates.handlers.RequestHandler;
-import com.github.pgreze.reactions.ReactionPopup;
-import com.github.pgreze.reactions.ReactionsConfigBuilder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
 import java.util.List;
 
-import kotlin.jvm.functions.Function1;
-
 public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder> {
-    Context context;
-    List<Review> reviews;
-    RelativeLayout container;
-
+    private Context context;
+    private List<Review> reviews;
     private ImageButton backBtn;
     private ReportDialog dialog;
     private RadioGroup alertGroup;
@@ -74,12 +50,9 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
-
-        //holder.img_user.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
-        //holder.container.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.scroll_animation));
         Review review = reviews.get(position);
 
-
+        review.checkReviewVisibility(review, holder);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +93,11 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             }
         });
 
-        review.checkReviewVisibility(review, holder);
+        if (MainActivity.utente.isAutenticato()) {
+            Reaction reaction = new Reaction(context);
+            reaction.getReaction(review, holder.likeBtn, holder.contLike);
+            holder.likeBtn.setOnTouchListener(reaction.showReaction(review, holder.likeBtn, holder.contLike));
+        }
     }
 
     @Override
@@ -143,19 +120,17 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             contLike = itemView.findViewById(R.id.cont_like);
         }
 
-        public void setReview(Review review) {
-            Reaction reaction = new Reaction(context);
+        public void restorelLikeButton() {
+            likeBtn.setImageResource(R.drawable.ic_no_reaction);
+            contLike.setTextColor(context.getResources().getColor(R.color.light_grey));
+        }
 
+        public void setReview(Review review) {
             username.setText(review.getUser() + " ha scritto:");
             review_description.setText(review.getDescrizione());
             review_date.setText(review.getData());
 
-            if (MainActivity.utente.isAutenticato()) {
-                System.out.println("REACTION ADAPTER");
-                reaction.getReaction(review, likeBtn, contLike);
-                likeBtn.setOnTouchListener(reaction.showReaction(review, likeBtn, contLike));
-            }
-            else {
+            if (!MainActivity.utente.isAutenticato()) {
                 likeBtn.setVisibility(View.INVISIBLE);
                 contLike.setVisibility(View.INVISIBLE);
                 comment_review.setVisibility(View.INVISIBLE);

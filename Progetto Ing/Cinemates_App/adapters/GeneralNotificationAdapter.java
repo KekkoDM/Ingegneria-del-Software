@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.classes.Notifica;
@@ -48,23 +49,13 @@ public class GeneralNotificationAdapter extends RecyclerView.Adapter<GeneralNoti
         holder.deleteNotification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notification.deleteNotification(notification, position, "Generale", context);
+                MainActivity.utente.deleteNotification(notification, position, "Generale", context);
             }
         });
     }
 
     public void removeNotification(int position) {
         notifications.remove(position);
-        GeneralNotificationsFragment.rvGeneral.removeViewAt(position);
-        GeneralNotificationsFragment.generalAdapter.notifyItemRemoved(position);
-        GeneralNotificationsFragment.generalAdapter.notifyItemRangeChanged(position, notifications.size());
-
-        if (notifications.size() == 0) {
-            ArrayList<String> error = new ArrayList<>();
-            error.add("Non ci sono nuove notifiche da mostrare");
-            ErrorAdapter errorAdapter = new ErrorAdapter(context, error);
-            GeneralNotificationsFragment.rvGeneral.setAdapter(errorAdapter);
-        }
     }
 
     @Override

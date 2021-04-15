@@ -50,9 +50,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
 
         if (alreadyFriends(result)) {
-            holder.followBtn.setText("Già aggiunto");
-            holder.followBtn.setBackgroundColor(Color.LTGRAY);
-            holder.followBtn.setEnabled(false);
+            holder.updateSendRequestButton("Già aggiunto");
         }
 
         holder.setResult(result);
@@ -103,6 +101,12 @@ public class SearchUserAdapter extends RecyclerView.Adapter<SearchUserAdapter.My
         public void setResult(Utente result) {
             friendUsername.setText(result.getUsername());
             friendName.setText(result.getNome() + " " + result.getCognome());
+        }
+
+        public void updateSendRequestButton(String textButton) {
+            followBtn.setText(textButton);
+            followBtn.setBackgroundColor(Color.LTGRAY);
+            followBtn.setEnabled(false);
         }
     }
 }
