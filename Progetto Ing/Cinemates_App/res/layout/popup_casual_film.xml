@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardViewFilm"
-    android:layout_width="wrap_content"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:backgroundTint="@color/light_background"
+    android:backgroundTint="@color/black"
     android:elevation="5dp"
     app:cardCornerRadius="15dp">
 
@@ -14,29 +14,48 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/filmCasual_img"
-                    android:layout_width="125dp"
-                    android:layout_height="175dp"
-                    android:layout_marginTop="16dp"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:riv_corner_radius="15dp" />
+        <ImageView
+            android:id="@+id/backdrop_casual_popup"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@+id/title_film_casual"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/gradient_bg"
+            app:layout_constraintBottom_toBottomOf="@+id/backdrop_casual_popup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/filmCasual_img"
+            android:layout_width="125dp"
+            android:layout_height="175dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.507"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:riv_corner_radius="15dp" />
 
         <TextView
             android:id="@+id/title_film_casual"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:padding="5dp"
+            android:layout_marginEnd="24dp"
             android:text="TextView"
             android:textAlignment="center"
-            android:textColor="@color/purple_hype"
-            android:textSize="16dp"
+            android:textColor="@color/white"
+            android:textSize="24dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +66,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:clickable="true"
             android:foreground="?android:attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
@@ -55,21 +74,20 @@
             app:layout_constraintStart_toEndOf="@+id/filmCasual_img"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_baseline_close"
-            app:tint="@color/light_grey" />
+            app:tint="@color/white" />
 
         <Button
             android:id="@+id/btn_regenerate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/white"
-            android:text="Rigenera nuovo media"
-            android:textColor="@color/blue_hype"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/blue_hype"
+            android:text="Genera ancora"
+            android:textColor="@color/white"
             app:cornerRadius="15dp"
-            android:textSize="14dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,22 +99,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="TextView"
-            android:textColor="@color/purple_hype"
-            android:textSize="14dp"
+            android:textColor="@color/white"
+            android:textSize="15dp"
             app:layout_constraintStart_toEndOf="@+id/textView16"
-            app:layout_constraintTop_toBottomOf="@+id/title_film_casual" />
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_casual_popup" />
 
         <TextView
             android:id="@+id/textView17"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:text="Valutazione:"
-            android:textColor="@color/purple_hype"
-            android:textSize="14dp"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/type_media_casual" />
 
@@ -105,23 +124,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:layout_marginTop="8dp"
             android:text="TextView"
-            android:textColor="@color/purple_hype"
-            android:textSize="14dp"
+            android:textColor="@color/white"
+            android:textSize="15dp"
             app:layout_constraintStart_toEndOf="@+id/textView17"
-            app:layout_constraintTop_toTopOf="@+id/textView17" />
+            app:layout_constraintTop_toBottomOf="@+id/type_media_casual" />
 
         <TextView
             android:id="@+id/textView16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Tipo :"
-            android:textColor="@color/purple_hype"
-            android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="@+id/type_media_casual"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
+            android:text="Tipologia:"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/type_media_casual" />
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_casual_popup" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
