@@ -1,11 +1,14 @@
 package com.example.cinemates.classes;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
@@ -24,15 +28,18 @@ import com.example.cinemates.activities.ResultsActivity;
 import com.example.cinemates.activities.SettingsActivity;
 import com.example.cinemates.adapters.CommentAdapter;
 import com.example.cinemates.adapters.ErrorAdapter;
+import com.example.cinemates.adapters.FilmAdapter;
 import com.example.cinemates.adapters.ReviewAdapter;
 import com.example.cinemates.adapters.SearchUserAdapter;
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.fragments.AccountFragment;
 import com.example.cinemates.fragments.DescriptionFragment;
+import com.example.cinemates.fragments.FavoritesFragment;
 import com.example.cinemates.fragments.FollowNotificationsFragment;
 import com.example.cinemates.fragments.GeneralNotificationsFragment;
 import com.example.cinemates.handlers.RequestHandler;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +48,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Utente implements Serializable {
     private String username;
@@ -969,5 +977,19 @@ public class Utente implements Serializable {
 
         ReportSender reportSender = new ReportSender();
         reportSender.execute();
+    }
+
+    public void generateRandomFromList(String listName, int numberItems) {
+        Random random = new Random();
+        int nextId = 0;
+        int id = -1;
+
+        do {
+            nextId = random.nextInt(numberItems);
+        } while(id == nextId);
+
+        id = nextId;
+
+        ((FavoritesFragment) MainActivity.selectedFragment).showGeneratedItem(id, listName);
     }
 }

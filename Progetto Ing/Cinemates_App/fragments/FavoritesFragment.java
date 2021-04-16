@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,9 +60,9 @@ public class FavoritesFragment extends Fragment {
     private CardView buttonCasualToSee;
     private TextView showAllFavorites;
     private TextView showAllToSee;
-    private int id = -1;
     private TextView title;
-    private Button regenerate;
+    private Button showItem;
+    private ImageButton regenerate;
     private ImageView cover, backdrop;
     private ImageView btnClose;
     private TextView rating;
@@ -85,12 +86,9 @@ public class FavoritesFragment extends Fragment {
         recyclerViewFavorites = view.findViewById(R.id.list_film_favorites);
         recyclerViewFavorites.setHasFixedSize(true);
         recyclerViewFavorites.setLayoutManager(llm);
-
         buttonCasualFavorites = view.findViewById(R.id.CardFavorites);
         showAllFavorites = view.findViewById(R.id.showAllFavorites);
-
         film.loadList("Preferiti", getContext());
-
 
         // Load ToSee list
         LinearLayoutManager ll = new LinearLayoutManager(this.getContext());
@@ -98,10 +96,8 @@ public class FavoritesFragment extends Fragment {
         recyclerViewToSee = view.findViewById(R.id.list_film_tosee);
         recyclerViewToSee.setHasFixedSize(true);
         recyclerViewToSee.setLayoutManager(ll);
-
         buttonCasualToSee = view.findViewById(R.id.CardToSee);
         showAllToSee = view.findViewById(R.id.showAllToSee);
-
         film.loadList("Da vedere", getContext());
 
         return view;
@@ -114,71 +110,74 @@ public class FavoritesFragment extends Fragment {
         getContext().startActivity(intent);
     }
 
-    public void showPopupFilm(View v, RecyclerView rv){
-        Dialog popupFilm = new Dialog(getContext());
-        Random random = new Random();
-        int nextId = 0;
+    public void showGeneratedItem(int item, String listName) {
+        Dialog popup = new Dialog(getContext());
 
-        filmAdapter = (FilmAdapter) rv.getAdapter();
+        if (listName.equals("Preferiti")) {
+            filmAdapter = (FilmAdapter) recyclerViewFavorites.getAdapter();
+        }
+        else {
+            filmAdapter = (FilmAdapter) recyclerViewToSee.getAdapter();
+        }
 
-        do {
-            nextId = random.nextInt(rv.getAdapter().getItemCount());
-        }while(id == nextId);
+        popup.setContentView(R.layout.popup_casual_film);
 
-        id = nextId;
+        backdrop = popup.findViewById(R.id.backdrop_casual_popup);
+        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/w500" + filmAdapter.getItem(item).getBackdrop()).into(backdrop);
 
-        popupFilm.setContentView(R.layout.popup_casual_film);
+        cover = popup.findViewById(R.id.filmCasual_img);
+        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/w500" + filmAdapter.getItem(item).getCover()).into(cover);
 
-        backdrop = popupFilm.findViewById(R.id.backdrop_casual_popup);
-        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/w500" + filmAdapter.getItem(id).getBackdrop()).into(backdrop);
+        title = popup.findViewById(R.id.title_film_casual);
+        title.setText(filmAdapter.getItem(item).getTitle());
 
-        title = popupFilm.findViewById(R.id.title_film_casual);
-        title.setText(filmAdapter.getItem(id).getTitle());
+        rating = popup.findViewById(R.id.rating_film_casual);
+        rating.setText(filmAdapter.getItem(item).getValutation());
 
-        title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupFilm.dismiss();
-                casualFilm(recyclerViewFavorites, id);
-            }
-        });
+        type = popup.findViewById(R.id.type_media_casual);
+        type.setText(filmAdapter.getItem(item).getType());
 
-        regenerate = popupFilm.findViewById(R.id.btn_regenerate);
+        regenerate = popup.findViewById(R.id.btn_regenerate);
         regenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupFilm.dismiss();
-                showPopupFilm(v, recyclerViewFavorites);
+                popup.dismiss();
+                MainActivity.utente.generateRandomFromList(listName, filmAdapter.getItemCount());
             }
         });
 
-        cover = popupFilm.findViewById(R.id.filmCasual_img);
-        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/w500" + filmAdapter.getItem(id).getCover()).into(cover);
-
-        cover.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupFilm.dismiss();
-                casualFilm(recyclerViewFavorites,id);
-            }
-        });
-
-        btnClose = popupFilm.findViewById(R.id.closePopBtn);
+        btnClose = popup.findViewById(R.id.closePopBtn);
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popupFilm.dismiss();
+                popup.dismiss();
             }
         });
 
-        rating = popupFilm.findViewById(R.id.rating_film_casual);
-        rating.setText(filmAdapter.getItem(id).getValutation());
+        showItem = popup.findViewById(R.id.btn_showcasual);
 
-        type = popupFilm.findViewById(R.id.type_media_casual);
-        type.setText(filmAdapter.getItem(id).getType());
+        if (filmAdapter.getItem(item).getType().equals("Film")) {
+            showItem.setText("Vai al Film");
+        }
+        else {
+            showItem.setText("Vai alla Serie TV");
+        }
 
-        popupFilm.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        popupFilm.show();
+        showItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup.dismiss();
+                if (listName.equals("Preferiti")) {
+                    casualFilm(recyclerViewFavorites, item);
+                }
+                else {
+                    casualFilm(recyclerViewToSee, item);
+                }
+            }
+        });
+
+        popup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popup.show();
     }
 
     public void setButtonVisibility(String listName, int i, Context context) {
@@ -190,7 +189,7 @@ public class FavoritesFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (recyclerViewFavorites.getAdapter() != null) {
-                                showPopupFilm(v, recyclerViewFavorites);
+                                MainActivity.utente.generateRandomFromList(listName, recyclerViewFavorites.getAdapter().getItemCount());
                             }
                         }
                     });
@@ -217,7 +216,7 @@ public class FavoritesFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (recyclerViewToSee.getAdapter() != null) {
-                                showPopupFilm(v, recyclerViewToSee);
+                                MainActivity.utente.generateRandomFromList(listName, recyclerViewToSee.getAdapter().getItemCount());
                             }
                         }
                     });

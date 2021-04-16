@@ -39,8 +39,6 @@
             android:layout_height="175dp"
             android:layout_marginTop="8dp"
             android:scaleType="centerCrop"
-            android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.507"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,8 +53,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
             android:text="TextView"
-            android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="24dp"
@@ -81,22 +77,41 @@
             app:tint="@color/white" />
 
         <Button
-            android:id="@+id/btn_regenerate"
+            android:id="@+id/btn_showcasual"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:backgroundTint="@color/blue_hype"
-            android:text="Genera ancora"
+            android:text="Mostra"
             android:textColor="@color/white"
             app:cornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_regenerate"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView17"
             app:layout_constraintVertical_bias="1.0" />
+
+
+        <ImageButton
+            android:id="@+id/btn_regenerate"
+            android:layout_width="50dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_showcasual"
+            app:layout_constraintTop_toBottomOf="@+id/rating_film_casual"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="fitCenter"
+            android:tint="@color/white"
+            android:backgroundTint="@android:color/transparent"
+            app:srcCompat="@drawable/ic_again" />
 
         <TextView
             android:id="@+id/type_media_casual"
