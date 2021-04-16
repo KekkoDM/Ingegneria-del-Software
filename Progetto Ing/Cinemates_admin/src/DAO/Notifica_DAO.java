@@ -52,7 +52,7 @@ public class Notifica_DAO implements DAO_Interface {
 	}
 	
 	public void sendReportDecision() {
-		String attr = "titolo, tipo, descrizione, amministratore, mittente, destinatario";
+		String attr = "titolo, tipo, descrizione, amministratore, destinatario";
 		Controller.conn.Insert("notifica", attr, Controller.notifica.getAllInOne());
 	}
 

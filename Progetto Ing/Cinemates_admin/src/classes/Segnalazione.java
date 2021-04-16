@@ -8,8 +8,9 @@ public class Segnalazione {
 	
 	private int id;
 	private String tipo;
-	private int recensione;
-	private int admin;
+	private String recensione;
+	private int commento;
+	private String motivo;
 	private String utente;
 	private String segnalatore;
 	private ArrayList<Segnalazione> reports;
@@ -23,20 +24,20 @@ public class Segnalazione {
 		this.tipo = tipo;
 	}
 
-	public int getRecensione() {
+	public String getRecensione() {
 		return recensione;
 	}
 
-	public void setRecensione(int recensione) {
+	public void setRecensione(String recensione) {
 		this.recensione = recensione;
 	}
 
-	public int getAdmin() {
-		return admin;
+	public String getMotivo() {
+		return motivo;
 	}
 
-	public void setAdmin(int admin) {
-		this.admin = admin;
+	public void setMotivo(String motivo) {
+		this.motivo = motivo;
 	}
 
 	public String getUtente() {
@@ -62,6 +63,14 @@ public class Segnalazione {
 	public void setSegnalatore(String segnalatore) {
 		this.segnalatore = segnalatore;
 	}
+	
+	public int getCommento() {
+		return commento;
+	}
+
+	public void setCommento(int commento) {
+		this.commento = commento;
+	}
 
 	public ArrayList<Segnalazione> getReports() {
 		return reports;
@@ -74,9 +83,10 @@ public class Segnalazione {
 				Segnalazione s = new Segnalazione();
 				
 				s.setId(rs.getInt("idsegnalazione"));
-				s.setRecensione(rs.getInt("recensione"));
+				s.setRecensione(rs.getString("recensione"));
 				s.setTipo(rs.getString("tipo"));
 				s.setUtente(rs.getString("utente"));
+				s.setCommento(rs.getInt("commento"));
 				
 				reports.add(s);
 			}
@@ -90,15 +100,18 @@ public class Segnalazione {
 		try {
 			while (rs.next()) {
 				this.setId(rs.getInt("idsegnalazione"));
-				this.setRecensione(rs.getInt("recensione"));
+				this.setRecensione(rs.getString("recensione"));
 				this.setTipo(rs.getString("tipo"));
-				this.setUtente("prova");
-				this.setSegnalatore("prova");
+				this.setSegnalatore(rs.getString("utente"));
+				this.setMotivo(rs.getString("motivo"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+
+	
+	
 	
 	
 }

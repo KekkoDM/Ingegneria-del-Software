@@ -8,6 +8,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.json.JSONException;
+
 import controller.Controller;
 
 import java.awt.Color;
@@ -16,6 +18,7 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
 
@@ -93,24 +96,30 @@ public class Popup extends JDialog {
 		// PRESSIONE TASTO SI
 		btnSi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				switch (ctx) {
-				case "approva":
-					ctr.sendReportResult(true);
-					ctr.showReports();
-					dispose();
-					break;
-						
-				case "disapprova":
-					ctr.sendReportResult(false);
-					ctr.showReports();
-					dispose();
-					break;
-				
-				default:
-					dispose();
-					ctr.closeDashboard();
-					ctr.openLogin();
-					System.out.println("LOG: Logout effettuato");
+				try {
+					switch (ctx) {
+					case "approva":
+						ctr.sendReportResult(true);
+						ctr.showReports();
+						dispose();
+						break;
+							
+					case "disapprova":
+						ctr.sendReportResult(false);
+						ctr.showReports();
+						dispose();
+						break;
+					
+					default:
+						dispose();
+						ctr.closeDashboard();
+						ctr.openLogin();
+					}
+				}catch(IOException io) {
+					io.printStackTrace();
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			}
 		});

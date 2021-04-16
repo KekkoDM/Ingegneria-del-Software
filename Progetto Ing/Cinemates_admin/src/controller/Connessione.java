@@ -20,16 +20,10 @@ public class Connessione{
 	//COLLEGAMENTODB
 	public Connessione() {
 		
-		try {
-			Class.forName("org.postgresql.Driver");
-		}catch(ClassNotFoundException e) {
-			System.err.println("Classe non trovata");
-		}
 		
-		//String url = "jdbc:postgresql://cinemates.cxnubr8ec2ra.eu-central-1.rds.amazonaws.com:5448/cinemates";
-		String url = "jdbc:postgresql://localhost:5432/cinemates";
+		String url = "jdbc:mysql://cinemates-mysql.cxnubr8ec2ra.eu-central-1.rds.amazonaws.com:3306/cinemates";
 		Properties props = new Properties();
-		props.setProperty("user","postgres");
+		props.setProperty("user","root");
 		props.setProperty("password","unina2021");
 		
 		this.connect = null;
@@ -48,6 +42,7 @@ public class Connessione{
 		try {
 			
 			String query = "insert into "+ table + "(" + attr + ") values(" + values + ");";
+			System.out.println("Insert: "+query);
 			PreparedStatement st = connect.prepareStatement(query);
 			st.executeUpdate();
 		}

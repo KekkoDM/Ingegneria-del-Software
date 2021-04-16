@@ -56,12 +56,28 @@ public class Notifica {
 		this.amministratore = amministratore;
 	}
 	
-	public void createNotifica(String messaggio) {
+	public void createNotificaProprietario(String messaggio) {
 		setTitolo("Esito Segnlazione");
 		System.out.println("Titolo: "+getTitolo());
 		setTipo("Segnalazione");
 		System.out.println("Tipo: "+getTipo());
 		setDescrizione(messaggio);
+		System.out.println("Messaggio: "+getDescrizione());
+		setAmministratore(Controller.admin.getID());
+		System.out.println("Amministratore: "+getAmministratore());
+		setMittente(Controller.segnalazione.getUtente());
+		System.out.println("Mittente: "+getMittente());
+		setDestinatario(Controller.commento.getUsername());
+		System.out.println("Destinatario: "+getDestinatario());
+	}
+	
+	public void createNotificaSegnalatore(String messaggio) {
+		setTitolo("Esito Segnlazione");
+		System.out.println("Titolo: "+getTitolo());
+		setTipo("Segnalazione");
+		System.out.println("Tipo: "+getTipo());
+		setDescrizione(messaggio);
+		System.out.println("Messaggio: "+getDescrizione());
 		setAmministratore(Controller.admin.getID());
 		System.out.println("Amministratore: "+getAmministratore());
 		setMittente(Controller.segnalazione.getUtente());
@@ -71,8 +87,7 @@ public class Notifica {
 	}
 	
 	public String getAllInOne() {
-		String values = "'"+getTitolo()+"','"+getTipo()+"','"+getDescrizione()+"',"+getAmministratore()+",'"+getMittente()
-					    +"','"+getDestinatario()+"'";
+		String values = "'"+getTitolo()+"','"+getTipo()+"','"+getDescrizione()+"',"+getAmministratore()+",'"+getDestinatario()+"'";
 		return values;
 	}
 	

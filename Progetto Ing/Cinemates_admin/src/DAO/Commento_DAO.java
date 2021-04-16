@@ -14,14 +14,14 @@ public class Commento_DAO implements DAO_Interface {
 		commento = Controller.commento;
 		
 		String select = "utente,recensione";
-		String where = "utente = '" + utente + "' AND recensione = " + Integer.getInteger(recensione);
+		String where = "utente = '" + utente + "' AND recensione = " + recensione;
 		System.out.println(select + where);
 		
 		try {
 			ResultSet rs = Controller.conn.Query(select,"commento",where);
 			while(rs.next()){
-				((Commento) commento).setUtente(utente);
-				((Commento) commento).setRecensione(Integer.getInteger(recensione));
+				((Commento) commento).setUsername(utente);
+				((Commento) commento).setRecensione(recensione);
 					
 				return true;
 			}
@@ -40,9 +40,9 @@ public class Commento_DAO implements DAO_Interface {
 		commento = Controller.commento;
 		
 		ResultSet rs = null;
-		String where = "utente = '" + ((Commento) commento).getUtente() + "' AND recensione = " + ((Commento) commento).getRecensione();
+		String where = "idcommento =" + ((Commento) commento).getId();
 		try {
-			rs = Controller.conn.Query("testo", "commento", where);
+			rs = Controller.conn.Query("*", "commento", where);
 		}catch(Error e) {
 			System.err.println("Errore SQL");
 			e.printStackTrace();

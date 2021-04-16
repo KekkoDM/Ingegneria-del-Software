@@ -50,9 +50,9 @@ public class Segnalazione_DAO implements DAO_Interface {
 	
 	public ResultSet getAllDAO(){
 		ResultSet rs = null;
-		String select = "idsegnalazione,tipo,recensione,utente";
-		String from = "segnalazione join recensione on(segnalazione.recensione = recensione.idrecensione)";
-		String where = "amministratore is null";
+		String select = "idsegnalazione,tipo,motivo,recensione,commento,utente";
+		String from = "segnalazione";
+		String where = "approvato = 1";
 		try {
 			rs = Controller.conn.Query(select,from,where);
 		}catch(Error e) {
@@ -64,14 +64,22 @@ public class Segnalazione_DAO implements DAO_Interface {
 	}
 
 	public void approva(Segnalazione s) {
-		String values = "amministratore="+Controller.admin.getID();
 		String where = "idsegnalazione="+s.getId();
-		Controller.conn.Update("segnalazione", values, where);;
+		Controller.conn.Delete("segnalazione", where);	
 	}
 	
 	public void disapprova(Segnalazione s) {
-		String where = "idrecensione="+s.getRecensione();
-		Controller.conn.Delete("recensione", where);
+	
+		if(Controller.commento != null) {
+			String where = "idcommento="+Controller.commento.getId();
+			Controller.conn.Delete("commento", where);
+			
+		}
+		else if(Controller.recensione != null) {
+			String where = "recensione='"+s.getRecensione()+"'";
+			Controller.conn.Update("segnalazione", "approvato = false", where);
+		}
+		
 	}
 
 }

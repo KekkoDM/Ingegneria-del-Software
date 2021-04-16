@@ -22,19 +22,24 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.json.JSONException;
+
+import classes.Commento;
+import classes.Recensione;
 import classes.Segnalazione;
 
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.List;
 import javax.swing.JSeparator;
 
 public class Dashboard extends JFrame {
 
-	private JPanel homePanel;
-	private JPanel reviewsPanel;
-	private JPanel settingsPanel;
+	public JPanel homePanel;
+	public JPanel reviewsPanel;
+	public JPanel settingsPanel;
 	private JPanel contentPane;
 	private JPasswordField newPw;
 	private JPasswordField confNewPw;
@@ -105,14 +110,14 @@ public class Dashboard extends JFrame {
 			reviewsPanel.add(lblNewLabel_2_1);			
 		}
 		else {
-			String colonne[] = {"ID", "Utente", "Recensione", "Tipologia"};
+			String colonne[] = {"ID", "Utente", "Recensione","Commento", "Tipologia"};
 			DefaultTableModel model = new DefaultTableModel(colonne, 0) {
 				@Override
 				public boolean isCellEditable(int row, int col) { return false; }
 		    };
 			
 			for (int i=0; i<s.size(); i++) {
-				Object[] reports = {s.get(i).getId(), s.get(i).getUtente(), s.get(i).getRecensione(), s.get(i).getTipo()};
+				Object[] reports = {s.get(i).getId(), s.get(i).getUtente(), s.get(i).getRecensione(),s.get(i).getCommento(), s.get(i).getTipo()};
 				model.addRow(reports);
 			}
 			
@@ -252,7 +257,7 @@ public class Dashboard extends JFrame {
 			approveBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Controller.segnalazione.setId(Integer.valueOf(table.getValueAt(table.getSelectedRow(), 0).toString()));
-					Controller.recensione.setIdRecensione(Integer.valueOf(table.getValueAt(table.getSelectedRow(), 2).toString()));
+					Controller.recensione.setId(table.getValueAt(table.getSelectedRow(), 2).toString());
 					ctr.showPopup("Confermando verrá inviata una notifica agli utenti", "approva");
 				}
 			});
@@ -262,7 +267,7 @@ public class Dashboard extends JFrame {
 			disapprovaBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Controller.segnalazione.setId(Integer.valueOf(table.getValueAt(table.getSelectedRow(), 0).toString()));
-					Controller.recensione.setIdRecensione(Integer.valueOf(table.getValueAt(table.getSelectedRow(), 2).toString()));
+					Controller.recensione.setId(table.getValueAt(table.getSelectedRow(), 2).toString());
 					ctr.showPopup("Confermando verrá inviata una notifica agli utenti", "disapprova");
 				}
 			});
@@ -272,8 +277,25 @@ public class Dashboard extends JFrame {
 			mostraBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Controller.segnalazione.setId(Integer.valueOf(table.getValueAt(table.getSelectedRow(), 0).toString()));
-					Controller.recensione.setIdRecensione(Integer.valueOf(table.getValueAt(table.getSelectedRow(), 2).toString()));
-					ctr.showReview();
+					Controller.recensione = null;
+					Controller.commento = null;
+					
+					if(table.getValueAt(table.getSelectedRow(), 2) != null) {
+						Controller.recensione = new Recensione();
+						Controller.recensione.setId(table.getValueAt(table.getSelectedRow(), 2).toString());
+					}
+						
+					else {
+						Controller.commento = new Commento();
+						Controller.commento.setId(Integer.valueOf(table.getValueAt(table.getSelectedRow(), 3).toString()));
+					}
+						
+					try {
+						ctr.showReport();
+					} catch (JSONException | IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			});
 			

@@ -20,7 +20,6 @@ import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -82,6 +81,7 @@ public class Visualizzazione extends JFrame {
 		titoloRew.setFont(new Font("Arial", Font.BOLD, 25));
 		titoloRew.setBounds(230, 11, 394, 30);
 		contentPane.add(titoloRew);
+		descrRew.setLineWrap(true);
 		
 		descrRew.setPreferredSize(new Dimension(100, 100));
 		descrRew.setEditable(false);

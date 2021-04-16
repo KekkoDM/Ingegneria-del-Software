@@ -6,6 +6,8 @@ import classes.Recensione;
 import controller.Controller;
 
 public class Recensione_DAO implements DAO_Interface {
+	
+
 
 	@Override
 	public Boolean checkExists(String idrecensione, String s, Object recensione) {
@@ -18,7 +20,7 @@ public class Recensione_DAO implements DAO_Interface {
 		try {
 			ResultSet rs = Controller.conn.Query(select, "recensione", where);
 			while(rs.next()) {
-				((Recensione) recensione).setIdRecensione(rs.getInt(1));
+				((Recensione) recensione).setId(rs.getString(1));
 				return true;
 			}
 			
@@ -35,7 +37,7 @@ public class Recensione_DAO implements DAO_Interface {
 		
 		ResultSet rs = null;
 		try {
-			rs = Controller.conn.Query("*", "recensione", "idrecensione="+ ((Recensione) recensione).getIdRecensione());
+			rs = Controller.conn.Query("*", "recensione", "idrecensione="+ ((Recensione) recensione).getId());
 		}catch(Error e) {
 			System.err.println("Errore SQL");
 			e.printStackTrace();
