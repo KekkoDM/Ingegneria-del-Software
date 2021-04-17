@@ -18,12 +18,14 @@ import com.android.volley.RequestQueue;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.ErrorAdapter;
+import com.example.cinemates.adapters.FilmAdapter;
 import com.example.cinemates.adapters.FriendsAdapter;
 import com.example.cinemates.adapters.ResultsAdapter;
 import com.example.cinemates.adapters.SearchUserAdapter;
 import com.example.cinemates.classes.Film;
 import com.example.cinemates.classes.RequestJson;
 import com.example.cinemates.classes.Utente;
+import com.example.cinemates.fragments.FavoritesFragment;
 import com.example.cinemates.handlers.RequestHandler;
 import com.example.cinemates.api.CinematesDB;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -50,9 +52,21 @@ public class ResultsActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
 
         Intent intent = getIntent();
+
+        switchScreen(intent);
+
+        backBtn = findViewById(R.id.backButton2);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+    }
+
+    private void switchScreen(Intent intent){
         Bundle bundle = new Bundle();
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
         switch (intent.getStringExtra("type")) {
             case "film":
                 bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, intent.getStringExtra("textsearched"));
@@ -88,17 +102,17 @@ public class ResultsActivity extends AppCompatActivity {
                 bundle.putString("type", "Mostra tutta la lista");
                 mFirebaseAnalytics.logEvent("Show_All_List", bundle);
                 break;
-
         }
-
-        backBtn = findViewById(R.id.backButton2);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+
 
     public void showSearchUserResult(ArrayList<Utente> users) {
         searchUserAdapter = new SearchUserAdapter(this, users);
