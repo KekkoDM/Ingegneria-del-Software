@@ -978,7 +978,7 @@ public class Utente implements Serializable {
         reportSender.execute();
     }
 
-    public void generateRandomFromList(String listName, int numberItems) {
+    public int generateRandomFromList(int numberItems) {
         Random random = new Random();
         int nextId = 0;
         int id = ((FavoritesFragment) MainActivity.selectedFragment).getIdentifier();
@@ -987,8 +987,6 @@ public class Utente implements Serializable {
             nextId = random.nextInt(numberItems);
         } while(id == nextId);
 
-        id = nextId;
-
-        ((FavoritesFragment) MainActivity.selectedFragment).showGeneratedItem(id, listName);
+        return nextId;
     }
 }
