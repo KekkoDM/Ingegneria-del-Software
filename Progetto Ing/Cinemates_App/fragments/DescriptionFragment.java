@@ -40,7 +40,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 public class DescriptionFragment extends Fragment {
-    private FilmAdapter filmAdapter;
     private DescriptionFilmAdapter adapter;
     private ImageView mCover;
     private TextView mTitle;
@@ -201,7 +200,7 @@ public class DescriptionFragment extends Fragment {
         bookmarkTextView.setText("Rimuovi da lista Da Vedere");
     }
 
-    public void disaableFavoritesButton() {
+    public void disableFavoritesButton() {
         favoritesBtn.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.light_grey));
         favoritesTextView.setText("Aggiungi a Preferiti");
     }

@@ -633,7 +633,6 @@ public class Utente implements Serializable {
 
                             users.add(utente);
                         }
-
                         resultsActivity.showSearchUserResult(users);
                     }
                     else {
@@ -813,7 +812,7 @@ public class Utente implements Serializable {
                     JSONObject obj = new JSONObject(s);
                     if (!obj.getBoolean("error")) {
                         if (list.equals("Preferiti")) {
-                            descriptionFragment.disaableFavoritesButton();
+                            descriptionFragment.disableFavoritesButton();
                         }
                         else {
                             descriptionFragment.disableToSeeButton();
@@ -982,7 +981,7 @@ public class Utente implements Serializable {
     public void generateRandomFromList(String listName, int numberItems) {
         Random random = new Random();
         int nextId = 0;
-        int id = -1;
+        int id = ((FavoritesFragment) MainActivity.selectedFragment).getIdentifier();
 
         do {
             nextId = random.nextInt(numberItems);

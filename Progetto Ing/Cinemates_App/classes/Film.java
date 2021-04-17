@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 import com.example.cinemates.adapters.ErrorAdapter;
+import com.example.cinemates.adapters.FilmAdapter;
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.fragments.DescriptionFragment;
 import com.example.cinemates.fragments.FavoritesFragment;

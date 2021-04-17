@@ -64,14 +64,17 @@
             android:id="@+id/rejectBtn"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/light_grey"
             android:text="Rifiuta"
             app:cornerRadius="15dp"
-            android:backgroundTint="@color/light_grey"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView9"
+            app:layout_constraintEnd_toStartOf="@+id/confirmBtn"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/followDescription"
             app:layout_constraintTop_toBottomOf="@+id/notificationDescription" />
 
         <Button
@@ -79,13 +82,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:backgroundTint="@color/blue_hype"
             android:text="Conferma"
             app:cornerRadius="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/followDescription"
             app:layout_constraintTop_toBottomOf="@+id/notificationDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -20,6 +20,7 @@ import com.example.cinemates.adapters.FilmAdapter;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,6 +56,8 @@ import java.util.Random;
 public class FavoritesFragment extends Fragment {
     private RecyclerView recyclerViewToSee;
     private RecyclerView recyclerViewFavorites;
+    private FilmAdapter favoritesAdapter;
+    private FilmAdapter toseeAdapter;
     private FilmAdapter filmAdapter;
     private CardView buttonCasualFavorites;
     private CardView buttonCasualToSee;
@@ -67,6 +70,8 @@ public class FavoritesFragment extends Fragment {
     private ImageView btnClose;
     private TextView rating;
     private TextView type;
+    private int id = -1;
+    private Film film;
 
     public FavoritesFragment() {
         // Required empty public constructor
@@ -78,7 +83,7 @@ public class FavoritesFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
 
-        Film film = new Film();
+        film = new Film();
 
         // Load Favorites list
         LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
@@ -103,6 +108,18 @@ public class FavoritesFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        buttonCasualFavorites.setVisibility(View.GONE);
+        showAllFavorites.setVisibility(View.GONE);
+        film.loadList("Preferiti", getContext());
+
+        buttonCasualToSee.setVisibility(View.GONE);
+        showAllToSee.setVisibility(View.GONE);
+        film.loadList("Da vedere", getContext());
+    }
+
     private void casualFilm(RecyclerView rv, int id) {
         filmAdapter = (FilmAdapter) rv.getAdapter();
         Intent intent = new Intent(getContext(), MovieDescriptorActivity.class);
@@ -112,6 +129,7 @@ public class FavoritesFragment extends Fragment {
 
     public void showGeneratedItem(int item, String listName) {
         Dialog popup = new Dialog(getContext());
+        this.id = item;
 
         if (listName.equals("Preferiti")) {
             filmAdapter = (FilmAdapter) recyclerViewFavorites.getAdapter();
@@ -258,5 +276,25 @@ public class FavoritesFragment extends Fragment {
 
     public RecyclerView getRecyclerViewFavorites() {
         return recyclerViewFavorites;
+    }
+
+    public int getIdentifier() {
+        return id;
+    }
+
+    public FilmAdapter getFavoritesAdapter() {
+        return favoritesAdapter;
+    }
+
+    public void setFavoritesAdapter(FilmAdapter favoritesAdapter) {
+        this.favoritesAdapter = favoritesAdapter;
+    }
+
+    public FilmAdapter getToseeAdapter() {
+        return toseeAdapter;
+    }
+
+    public void setToseeAdapter(FilmAdapter toseeAdapter) {
+        this.toseeAdapter = toseeAdapter;
     }
 }

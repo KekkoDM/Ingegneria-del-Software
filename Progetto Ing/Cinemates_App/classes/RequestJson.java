@@ -28,6 +28,7 @@ import com.example.cinemates.adapters.SearchSuggestionsAdapter;
 import com.example.cinemates.adapters.SliderAdapter;
 import com.example.cinemates.fragments.FavoritesFragment;
 import com.example.cinemates.fragments.HomeFragment;
+import com.example.cinemates.fragments.ReviewFragment;
 
 
 import org.json.JSONArray;
@@ -244,10 +245,15 @@ public class RequestJson<JSONParser>{
 
             setReview(jsonArray);
 
-            if (reviews.size()>0)
+            ReviewFragment reviewFragment = ReviewFragment.getInstance();
+
+            if (reviews.size()>0) {
                 adapter = new ReviewAdapter(reviews, context);
-            else
-                adapter = new ErrorAdapter(context,error);
+                reviewFragment.setReviewAdapter((ReviewAdapter) adapter);
+            }
+            else {
+                adapter = new ErrorAdapter(context, error);
+            }
 
             recyclerView.setAdapter(adapter);
         } catch (JSONException e) {
@@ -257,8 +263,7 @@ public class RequestJson<JSONParser>{
 
 
     //FAVORITI E DA VEDERE
-    public void parseJSONSavedList(RecyclerView recyclerView,Film film){
-
+    public void parseJSONSavedList(RecyclerView recyclerView, Film film){
         String type ="";
         if (film.getType().equals("Film"))
             type="movie/";
@@ -281,8 +286,7 @@ public class RequestJson<JSONParser>{
         requestQueue.add(request);
     }
 
-    protected void getMediaOnId(RecyclerView recyclerView, JSONObject response,String type){
-
+    protected void getMediaOnId(RecyclerView recyclerView, JSONObject response, String type){
         try {
             if(type.equals("Film"))
                 setListFilm(response,0);
@@ -290,18 +294,15 @@ public class RequestJson<JSONParser>{
                 setListSeries(response,0);
 
             if(context.equals(MainActivity.selectedFragment.getContext()))
-                adapter = new FilmAdapter(listFilm,context);
-
+                adapter = new FilmAdapter(listFilm, context);
             else
                 adapter = new ResultsAdapter(listFilm,context);
-
 
             recyclerView.setAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
 
 
     //SET PARAMETRI

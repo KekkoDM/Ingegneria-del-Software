@@ -32,6 +32,8 @@ public class ReviewFragment extends Fragment {
     private RecyclerView reviewRecyclerView;
     private Film film;
     private Review review;
+    private ReviewAdapter reviewAdapter;
+    private static ReviewFragment instance;
 
     public ReviewFragment() {
         // Required empty public constructor
@@ -40,6 +42,8 @@ public class ReviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_review, container, false);
+
+        instance = this;
 
         alert = new Dialog(getContext());
         film = ((MovieDescriptorActivity)getActivity()).getFilm();
@@ -56,7 +60,23 @@ public class ReviewFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (reviewAdapter != null) {
+            reviewAdapter.notifyDataSetChanged();
+        }
+    }
+
     public Review getReview() { return review; }
 
     public void setReview(Review review) { this.review = review; }
+
+    public void setReviewAdapter(ReviewAdapter reviewAdapter) {
+        this.reviewAdapter = reviewAdapter;
+    }
+
+    public static ReviewFragment getInstance() {
+        return instance;
+    }
 }
