@@ -160,7 +160,8 @@ public class FavoritesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 popup.dismiss();
-                MainActivity.utente.generateRandomFromList(listName, filmAdapter.getItemCount());
+                id = MainActivity.utente.generateRandomFromList(filmAdapter.getItemCount());
+                showGeneratedItem(id, listName);
             }
         });
 
@@ -207,7 +208,8 @@ public class FavoritesFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (recyclerViewFavorites.getAdapter() != null) {
-                                MainActivity.utente.generateRandomFromList(listName, recyclerViewFavorites.getAdapter().getItemCount());
+                                id = MainActivity.utente.generateRandomFromList(recyclerViewFavorites.getAdapter().getItemCount());
+                                showGeneratedItem(id, listName);
                             }
                         }
                     });
@@ -234,7 +236,8 @@ public class FavoritesFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (recyclerViewToSee.getAdapter() != null) {
-                                MainActivity.utente.generateRandomFromList(listName, recyclerViewToSee.getAdapter().getItemCount());
+                                id = MainActivity.utente.generateRandomFromList(recyclerViewToSee.getAdapter().getItemCount());
+                                showGeneratedItem(id, listName);
                             }
                         }
                     });
@@ -280,21 +283,5 @@ public class FavoritesFragment extends Fragment {
 
     public int getIdentifier() {
         return id;
-    }
-
-    public FilmAdapter getFavoritesAdapter() {
-        return favoritesAdapter;
-    }
-
-    public void setFavoritesAdapter(FilmAdapter favoritesAdapter) {
-        this.favoritesAdapter = favoritesAdapter;
-    }
-
-    public FilmAdapter getToseeAdapter() {
-        return toseeAdapter;
-    }
-
-    public void setToseeAdapter(FilmAdapter toseeAdapter) {
-        this.toseeAdapter = toseeAdapter;
     }
 }
