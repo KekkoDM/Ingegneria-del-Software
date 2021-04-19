@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +41,10 @@ import java.util.HashMap;
 public class ResultsActivity extends AppCompatActivity {
     private RecyclerView rv;
     private SearchUserAdapter searchUserAdapter;
+    private ResultsAdapter resultsAdapter;
     private ImageButton backBtn;
+    private Intent intent;
+    private Film film;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,8 @@ public class ResultsActivity extends AppCompatActivity {
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        Intent intent = getIntent();
+        intent = getIntent();
+        film = new Film();
 
         switchScreen(intent);
 
@@ -62,6 +67,24 @@ public class ResultsActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (intent.getStringExtra("type").equals("showall")) {
+            if (intent.getStringExtra("name").equals("preferiti")) {
+                film.loadList("Preferiti", this);
+            }
+            else {
+                film.loadList("Da vedere", this);
+            }
+        }
+    }
+
+    public void updateResultActivity(ArrayList<Film> list) {
+        resultsAdapter.updateData(list);
     }
 
     private void switchScreen(Intent intent){
@@ -95,7 +118,7 @@ public class ResultsActivity extends AppCompatActivity {
 
             case "showall":
                 ArrayList<Film> list = (ArrayList<Film>) intent.getSerializableExtra("list");
-                ResultsAdapter resultsAdapter = new ResultsAdapter(list,this);
+                resultsAdapter = new ResultsAdapter(list,this);
                 rv.setAdapter(resultsAdapter);
 
                 bundle.putString("user", MainActivity.utente.getUsername());
@@ -104,15 +127,6 @@ public class ResultsActivity extends AppCompatActivity {
                 break;
         }
     }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-
 
     public void showSearchUserResult(ArrayList<Utente> users) {
         searchUserAdapter = new SearchUserAdapter(this, users);

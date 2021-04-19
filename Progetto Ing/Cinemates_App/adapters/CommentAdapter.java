@@ -15,17 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
-import com.example.cinemates.classes.Comment;
+import com.example.cinemates.classes.Commento;
 import com.example.cinemates.dialog.ReportDialog;
 
 import java.util.List;
 
 public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewHolder> {
     private Context context;
-    private List<Comment> comments;
+    private List<Commento> comments;
     private ReportDialog dialog;
 
-    public CommentAdapter(List<Comment> comments, Context context){
+    public CommentAdapter(List<Commento> comments, Context context){
         this.context = context;
         this.comments = comments;
     }
@@ -39,7 +39,7 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Comment comment = comments.get(position);
+        Commento comment = comments.get(position);
 
         holder.setComment(comment);
 
@@ -92,7 +92,7 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
         return comments.size();
     }
 
-    public void addItem(Comment comment){
+    public void addItem(Commento comment){
         comments.add(comment);
         notifyDataSetChanged();
     }
@@ -111,7 +111,7 @@ public class CommentAdapter extends RecyclerView.Adapter <CommentAdapter.MyViewH
             showComment = itemView.findViewById(R.id.showComment);
         }
 
-        public void setComment(Comment comment) {
+        public void setComment(Commento comment) {
             user.setText(comment.getUsername() + " ha commentato:");
 
             if (comment.getReportNumber() < 3) {

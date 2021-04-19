@@ -2,14 +2,11 @@ package com.example.cinemates.classes;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
-import com.example.cinemates.adapters.ReviewAdapter;
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.handlers.RequestHandler;
 import com.github.pgreze.reactions.ReactionPopup;
@@ -29,7 +26,7 @@ public class Reaction {
     }
 
     // show reactions popup
-    public ReactionPopup showReaction(Review review, ImageView button, TextView count) {
+    public ReactionPopup showReaction(Recensione review, ImageView button, TextView count) {
         ReactionPopup popup = new ReactionPopup(
                 context,
                 new ReactionsConfigBuilder(context)
@@ -55,7 +52,7 @@ public class Reaction {
         return popup;
     }
 
-    public void getReaction(Review review, ImageView button, TextView count) {
+    public void getReaction(Recensione review, ImageView button, TextView count) {
         class ReactionGetter extends AsyncTask<Void, Void, String> {
 
             @Override

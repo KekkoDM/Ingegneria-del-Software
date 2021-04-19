@@ -56,8 +56,6 @@ import java.util.Random;
 public class FavoritesFragment extends Fragment {
     private RecyclerView recyclerViewToSee;
     private RecyclerView recyclerViewFavorites;
-    private FilmAdapter favoritesAdapter;
-    private FilmAdapter toseeAdapter;
     private FilmAdapter filmAdapter;
     private CardView buttonCasualFavorites;
     private CardView buttonCasualToSee;
@@ -221,6 +219,7 @@ public class FavoritesFragment extends Fragment {
                             filmAdapter = (FilmAdapter) recyclerViewFavorites.getAdapter();
                             Intent intent = new Intent(context, ResultsActivity.class);
                             intent.putExtra("type", "showall");
+                            intent.putExtra("name", "preferiti");
                             intent.putExtra("list", (Serializable) filmAdapter.getListFilm());
                             startActivity(intent);
                         }
@@ -249,6 +248,7 @@ public class FavoritesFragment extends Fragment {
                             filmAdapter = (FilmAdapter) recyclerViewToSee.getAdapter();
                             Intent intent = new Intent(context, ResultsActivity.class);
                             intent.putExtra("type", "showall");
+                            intent.putExtra("name", "davedere");
                             intent.putExtra("list", (Serializable) filmAdapter.getListFilm());
                             startActivity(intent);
                         }

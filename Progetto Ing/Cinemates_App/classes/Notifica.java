@@ -82,6 +82,7 @@ public class Notifica {
                 super.onPreExecute();
                 loading.setContentView(R.layout.loading);
                 loading.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                loading.setCancelable(false);
                 loading.show();
             }
 

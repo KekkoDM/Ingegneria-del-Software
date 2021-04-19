@@ -23,9 +23,7 @@ import java.util.ArrayList;
 public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> {
     private Context context;
     private ArrayList<Film> listFilm;
-
     private FirebaseAnalytics mFirebaseAnalytics;
-
 
     public FilmAdapter(ArrayList<Film> listFilm, Context context) {
         this.context = context;
@@ -40,7 +38,6 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
         return listFilm;
     }
 
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,6 +49,7 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull FilmAdapter.MyViewHolder holder, int position) {
         holder.setFilm(listFilm.get(position));
+
         holder.poster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,8 +64,6 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
                 mFirebaseAnalytics.logEvent("Description_Film", params);
                 // [END custom_event]
 
-                System.out.println("Bundle: "+params);
-
                 context.startActivity(intent);
             }
         });
@@ -77,7 +73,6 @@ public class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.MyViewHolder> 
     public int getItemCount() {
         return listFilm.size();
     }
-
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title;

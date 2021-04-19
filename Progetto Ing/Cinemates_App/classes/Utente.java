@@ -44,6 +44,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Comment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -838,7 +839,7 @@ public class Utente implements Serializable {
         remover.execute();
     }
 
-    public void sendComment(String comment, Review review, Context context) {
+    public void sendComment(String comment, Recensione review, Context context) {
         class CommentSender extends AsyncTask<Void, Void, String> {
             CommentsActivity commentsActivity = (CommentsActivity) context;
 
@@ -872,7 +873,7 @@ public class Utente implements Serializable {
 
                     //if no error in response
                     if (!obj.getBoolean("error")) {
-                        Comment cmt = new Comment(
+                        Commento cmt = new Commento(
                                 -1,
                                 comment,
                                 MainActivity.utente.getUsername(),
@@ -891,7 +892,7 @@ public class Utente implements Serializable {
         commentSender.execute();
     }
 
-    public void sendReaction(String reaction, Review review) {
+    public void sendReaction(String reaction, Recensione review) {
         class ReactionSender extends AsyncTask<Void, Void, String> {
 
             @Override
@@ -947,10 +948,10 @@ public class Utente implements Serializable {
                 params.put("username", MainActivity.utente.getUsername());
                 params.put("type", type);
                 if (type.equals("Recensione")) {
-                    params.put("item", ((Review) item).getId());
+                    params.put("item", ((Recensione) item).getId());
                 }
                 else {
-                    params.put("item", String.valueOf(((Comment) item).getId()));
+                    params.put("item", String.valueOf(((Commento) item).getId()));
                 }
                 params.put("reason", reason);
                 params.put("note", note);

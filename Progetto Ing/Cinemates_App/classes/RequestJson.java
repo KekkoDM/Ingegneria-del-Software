@@ -1,8 +1,6 @@
 package com.example.cinemates.classes;
 
 import android.content.Context;
-import android.net.Uri;
-
 
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,8 +24,6 @@ import com.example.cinemates.adapters.ResultsAdapter;
 import com.example.cinemates.adapters.ReviewAdapter;
 import com.example.cinemates.adapters.SearchSuggestionsAdapter;
 import com.example.cinemates.adapters.SliderAdapter;
-import com.example.cinemates.fragments.FavoritesFragment;
-import com.example.cinemates.fragments.HomeFragment;
 import com.example.cinemates.fragments.ReviewFragment;
 
 
@@ -343,7 +339,7 @@ public class RequestJson<JSONParser>{
             String username = hit.getString("author");
             String description = hit.getString("content");
             String data = hit.getString("created_at").substring(0,10);
-            reviews.add(new Review(id,username,description,data));
+            reviews.add(new Recensione(id,username,description,data));
         }
     }
 

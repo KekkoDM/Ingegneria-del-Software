@@ -20,10 +20,10 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.cinemates.classes.Comment;
+import com.example.cinemates.classes.Commento;
 import com.example.cinemates.classes.Reaction;
 import com.example.cinemates.dialog.ReportDialog;
-import com.example.cinemates.classes.Review;
+import com.example.cinemates.classes.Recensione;
 import com.example.cinemates.R;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 public class CommentsActivity extends AppCompatActivity {
     private RecyclerView rvComments;
     private CommentAdapter commentAdapter;
-    public ArrayList<Comment> comments;
+    public ArrayList<Commento> comments;
     private TextView detailReview;
     private TextView usernameReview;
     private TextView dateReview;
@@ -40,8 +40,8 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView likeBtn;
     private ImageView alertReview;
     private EditText textComment;
-    private Review review;
-    private Comment comment;
+    private Recensione review;
+    private Commento comment;
     private ImageButton backBtn;
     private ReportDialog dialog;
     private Button sendComment;
@@ -55,9 +55,9 @@ public class CommentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_comments);
 
         Intent intent = getIntent();
-        review = (Review) intent.getSerializableExtra("recensione");
+        review = (Recensione) intent.getSerializableExtra("recensione");
 
-        comment = new Comment();
+        comment = new Commento();
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
@@ -169,7 +169,7 @@ public class CommentsActivity extends AppCompatActivity {
         rvComments.setAdapter(commentAdapter);
     }
 
-    public void showComments(ArrayList<Comment> comments) {
+    public void showComments(ArrayList<Commento> comments) {
         this.comments = comments;
         commentAdapter = new CommentAdapter(comments, this);
         rvComments.setAdapter(commentAdapter);
@@ -182,7 +182,7 @@ public class CommentsActivity extends AppCompatActivity {
         rvComments.setAdapter(errorAdapter);
     }
 
-    public void postComment(Comment comment) {
+    public void postComment(Commento comment) {
         if (comments.isEmpty()) {
             comments.add(comment);
             swapAdapter(new CommentAdapter(comments, this), new LinearLayoutManager(this));

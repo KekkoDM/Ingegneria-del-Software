@@ -16,6 +16,8 @@ import com.example.cinemates.activities.MovieDescriptorActivity;
 import com.example.cinemates.classes.Film;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHolder>{
@@ -36,21 +38,27 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Film result = results.get(position);
-        holder.setResult(result);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(result.getType().equals("Persona")){
 
-                }
-                else{
+        if (result.getType().equals("Persona")) {
+            holder.setActorResult(result);
+        }
+        else {
+            holder.setResult(result);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     Intent intent = new Intent(context, MovieDescriptorActivity.class);
                     intent.putExtra("Film", results.get(position));
                     context.startActivity(intent);
                 }
-                
-            }
-        });
+            });
+        }
+    }
+
+    public void updateData(ArrayList<Film> results) {
+        this.results.clear();
+        this.results.addAll(results);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -58,13 +66,15 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
         return results.size();
     }
 
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView mCover;
         public TextView mTitle;
         public TextView mDescription;
         public TextView mReleaseDate;
         public TextView mValutation;
+        public TextView nextIcon;
+        public ImageView calendarIcon;
+        public ImageView starIcon;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -73,6 +83,9 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
             mDescription = itemView.findViewById(R.id.descriptionResult);
             mReleaseDate = itemView.findViewById(R.id.dateResult);
             mValutation = itemView.findViewById(R.id.typeResult);
+            nextIcon = itemView.findViewById(R.id.textView11);
+            calendarIcon = itemView.findViewById(R.id.imageView8);
+            starIcon = itemView.findViewById(R.id.imageView5);
         }
 
         public void setResult(Film result) {
@@ -82,10 +95,26 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
             else {
                 Picasso.with(context).load("https://image.tmdb.org/t/p/w500"+result.getCover()).into(mCover);
             }
+
             mTitle.setText(result.getTitle());
             mDescription.setText(result.getDescription());
             mReleaseDate.setText(result.getReleaseDate());
             mValutation.setText(result.getValutation());
+        }
+
+        public void setActorResult(Film result) {
+            if (result.getCover().equals("null")) {
+                mCover.setImageResource(R.drawable.no_cover_found);
+            }
+            else {
+                Picasso.with(context).load("https://image.tmdb.org/t/p/w500"+result.getCover()).into(mCover);
+            }
+
+            mTitle.setText(result.getTitle());
+            mValutation.setText("Attore");
+            nextIcon.setVisibility(View.INVISIBLE);
+            calendarIcon.setVisibility(View.INVISIBLE);
+            starIcon.setVisibility(View.INVISIBLE);
         }
     }
 }

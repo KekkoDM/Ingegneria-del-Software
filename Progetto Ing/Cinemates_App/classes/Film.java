@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
+import com.example.cinemates.activities.ResultsActivity;
 import com.example.cinemates.adapters.ErrorAdapter;
 import com.example.cinemates.adapters.FilmAdapter;
+import com.example.cinemates.adapters.ResultsAdapter;
 import com.example.cinemates.api.CinematesDB;
 import com.example.cinemates.fragments.DescriptionFragment;
 import com.example.cinemates.fragments.FavoritesFragment;
@@ -157,7 +159,7 @@ public class Film implements Serializable {
             protected void onPreExecute() {
                 super.onPreExecute();
                 pdLoading.setMessage("\tCaricamento liste...");
-                pdLoading.setCancelable(true);
+                pdLoading.setCancelable(false);
                 pdLoading.show();
             }
 
@@ -218,8 +220,12 @@ public class Film implements Serializable {
                             }
                         }
 
-                        ((FavoritesFragment) MainActivity.selectedFragment).setButtonVisibility(listName, i, context);
-
+                        if (context.equals((MainActivity.selectedFragment.getContext()))) {
+                            ((FavoritesFragment) MainActivity.selectedFragment).setButtonVisibility(listName, i, context);
+                        }
+                        else {
+                            ((ResultsActivity) context).updateResultActivity(listItem);
+                        }
                     } else {
                         if (listName.equals("Preferiti")) {
                             ((FavoritesFragment) MainActivity.selectedFragment).setEmptyFavoritesListError();

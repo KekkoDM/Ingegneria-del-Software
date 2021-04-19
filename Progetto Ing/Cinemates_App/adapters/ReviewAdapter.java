@@ -23,20 +23,20 @@ import com.example.cinemates.R;
 import com.example.cinemates.activities.CommentsActivity;
 import com.example.cinemates.classes.Reaction;
 import com.example.cinemates.dialog.ReportDialog;
-import com.example.cinemates.classes.Review;
+import com.example.cinemates.classes.Recensione;
 
 import java.util.List;
 
 public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewViewHolder> {
     private Context context;
-    private List<Review> reviews;
+    private List<Recensione> reviews;
     private ImageButton backBtn;
     private ReportDialog dialog;
     private RadioGroup alertGroup;
     private RadioButton radioButton;
     private Button sendAlert;
 
-    public ReviewAdapter(List<Review> list, Context c){
+    public ReviewAdapter(List<Recensione> list, Context c){
         this.context = c;
         this.reviews = list;
     }
@@ -50,7 +50,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
-        Review review = reviews.get(position);
+        Recensione review = reviews.get(position);
 
         review.checkReviewVisibility(review, holder);
 
@@ -107,7 +107,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
         private TextView username, review_description, review_date, contLike;
-        private ImageView img_user, comment_review, report, likeBtn;
+        private ImageView comment_review, report, likeBtn;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -120,12 +120,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             contLike = itemView.findViewById(R.id.cont_like);
         }
 
-        public void restorelLikeButton() {
-            likeBtn.setImageResource(R.drawable.ic_no_reaction);
-            contLike.setTextColor(context.getResources().getColor(R.color.light_grey));
-        }
-
-        public void setReview(Review review) {
+        public void setReview(Recensione review) {
             username.setText(review.getUser() + " ha scritto:");
             review_description.setText(review.getDescrizione());
             review_date.setText(review.getData());
@@ -138,7 +133,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
             }
         }
 
-        public void setCensoredReview(Review review) {
+        public void setCensoredReview(Recensione review) {
             username.setText(review.getUser() + " ha scritto:");
             review_description.setText("Questo contenuto è stato oscurato perchè contiene Spoiler");
             review_date.setText(review.getData());
