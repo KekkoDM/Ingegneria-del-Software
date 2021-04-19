@@ -110,18 +110,18 @@ public class Dashboard extends JFrame {
 			reviewsPanel.add(lblNewLabel_2_1);			
 		}
 		else {
-			String colonne[] = {"ID", "Utente", "Recensione","Commento", "Tipologia"};
+			String colonne[] = {"ID", "Segnalatore", "Recensione","Commento", "Motivo"};
 			DefaultTableModel model = new DefaultTableModel(colonne, 0) {
 				@Override
 				public boolean isCellEditable(int row, int col) { return false; }
 		    };
 			
 			for (int i=0; i<s.size(); i++) {
-				Object[] reports = {s.get(i).getId(), s.get(i).getUtente(), s.get(i).getRecensione(),s.get(i).getCommento(), s.get(i).getTipo()};
+				Object[] reports = {s.get(i).getId(), s.get(i).getUtente(), s.get(i).getRecensione(),s.get(i).getCommento(), s.get(i).getMotivo()};
 				model.addRow(reports);
 			}
 			
-			JLabel lblNewLabel_3_1 = new JLabel("Recensioni segnalate");
+			JLabel lblNewLabel_3_1 = new JLabel("Contenuti segnalati");
 			lblNewLabel_3_1.setForeground(Color.GRAY);
 			lblNewLabel_3_1.setFont(new Font("Arial", Font.BOLD, 25));
 			lblNewLabel_3_1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -159,30 +159,6 @@ public class Dashboard extends JFrame {
 			scrollPane.setBackground(Color.WHITE);
 			reviewsPanel.add(scrollPane);
 			
-			JButton approveBtn = new JButton("Approva");
-			approveBtn.setIcon(new ImageIcon(Dashboard.class.getResource("/approve.png")));
-			approveBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
-			approveBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-			approveBtn.setForeground(Color.GRAY);
-			approveBtn.setFont(new Font("Arial", Font.PLAIN, 18));
-			approveBtn.setFocusPainted(false);
-			approveBtn.setBackground(SystemColor.menu);
-			approveBtn.setBounds(534, 486, 140, 40);
-			approveBtn.setEnabled(false);
-			reviewsPanel.add(approveBtn);
-			
-			JButton disapprovaBtn = new JButton("Disapprova");
-			disapprovaBtn.setIcon(new ImageIcon(Dashboard.class.getResource("/reject.png")));
-			disapprovaBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
-			disapprovaBtn.setHorizontalTextPosition(SwingConstants.RIGHT);
-			disapprovaBtn.setForeground(Color.GRAY);
-			disapprovaBtn.setFont(new Font("Arial", Font.PLAIN, 18));
-			disapprovaBtn.setFocusPainted(false);
-			disapprovaBtn.setBackground(SystemColor.menu);
-			disapprovaBtn.setBounds(362, 486, 162, 40);
-			disapprovaBtn.setEnabled(false);
-			reviewsPanel.add(disapprovaBtn);
-			
 			JButton mostraBtn = new JButton("Mostra");
 			mostraBtn.setIcon(new ImageIcon(Dashboard.class.getResource("/showReview.png")));
 			mostraBtn.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -194,44 +170,6 @@ public class Dashboard extends JFrame {
 			mostraBtn.setBounds(0, 486, 125, 40);
 			mostraBtn.setEnabled(false);
 			reviewsPanel.add(mostraBtn);
-			
-			
-			// MOUSE SU TASTO DISAPPROVA
-			disapprovaBtn.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					if (disapprovaBtn.isEnabled()) {
-						disapprovaBtn.setBackground(Color.decode("#00a5ff"));
-						disapprovaBtn.setForeground(Color.WHITE);
-					}
-				}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					if (disapprovaBtn.isEnabled()) {
-						disapprovaBtn.setBackground(SystemColor.menu);
-						disapprovaBtn.setForeground(Color.GRAY);
-					}
-				}
-			});
-			
-			
-			// MOUSE SU TASTO APPROVA
-			approveBtn.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseEntered(MouseEvent e) {
-					if (approveBtn.isEnabled()) {
-						approveBtn.setBackground(Color.decode("#00a5ff"));
-						approveBtn.setForeground(Color.WHITE);
-					}
-				}
-				@Override
-				public void mouseExited(MouseEvent e) {
-					if (approveBtn.isEnabled()) {
-						approveBtn.setBackground(SystemColor.menu);
-						approveBtn.setForeground(Color.GRAY);
-					}
-				}
-			});
 			
 			
 			// MOUSE SU TASTO MOSTRA
@@ -251,27 +189,6 @@ public class Dashboard extends JFrame {
 					}
 				}
 			});
-			
-			
-			// PRESSIONE TASTO APPROVA
-			approveBtn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					Controller.segnalazione.setId(Integer.valueOf(table.getValueAt(table.getSelectedRow(), 0).toString()));
-					Controller.recensione.setId(table.getValueAt(table.getSelectedRow(), 2).toString());
-					ctr.showPopup("Confermando verrá inviata una notifica agli utenti", "approva");
-				}
-			});
-			
-			
-			// PRESSIONE TASTO DISAPPROVA
-			disapprovaBtn.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					Controller.segnalazione.setId(Integer.valueOf(table.getValueAt(table.getSelectedRow(), 0).toString()));
-					Controller.recensione.setId(table.getValueAt(table.getSelectedRow(), 2).toString());
-					ctr.showPopup("Confermando verrá inviata una notifica agli utenti", "disapprova");
-				}
-			});
-			
 			
 			// PRESSIONE TASTO MOSTRA
 			mostraBtn.addActionListener(new ActionListener() {
@@ -304,13 +221,9 @@ public class Dashboard extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
 					if(table.getSelectionModel().isSelectionEmpty()) {
-						approveBtn.setEnabled(false);
-						disapprovaBtn.setEnabled(false);
 						mostraBtn.setEnabled(false);
 					}
 					else {
-						approveBtn.setEnabled(true);
-						disapprovaBtn.setEnabled(true);
 						mostraBtn.setEnabled(true);
 					}
 				}
@@ -458,7 +371,7 @@ public class Dashboard extends JFrame {
 		lblOperazioni.setBounds(10, 100, 200, 36);
 		contentPane.add(lblOperazioni);
 		
-		JButton review = new JButton("Recensioni segnalate");
+		JButton review = new JButton("Contenuti segnalati");
 		review.setIcon(new ImageIcon(Dashboard.class.getResource("/segnalazioni_icon.png")));
 		review.setForeground(Color.WHITE);
 		review.setBackground(Color.decode("#201849"));

@@ -9,7 +9,7 @@ public class Segnalazione {
 	private int id;
 	private String tipo;
 	private String recensione;
-	private int commento;
+	private String commento;
 	private String motivo;
 	private String utente;
 	private String segnalatore;
@@ -64,11 +64,11 @@ public class Segnalazione {
 		this.segnalatore = segnalatore;
 	}
 	
-	public int getCommento() {
+	public String getCommento() {
 		return commento;
 	}
 
-	public void setCommento(int commento) {
+	public void setCommento(String commento) {
 		this.commento = commento;
 	}
 
@@ -84,9 +84,9 @@ public class Segnalazione {
 				
 				s.setId(rs.getInt("idsegnalazione"));
 				s.setRecensione(rs.getString("recensione"));
-				s.setTipo(rs.getString("tipo"));
+				s.setMotivo(rs.getString("motivo"));
 				s.setUtente(rs.getString("utente"));
-				s.setCommento(rs.getInt("commento"));
+				s.setCommento(rs.getString("commento"));
 				
 				reports.add(s);
 			}

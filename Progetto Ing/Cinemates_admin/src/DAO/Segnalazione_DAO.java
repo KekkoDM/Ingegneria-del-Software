@@ -50,7 +50,7 @@ public class Segnalazione_DAO implements DAO_Interface {
 	
 	public ResultSet getAllDAO(){
 		ResultSet rs = null;
-		String select = "idsegnalazione,tipo,motivo,recensione,commento,utente";
+		String select = "idsegnalazione,motivo,recensione,commento,utente";
 		String from = "segnalazione";
 		String where = "approvato = 1";
 		try {

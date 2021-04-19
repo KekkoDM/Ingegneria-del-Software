@@ -32,12 +32,12 @@ public class Visualizzazione extends JFrame {
 	private JPanel contentPane;
 	public JLabel motivoSeg = new JLabel();
 	public JLabel segnalatoreRew = new JLabel();
-	public JLabel negRew = new JLabel();
-	public JLabel posRew = new JLabel();
+	public JLabel numReact = new JLabel();
 	public JLabel autoreRew = new JLabel();
 	public JLabel idRew = new JLabel();
 	public JLabel titoloRew = new JLabel();
 	public JTextArea descrRew = new JTextArea();
+	public JLabel oggetto = new JLabel();
 	
 
 	/**
@@ -59,6 +59,19 @@ public class Visualizzazione extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		oggetto.setHorizontalAlignment(SwingConstants.RIGHT);
+		oggetto.setForeground(Color.WHITE);
+		oggetto.setFont(new Font("Arial", Font.PLAIN, 15));
+		oggetto.setBounds(77, 270, 131, 18);
+		contentPane.add(oggetto);
+		
+		JLabel lblOggetto = new JLabel("Oggetto");
+		lblOggetto.setFont(new Font("Arial", Font.BOLD, 15));
+		lblOggetto.setForeground(Color.WHITE);
+		lblOggetto.setHorizontalAlignment(SwingConstants.LEFT);
+		lblOggetto.setBounds(10, 270, 70, 18);
+		contentPane.add(lblOggetto);
 		
 		JLabel lblDisapprova = new JLabel();
 		lblDisapprova.setText("Disapprova");
@@ -87,7 +100,7 @@ public class Visualizzazione extends JFrame {
 		descrRew.setEditable(false);
 		descrRew.setForeground(Color.GRAY);
 		descrRew.setFont(new Font("Arial", Font.PLAIN, 15));
-		descrRew.setBounds(66, 65, 394, 348);
+		descrRew.setBounds(29, 0, 394, 348);
 		contentPane.add(descrRew);
 		
 		JScrollPane scrollPane = new JScrollPane(descrRew);
@@ -106,12 +119,15 @@ public class Visualizzazione extends JFrame {
 		motivoSeg.setBounds(67, 250, 141, 18);
 		contentPane.add(motivoSeg);
 		
+		
+		
 		JLabel lblMotivo = new JLabel("Motivo");
 		lblMotivo.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMotivo.setForeground(Color.WHITE);
 		lblMotivo.setFont(new Font("Arial", Font.BOLD, 15));
 		lblMotivo.setBounds(10, 250, 49, 18);
 		contentPane.add(lblMotivo);
+		
 		
 		segnalatoreRew.setHorizontalAlignment(SwingConstants.RIGHT);
 		segnalatoreRew.setForeground(Color.WHITE);
@@ -125,32 +141,21 @@ public class Visualizzazione extends JFrame {
 		lblSegnalatore.setFont(new Font("Arial", Font.BOLD, 15));
 		lblSegnalatore.setBounds(10, 230, 86, 18);
 		contentPane.add(lblSegnalatore);
+		numReact.setText("0");
 		
-		negRew.setHorizontalAlignment(SwingConstants.RIGHT);
-		negRew.setForeground(Color.WHITE);
-		negRew.setFont(new Font("Arial", Font.PLAIN, 15));
-		negRew.setBounds(113, 152, 95, 18);
-		contentPane.add(negRew);
 		
-		JLabel lblValNegative = new JLabel("Val. Negative");
-		lblValNegative.setHorizontalAlignment(SwingConstants.LEFT);
-		lblValNegative.setForeground(Color.WHITE);
-		lblValNegative.setFont(new Font("Arial", Font.BOLD, 15));
-		lblValNegative.setBounds(10, 152, 93, 18);
-		contentPane.add(lblValNegative);
+		numReact.setHorizontalAlignment(SwingConstants.RIGHT);
+		numReact.setForeground(Color.WHITE);
+		numReact.setFont(new Font("Arial", Font.PLAIN, 15));
+		numReact.setBounds(138, 130, 70, 18);
+		contentPane.add(numReact);
 		
-		posRew.setHorizontalAlignment(SwingConstants.RIGHT);
-		posRew.setForeground(Color.WHITE);
-		posRew.setFont(new Font("Arial", Font.PLAIN, 15));
-		posRew.setBounds(107, 130, 101, 18);
-		contentPane.add(posRew);
-		
-		JLabel lblValPositive = new JLabel("Val. Positive");
-		lblValPositive.setHorizontalAlignment(SwingConstants.LEFT);
-		lblValPositive.setForeground(Color.WHITE);
-		lblValPositive.setFont(new Font("Arial", Font.BOLD, 15));
-		lblValPositive.setBounds(10, 130, 87, 18);
-		contentPane.add(lblValPositive);
+		JLabel lblratings = new JLabel("Totale Reazioni");
+		lblratings.setHorizontalAlignment(SwingConstants.LEFT);
+		lblratings.setForeground(Color.WHITE);
+		lblratings.setFont(new Font("Arial", Font.BOLD, 15));
+		lblratings.setBounds(10, 130, 111, 18);
+		contentPane.add(lblratings);
 		
 		autoreRew.setHorizontalAlignment(SwingConstants.RIGHT);
 		autoreRew.setForeground(Color.WHITE);
@@ -207,9 +212,15 @@ public class Visualizzazione extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 15));
+		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setIcon(new ImageIcon(Visualizzazione.class.getResource("/lateral_bar.png")));
-		lblNewLabel.setBounds(0, 0, 220, 411);
+		lblNewLabel.setBounds(0, 0, 220, 421);
 		contentPane.add(lblNewLabel);
+		labelID.setHorizontalAlignment(SwingConstants.LEFT);
+		labelID.setForeground(Color.WHITE);
+		labelID.setFont(new Font("Arial", Font.BOLD, 15));
+		labelID.setBounds(10, 86, 15, 18);
 		
 		
 		// MOUSE SU TASTO DISAPPROVA

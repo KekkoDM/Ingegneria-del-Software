@@ -115,7 +115,6 @@ public class Controller {
 	 
 	public void sendReportResult(Boolean decisione) throws JSONException, IOException{
 		
-		segnalazione.setAll(reportDAO.getDAO(segnalazione));
 		String msgProp = null;
 		String msgSeg = null;
 		
@@ -162,14 +161,14 @@ public class Controller {
 	
 	
 	public void showReport() throws JSONException, IOException {
-		
+		segnalazione.setAll(reportDAO.getDAO(segnalazione));
 		visualizza = new Visualizzazione(this);
 		if(recensione != null) {
 			recensione.setAll(new RequestJson().getReview(recensione.getId()));
 			valutazione.setValutazione(valutation_DAO.getDAO(recensione));
 			visualizza.idRew.setText(recensione.getId());
 			visualizza.autoreRew.setText(recensione.getUser());
-			visualizza.posRew.setText(String.valueOf(valutazione.getValore()));
+			visualizza.numReact.setText(String.valueOf(valutazione.getValore()));
 			visualizza.descrRew.setCaretPosition(visualizza.descrRew.getDocument().getLength());
 			visualizza.descrRew.append(recensione.getDescrizione());
 		}
@@ -180,7 +179,7 @@ public class Controller {
 			visualizza.descrRew.setCaretPosition(visualizza.descrRew.getDocument().getLength());
 			visualizza.descrRew.append(commento.getDescrizione());
 		}
-		
+		visualizza.oggetto.setText(segnalazione.getTipo());
 		segnalazione.setAll(reportDAO.getDAO(segnalazione));
 		visualizza.segnalatoreRew.setText(segnalazione.getSegnalatore());
 		visualizza.motivoSeg.setText(segnalazione.getMotivo());
