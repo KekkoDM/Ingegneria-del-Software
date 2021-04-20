@@ -11,7 +11,7 @@ import com.example.cinemates.MainActivity;
 import com.example.cinemates.R;
 
 public class SplashActivity extends Activity {
-    private static int SPLASH_SCREEN = 500;
+    private static int SPLASH_SCREEN = 700;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

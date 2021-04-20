@@ -23,6 +23,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:requiresFadingEdge="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,13 +53,17 @@
 
                     <ImageView
                         android:id="@+id/imageView"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_marginStart="80dp"
                         android:layout_marginTop="16dp"
-                        android:src="@drawable/ic_app_icon"
+                        android:layout_marginEnd="80dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_app_icon_alternative"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/purple_hype" />
 
                     <EditText
                         android:id="@+id/username"
@@ -125,13 +130,13 @@
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
                         android:layout_marginEnd="32dp"
                         android:src="@drawable/ic_show_password"
+                        app:layout_constraintBottom_toBottomOf="@+id/forgotPw"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toEndOf="@+id/forgotPw"
-                        app:layout_constraintTop_toBottomOf="@+id/password"
+                        app:layout_constraintTop_toTopOf="@+id/forgotPw"
                         app:tint="@color/purple_hype" />
 
                     <Button
@@ -139,7 +144,7 @@
                         android:layout_width="0dp"
                         android:layout_height="60dp"
                         android:layout_marginStart="32dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="32dp"
                         android:layout_marginEnd="32dp"
                         android:backgroundTint="@color/purple_hype"
                         android:text="@string/submit_botton"
@@ -154,7 +159,7 @@
                         android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:text="oppure"
                         android:textAlignment="center"
                         android:textColor="@color/purple_hype"
@@ -168,7 +173,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginStart="32dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="4dp"
                         android:layout_marginEnd="32dp"
                         android:layout_marginBottom="16dp"
                         android:backgroundTint="@color/google_color"
