@@ -42,7 +42,7 @@ public class FollowNotificationsFragment extends Fragment {
 
         Notifica notifica = new Notifica();
 
-        notifica.loadFollowNotification(MainActivity.utente);
+        notifica.loadFollowNotifications(MainActivity.utente);
 
         return v;
     }

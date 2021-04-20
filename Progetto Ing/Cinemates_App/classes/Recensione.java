@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 public class Recensione implements Serializable {
-    private String title;
     private String descrizione;
     private String data;
     private String id;
@@ -30,14 +29,6 @@ public class Recensione implements Serializable {
     }
 
     public String getUser() { return user; }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getDescrizione() {
         return descrizione;

@@ -206,7 +206,6 @@ public class RequestJson<JSONParser>{
     }
 
 
-
     //RECENSIONI
     public void parseJSONReviews(RecyclerView recyclerView,String id,String type) {
 

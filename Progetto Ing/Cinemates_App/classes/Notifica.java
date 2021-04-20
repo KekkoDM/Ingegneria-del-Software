@@ -141,7 +141,7 @@ public class Notifica {
         loader.execute();
     }
 
-    public void loadFollowNotification(Utente utente) {
+    public void loadFollowNotifications(Utente utente) {
         class FollowLoader extends AsyncTask<Void, Void, String> {
             FollowNotificationsFragment followNotificationsFragment = FollowNotificationsFragment.getInstance();
 
