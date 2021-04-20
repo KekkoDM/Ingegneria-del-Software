@@ -19,6 +19,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,8 +27,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
-public class Visualizzazione extends JFrame {
+public class Visualizzazione extends JDialog {
 
 	private JPanel contentPane;
 	public JLabel motivoSeg = new JLabel();
@@ -57,6 +59,8 @@ public class Visualizzazione extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setModal(true);
+		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
@@ -65,6 +69,7 @@ public class Visualizzazione extends JFrame {
 		oggetto.setFont(new Font("Arial", Font.PLAIN, 15));
 		oggetto.setBounds(77, 270, 131, 18);
 		contentPane.add(oggetto);
+	
 		
 		JLabel lblOggetto = new JLabel("Oggetto");
 		lblOggetto.setFont(new Font("Arial", Font.BOLD, 15));
@@ -94,17 +99,20 @@ public class Visualizzazione extends JFrame {
 		titoloRew.setFont(new Font("Arial", Font.BOLD, 25));
 		titoloRew.setBounds(230, 11, 394, 30);
 		contentPane.add(titoloRew);
+		descrRew.setWrapStyleWord(true);
 		descrRew.setLineWrap(true);
-		
+		descrRew.setEnabled(false);
 		descrRew.setPreferredSize(new Dimension(100, 100));
 		descrRew.setEditable(false);
-		descrRew.setForeground(Color.GRAY);
+		descrRew.setForeground(Color.BLACK);
 		descrRew.setFont(new Font("Arial", Font.PLAIN, 15));
 		descrRew.setBounds(29, 0, 394, 348);
 		contentPane.add(descrRew);
 		
 		JScrollPane scrollPane = new JScrollPane(descrRew);
-		scrollPane.setBounds(230, 52, 394, 348);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setBounds(233, 35, 400, 350);
 		contentPane.add(scrollPane);
 		
 		JSeparator separator = new JSeparator();

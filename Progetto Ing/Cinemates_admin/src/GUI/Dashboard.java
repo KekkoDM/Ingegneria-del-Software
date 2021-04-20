@@ -167,7 +167,7 @@ public class Dashboard extends JFrame {
 			mostraBtn.setFont(new Font("Arial", Font.PLAIN, 18));
 			mostraBtn.setFocusPainted(false);
 			mostraBtn.setBackground(SystemColor.menu);
-			mostraBtn.setBounds(0, 486, 125, 40);
+			mostraBtn.setBounds(270, 486, 125, 40);
 			mostraBtn.setEnabled(false);
 			reviewsPanel.add(mostraBtn);
 			
