@@ -220,13 +220,9 @@ public class Film implements Serializable {
                             }
                         }
 
-                        if (context.equals((MainActivity.selectedFragment.getContext()))) {
-                            ((FavoritesFragment) MainActivity.selectedFragment).setButtonVisibility(listName, i, context);
-                        }
-                        else {
-                            ((ResultsActivity) context).updateResultActivity(listItem);
-                        }
-                    } else {
+                        ((FavoritesFragment) MainActivity.selectedFragment).setButtonVisibility(listName, i, context);
+                    }
+                    else {
                         if (listName.equals("Preferiti")) {
                             ((FavoritesFragment) MainActivity.selectedFragment).setEmptyFavoritesListError();
                         }

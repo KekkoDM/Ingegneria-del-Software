@@ -55,9 +55,9 @@ public class ResultsAdapter extends RecyclerView.Adapter<ResultsAdapter.MyViewHo
         }
     }
 
-    public void updateData(ArrayList<Film> results) {
-        this.results.clear();
-        this.results.addAll(results);
+    public void updateData(ArrayList<Film> list) {
+        results.clear();
+        results.addAll(list);
         notifyDataSetChanged();
     }
 

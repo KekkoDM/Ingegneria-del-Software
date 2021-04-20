@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,18 +47,22 @@ public class ResultsActivity extends AppCompatActivity {
     private ImageButton backBtn;
     private Intent intent;
     private Film film;
+    private TextView activityTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
 
+        intent = getIntent();
+
         rv = findViewById(R.id.resultContainer);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(this));
 
-        intent = getIntent();
         film = new Film();
+
+        activityTitle = findViewById(R.id.resultFor);
 
         switchScreen(intent);
 
@@ -75,16 +81,26 @@ public class ResultsActivity extends AppCompatActivity {
 
         if (intent.getStringExtra("type").equals("showall")) {
             if (intent.getStringExtra("name").equals("preferiti")) {
-                film.loadList("Preferiti", this);
+                film.loadList("Preferiti", MainActivity.selectedFragment.getContext());
+                updateAdapter(((FavoritesFragment) MainActivity.selectedFragment).getRecyclerViewFavorites().getAdapter(), "Preferiti");
             }
             else {
-                film.loadList("Da vedere", this);
+                film.loadList("Da vedere", MainActivity.selectedFragment.getContext());
+                updateAdapter(((FavoritesFragment) MainActivity.selectedFragment).getRecyclerViewToSee().getAdapter(), "Da vedere");
             }
         }
     }
 
-    public void updateResultActivity(ArrayList<Film> list) {
-        resultsAdapter.updateData(list);
+    private void updateAdapter(RecyclerView.Adapter adapter, String listName) {
+        if (adapter instanceof FilmAdapter) {
+            resultsAdapter.updateData(((FilmAdapter) adapter).getListFilm());
+        }
+        else if (listName.equals("Preferiti")) {
+            setEmptyFavoritesListError();
+        }
+        else {
+            setEmptyToSeeListError();
+        }
     }
 
     private void switchScreen(Intent intent){
@@ -107,6 +123,7 @@ public class ResultsActivity extends AppCompatActivity {
                 break;
 
             case "sharedcontent":
+                activityTitle.setText("In comune");
                 String friend = intent.getStringExtra("Friend");
 
                 bundle.putString("id_film", friend);
@@ -117,8 +134,9 @@ public class ResultsActivity extends AppCompatActivity {
                 break;
 
             case "showall":
+                activityTitle.setText("Mostra tutto");
                 ArrayList<Film> list = (ArrayList<Film>) intent.getSerializableExtra("list");
-                resultsAdapter = new ResultsAdapter(list,this);
+                resultsAdapter = new ResultsAdapter(list, this);
                 rv.setAdapter(resultsAdapter);
 
                 bundle.putString("user", MainActivity.utente.getUsername());
@@ -126,6 +144,21 @@ public class ResultsActivity extends AppCompatActivity {
                 mFirebaseAnalytics.logEvent("Show_All_List", bundle);
                 break;
         }
+    }
+
+
+    private void setEmptyFavoritesListError() {
+        ArrayList<String> error = new ArrayList<String>();
+        error.add("La tua lista dei Preferiti è vuota");
+        ErrorAdapter errorAdapter = new ErrorAdapter(this, error);
+        rv.setAdapter(errorAdapter);
+    }
+
+    public void setEmptyToSeeListError() {
+        ArrayList<String> error = new ArrayList<String>();
+        error.add("La tua lista dei Contenuti da vedere è vuota");
+        ErrorAdapter errorAdapter = new ErrorAdapter(this, error);
+        rv.setAdapter(errorAdapter);
     }
 
     public void showSearchUserResult(ArrayList<Utente> users) {

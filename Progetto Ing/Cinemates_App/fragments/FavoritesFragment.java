@@ -83,7 +83,7 @@ public class FavoritesFragment extends Fragment {
 
         film = new Film();
 
-        // Load Favorites list
+        // Favorites list
         LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewFavorites = view.findViewById(R.id.list_film_favorites);
@@ -91,9 +91,8 @@ public class FavoritesFragment extends Fragment {
         recyclerViewFavorites.setLayoutManager(llm);
         buttonCasualFavorites = view.findViewById(R.id.CardFavorites);
         showAllFavorites = view.findViewById(R.id.showAllFavorites);
-        film.loadList("Preferiti", getContext());
 
-        // Load ToSee list
+        // ToSee list
         LinearLayoutManager ll = new LinearLayoutManager(this.getContext());
         ll.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerViewToSee = view.findViewById(R.id.list_film_tosee);
@@ -101,7 +100,6 @@ public class FavoritesFragment extends Fragment {
         recyclerViewToSee.setLayoutManager(ll);
         buttonCasualToSee = view.findViewById(R.id.CardToSee);
         showAllToSee = view.findViewById(R.id.showAllToSee);
-        film.loadList("Da vedere", getContext());
 
         return view;
     }
