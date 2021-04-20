@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "671965914741",
+    "project_id": "cinemates-a29db",
+    "storage_bucket": "cinemates-a29db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671965914741:android:6b6966749a31e05497ba3c",
+        "android_client_info": {
+          "package_name": "com.example.cinemates"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "671965914741-3dqfcc097g5f8l94abaqneua7qa9lv6p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cinemates",
+            "certificate_hash": "526acfe05778e334fd270ffefb23624af8c0c825"
+          }
+        },
+        {
+          "client_id": "671965914741-hefmibbe1cm325p42jf5ukelu0lah3rj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cinemates",
+            "certificate_hash": "ff1e01633ce4cc6a5c45a9aee238f4b9193b375c"
+          }
+        },
+        {
+          "client_id": "671965914741-ic61ccdmcobgmouegkbvol0jglfn53hp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoWBYw2PSwpKKW-wNFUETVVvA9SyTQ4Ww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "671965914741-ic61ccdmcobgmouegkbvol0jglfn53hp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
