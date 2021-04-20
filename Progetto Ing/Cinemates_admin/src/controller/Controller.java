@@ -161,6 +161,8 @@ public class Controller {
 	
 	
 	public void showReport() throws JSONException, IOException {
+		dashboard.setEnabled(false);
+		
 		segnalazione.setAll(reportDAO.getDAO(segnalazione));
 		visualizza = new Visualizzazione(this);
 		if(recensione != null) {
@@ -193,5 +195,15 @@ public class Controller {
 		dashboard.settingsPanel.setVisible(false);
 		dashboard.reviewsPanel.setVisible(false);
 		dashboard.reviewsPanelStart(this);
+	}
+	
+	
+	public void enableDashboard() {
+		dashboard.setEnabled(true);
+	}
+	
+	
+	public void closeVisualizza() {
+		visualizza.dispose();
 	}
 }

@@ -143,7 +143,7 @@ public class Dashboard extends JFrame {
 			table.getColumnModel().getColumn(0).setPreferredWidth(20);
 			table.getColumnModel().getColumn(1).setPreferredWidth(100);
 			table.getColumnModel().getColumn(2).setPreferredWidth(100);
-			table.getColumnModel().getColumn(3).setPreferredWidth(200);
+			table.getColumnModel().getColumn(3).setPreferredWidth(60);
 			table.setBorder(null);
 			table.setSelectionBackground(Color.decode("#00a5ff"));
 			table.setSelectionForeground(Color.WHITE);

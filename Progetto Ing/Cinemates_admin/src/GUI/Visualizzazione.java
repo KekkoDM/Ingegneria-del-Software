@@ -46,6 +46,7 @@ public class Visualizzazione extends JFrame {
 	 * Create the frame.
 	 */
 	public Visualizzazione(Controller ctr) {
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBackground(Color.WHITE);
 		setTitle("Visualizza recensione");
 		inizializzaFrame(ctr);
@@ -54,7 +55,6 @@ public class Visualizzazione extends JFrame {
 	
 	public void inizializzaFrame(Controller ctr) {
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);

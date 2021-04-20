@@ -115,6 +115,10 @@ public class Popup extends JDialog {
 						ctr.closeDashboard();
 						ctr.openLogin();
 					}
+					
+					ctr.enableDashboard();
+					ctr.closeVisualizza();
+					
 				}catch(IOException io) {
 					io.printStackTrace();
 				} catch (JSONException e1) {
