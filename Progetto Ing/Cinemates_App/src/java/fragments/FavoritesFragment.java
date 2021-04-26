@@ -56,6 +56,7 @@ public class FavoritesFragment extends Fragment {
     private TextView type;
     private int id = -1;
     private Media media;
+    private String listName;
 
     public FavoritesFragment() {
         // Required empty public constructor
@@ -109,9 +110,8 @@ public class FavoritesFragment extends Fragment {
         getContext().startActivity(intent);
     }
 
-    public void showGeneratedItem(int item, String listName) {
-        Dialog popup = new Dialog(getContext());
-        this.id = item;
+    public void showGeneratedItem(String listName) {
+        this.listName = listName;
 
         if (listName.equals("Preferiti")) {
             mediaAdapter = (MediaAdapter) recyclerViewFavorites.getAdapter();
@@ -120,30 +120,36 @@ public class FavoritesFragment extends Fragment {
             mediaAdapter = (MediaAdapter) recyclerViewToSee.getAdapter();
         }
 
+        id = MainActivity.utente.generateRandomFromList(id ,mediaAdapter.getItemCount());
+
+        setPopUp(id);
+    }
+
+    private void setPopUp(int id){
+        Dialog popup = new Dialog(getContext());
         popup.setContentView(R.layout.popup_casual_film);
 
         backdrop = popup.findViewById(R.id.backdrop_casual_popup);
-        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/w500" + mediaAdapter.getItem(item).getBackdrop()).into(backdrop);
+        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/w500" + mediaAdapter.getItem(id).getBackdrop()).into(backdrop);
 
         cover = popup.findViewById(R.id.filmCasual_img);
-        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/w500" + mediaAdapter.getItem(item).getCover()).into(cover);
+        Picasso.with(getContext()).load("https://image.tmdb.org/t/p/w500" + mediaAdapter.getItem(id).getCover()).into(cover);
 
         title = popup.findViewById(R.id.title_film_casual);
-        title.setText(mediaAdapter.getItem(item).getTitle());
+        title.setText(mediaAdapter.getItem(id).getTitle());
 
         rating = popup.findViewById(R.id.rating_film_casual);
-        rating.setText(mediaAdapter.getItem(item).getValutation());
+        rating.setText(mediaAdapter.getItem(id).getValutation());
 
         type = popup.findViewById(R.id.type_media_casual);
-        type.setText(mediaAdapter.getItem(item).getType());
+        type.setText(mediaAdapter.getItem(id).getType());
 
         regenerate = popup.findViewById(R.id.btn_regenerate);
         regenerate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popup.dismiss();
-                id = MainActivity.utente.generateRandomFromList(mediaAdapter.getItemCount());
-                showGeneratedItem(id, listName);
+                showGeneratedItem(listName);
             }
         });
 
@@ -157,7 +163,7 @@ public class FavoritesFragment extends Fragment {
 
         showItem = popup.findViewById(R.id.btn_showcasual);
 
-        if (mediaAdapter.getItem(item).getType().equals("Film")) {
+        if (mediaAdapter.getItem(id).getType().equals("Film")) {
             showItem.setText("Vai al Film");
         }
         else {
@@ -169,10 +175,10 @@ public class FavoritesFragment extends Fragment {
             public void onClick(View v) {
                 popup.dismiss();
                 if (listName.equals("Preferiti")) {
-                    casualFilm(recyclerViewFavorites, item);
+                    casualFilm(recyclerViewFavorites, id);
                 }
                 else {
-                    casualFilm(recyclerViewToSee, item);
+                    casualFilm(recyclerViewToSee, id);
                 }
             }
         });
@@ -190,8 +196,7 @@ public class FavoritesFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (recyclerViewFavorites.getAdapter() != null) {
-                                id = MainActivity.utente.generateRandomFromList(recyclerViewFavorites.getAdapter().getItemCount());
-                                showGeneratedItem(id, listName);
+                                showGeneratedItem(listName);
                             }
                         }
                     });
@@ -219,8 +224,7 @@ public class FavoritesFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (recyclerViewToSee.getAdapter() != null) {
-                                id = MainActivity.utente.generateRandomFromList(recyclerViewToSee.getAdapter().getItemCount());
-                                showGeneratedItem(id, listName);
+                                showGeneratedItem(listName);
                             }
                         }
                     });
@@ -265,7 +269,7 @@ public class FavoritesFragment extends Fragment {
         return recyclerViewFavorites;
     }
 
-    public int getIdentifier() {
+    public int getCurrentId() {
         return id;
     }
 }

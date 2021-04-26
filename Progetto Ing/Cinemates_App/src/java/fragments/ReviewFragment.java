@@ -59,10 +59,6 @@ public class ReviewFragment extends Fragment {
         }
     }
 
-    public Recensione getReview() { return review; }
-
-    public void setReview(Recensione review) { this.review = review; }
-
     public void setReviewAdapter(ReviewAdapter reviewAdapter) {
         this.reviewAdapter = reviewAdapter;
     }

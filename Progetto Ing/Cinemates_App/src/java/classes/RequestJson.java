@@ -122,7 +122,7 @@ public class RequestJson<JSONParser>{
 
             setFMV(jsonArray);
 
-             adapter = new SearchSuggestionsAdapter(context, listFilm);
+            adapter = new SearchSuggestionsAdapter(context, listFilm);
             recyclerView.setAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -235,18 +235,18 @@ public class RequestJson<JSONParser>{
         try {
             reviews = new ArrayList<>();
             JSONArray jsonArray = response.getJSONArray("results");
-            ArrayList<String> error = new ArrayList<String>();
-            error.add("Non ci sono ancora recensioni");
 
             setReview(jsonArray);
 
             ReviewFragment reviewFragment = ReviewFragment.getInstance();
 
-            if (reviews.size()>0) {
+            if (reviews.size() > 0) {
                 adapter = new ReviewAdapter(reviews, context);
                 reviewFragment.setReviewAdapter((ReviewAdapter) adapter);
             }
             else {
+                ArrayList<String> error = new ArrayList<String>();
+                error.add("Non ci sono ancora recensioni");
                 adapter = new ErrorAdapter(context, error);
             }
 

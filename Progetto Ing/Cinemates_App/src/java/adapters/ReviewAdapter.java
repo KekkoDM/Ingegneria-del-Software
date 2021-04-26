@@ -52,7 +52,7 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
         Recensione review = reviews.get(position);
 
-        review.checkReviewVisibility(review, holder);
+        review.checkReviewVisibility(holder);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +131,11 @@ public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.ReviewVie
                 comment_review.setVisibility(View.INVISIBLE);
                 report.setVisibility(View.INVISIBLE);
             }
+        }
+
+        public void removeReview(Recensione review) {
+            reviews.remove(review);
+            notifyDataSetChanged();
         }
 
         public void setCensoredReview(Recensione review) {

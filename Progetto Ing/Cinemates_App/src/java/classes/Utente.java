@@ -963,10 +963,9 @@ public class Utente implements Serializable {
         reportSender.execute();
     }
 
-    public int generateRandomFromList(int numberItems) {
+    public int generateRandomFromList(int id ,int numberItems) {
         Random random = new Random();
         int nextId = 0;
-        int id = ((FavoritesFragment) MainActivity.selectedFragment).getIdentifier();
 
         do {
             nextId = random.nextInt(numberItems);

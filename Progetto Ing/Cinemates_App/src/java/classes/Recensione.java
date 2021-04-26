@@ -1,5 +1,6 @@
 package com.example.cinemates.classes;
 
+import android.app.Dialog;
 import android.os.AsyncTask;
 
 import com.example.cinemates.adapters.ReviewAdapter;
@@ -10,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Recensione implements Serializable {
@@ -42,7 +44,7 @@ public class Recensione implements Serializable {
         return id;
     }
 
-    public void checkReviewVisibility(Recensione review, ReviewAdapter.ReviewViewHolder holder) {
+    public void checkReviewVisibility(ReviewAdapter.ReviewViewHolder holder) {
         class ReviewVisibility extends AsyncTask<Void, Void, String> {
 
             @Override
@@ -57,7 +59,7 @@ public class Recensione implements Serializable {
 
                 //creating request parameters
                 HashMap<String, String> params = new HashMap<>();
-                params.put("item", review.getId());
+                params.put("item", getId());
                 params.put("type", "Recensione");
 
                 //returning the response
@@ -74,10 +76,15 @@ public class Recensione implements Serializable {
 
                     // if no error in response
                     if (obj.getBoolean("error")) {
-                        holder.setCensoredReview(review);
+                        if (obj.getString("message").equals("Elimina")) {
+                            holder.removeReview(Recensione.this);
+                        }
+                        else {
+                            holder.setCensoredReview(Recensione.this);
+                        }
                     }
                     else {
-                        holder.setReview(review);
+                        holder.setReview(Recensione.this);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
