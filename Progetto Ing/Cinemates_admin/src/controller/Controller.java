@@ -20,7 +20,6 @@ import classes.Amministratore;
 import classes.Commento;
 import classes.Notifica;
 import classes.Recensione;
-import classes.RequestJson;
 import classes.Segnalazione;
 import classes.Valutazione;
 
@@ -40,7 +39,6 @@ public class Controller {
     public static Segnalazione_DAO reportDAO;
     public static Valutazione_DAO valutation_DAO;
 
-    
     private static Login login;
     private static Dashboard dashboard;
     private static Popup popup;
@@ -107,8 +105,7 @@ public class Controller {
 	
 	
 	public Recensione getRecensione(String idRecensione, String utente) throws JSONException, IOException {
-		reviewDAO.checkExists(idRecensione, utente, recensione);
-		recensione.setAll(new RequestJson().getReview(recensione.getId()));
+		recensione.setAll(reviewDAO.getDAO(recensione.getId()));
 		return recensione;
 	}
 	
@@ -131,7 +128,7 @@ public class Controller {
 				msgSeg ="La tua segnalazione n. " + segnalazione.getId() +"  per " +segnalazione.getMotivo() + " alla recensione di " + recensione.getUser() + 
 						" non è stata ritenuta valida per eliminare il contenuto";
 			}
-			reportDAO.approva(segnalazione);
+			adminDAO.approva(segnalazione);
 			
 		}else {
 			if(commento != null) {
@@ -146,7 +143,7 @@ public class Controller {
 						" è stata ritenuta valida, pertanto il contenuto è stato eliminato";
 			}
 				
-			reportDAO.disapprova(segnalazione);
+			adminDAO.disapprova(segnalazione);
 		}
 		
 		if(msgProp != null) {
@@ -166,7 +163,7 @@ public class Controller {
 		segnalazione.setAll(reportDAO.getDAO(segnalazione));
 		visualizza = new Visualizzazione(this);
 		if(recensione != null) {
-			recensione.setAll(new RequestJson().getReview(recensione.getId()));
+			recensione.setAll(reviewDAO.getDAO(recensione.getId()));
 			valutazione.setValutazione(valutation_DAO.getDAO(recensione));
 			visualizza.idRew.setText(recensione.getId());
 			visualizza.autoreRew.setText(recensione.getUser());

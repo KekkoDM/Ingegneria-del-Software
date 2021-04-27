@@ -4,22 +4,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import classes.Amministratore;
+import classes.Segnalazione;
 import controller.Controller;
 
 public class Amministratore_DAO implements DAO_Interface {
 
 	@Override
-	public Boolean checkExists(String usrname, String pw, Object admin) {
+	public Boolean checkExists(String username, String pw, Object admin) {
 		
 		admin = Controller.admin;
 		
 		String select = "username,password";
-		String where = "username = '" + usrname + "' AND password = '" + pw + "'";
+		String where = "username = '" + username + "' AND password = '" + pw + "'";
 		System.out.println(select + where);
 		try {
 			ResultSet rs = Controller.conn.Query(select,"amministratore",where);
 			while(rs.next()) {
-				((Amministratore) admin).setUsername(usrname);
+				((Amministratore) admin).setUsername(username);
 				((Amministratore) admin).setPassword(pw);
 				return true;
 			}
@@ -34,7 +35,6 @@ public class Amministratore_DAO implements DAO_Interface {
 	
 	
 	public void updatePassword(String newPw) {
-		System.out.println(this);
 		String values = "password='"+newPw+"'";
 		String where = "idamministratore="+Controller.admin.getID();
 		Controller.conn.Update("amministratore", values, where);
@@ -54,6 +54,25 @@ public class Amministratore_DAO implements DAO_Interface {
 		}
 		
 		return rs;
+	}
+	
+	public void approva(Segnalazione s) {
+		String where = "idsegnalazione="+s.getId();
+		Controller.conn.Delete("segnalazione", where);	
+	}
+	
+	public void disapprova(Segnalazione s) {
+	
+		if(Controller.commento != null) {
+			String where = "idcommento="+Controller.commento.getId();
+			Controller.conn.Delete("commento", where);
+			
+		}
+		else if(Controller.recensione != null) {
+			String where = "recensione='"+s.getRecensione()+"'";
+			Controller.conn.Update("segnalazione", "approvato = false", where);
+		}
+		
 	}
 
 }

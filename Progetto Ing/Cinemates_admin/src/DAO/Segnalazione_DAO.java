@@ -63,23 +63,6 @@ public class Segnalazione_DAO implements DAO_Interface {
 		return rs;
 	}
 
-	public void approva(Segnalazione s) {
-		String where = "idsegnalazione="+s.getId();
-		Controller.conn.Delete("segnalazione", where);	
-	}
 	
-	public void disapprova(Segnalazione s) {
-	
-		if(Controller.commento != null) {
-			String where = "idcommento="+Controller.commento.getId();
-			Controller.conn.Delete("commento", where);
-			
-		}
-		else if(Controller.recensione != null) {
-			String where = "recensione='"+s.getRecensione()+"'";
-			Controller.conn.Update("segnalazione", "approvato = false", where);
-		}
-		
-	}
 
 }
