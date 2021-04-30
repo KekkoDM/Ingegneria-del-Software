@@ -39,9 +39,7 @@ import java.util.ArrayList;
 public class RequestJson<JSONParser>{
 
 
-    public ArrayList getListFilm() {
-        return listFilm;
-    }
+
     private ArrayList listFilm;
     private ArrayList reviews;
     private RecyclerView.Adapter adapter;
@@ -66,6 +64,9 @@ public class RequestJson<JSONParser>{
 
     }
 
+    public ArrayList getListFilm() {
+        return listFilm;
+    }
     //SLIDER
     public void parseJSONSlide(ViewPager2 viewPager2) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, TRENDING_ALL, null,

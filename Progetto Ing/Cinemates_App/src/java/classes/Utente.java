@@ -43,6 +43,10 @@ public class Utente implements Serializable {
     private String password;
     private boolean autenticato = false;
 
+    public Utente(String username){
+        this.username = username;
+    }
+
     public Utente(String username, String nome, String cognome, String email, String password) {
         this.username = username;
         this.nome = nome;

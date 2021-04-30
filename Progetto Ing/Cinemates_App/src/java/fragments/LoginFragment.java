@@ -59,11 +59,10 @@ public class LoginFragment extends Fragment {
     private Button loginBtn;
     private Boolean isShowed = false;
     private GoogleSignInClient mGoogleSignInClient;
-    private final static int RC_SIGN_IN = 123;
     private Button googleBtn;
     private FirebaseAuth mAuth;
     private FirebaseAnalytics mFirebaseAnalytics;
-
+    private final static int RC_SIGN_IN = 123;
     public LoginFragment() {
         // Required empty public constructor
     }
